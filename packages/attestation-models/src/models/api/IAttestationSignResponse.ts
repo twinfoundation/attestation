@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IDidProof } from "@gtsc/standards-w3c-did";
+import type { IAttestationProof } from "../IAttestationProof";
 
 /**
  * The response when creating the proof for a data set.
@@ -11,8 +11,8 @@ export interface IAttestationSignResponse {
 	 */
 	body: {
 		/**
-		 * The proof for the data set.
+		 * The proof for the data.
 		 */
-		proof: IDidProof;
+		proof: IAttestationProof;
 	};
 }

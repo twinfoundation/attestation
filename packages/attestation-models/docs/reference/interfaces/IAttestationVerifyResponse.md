@@ -1,6 +1,6 @@
 # Interface: IAttestationVerifyResponse
 
-The response to verifying a data set and proof.
+The response to verifying a proof.
 
 ## Properties
 
@@ -8,7 +8,7 @@ The response to verifying a data set and proof.
 
 > **body**: `object`
 
-The data to be used in the verification.
+The data to be used in the verification response.
 
 #### verified
 

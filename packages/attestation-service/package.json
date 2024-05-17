@@ -31,6 +31,7 @@
 	"dependencies": {
 		"@gtsc/api-models": "next",
 		"@gtsc/attestation-models": "0.0.3-next.2",
+		"@gtsc/blob-storage-models": "next",
 		"@gtsc/core": "next",
 		"@gtsc/entity": "next",
 		"@gtsc/nameof": "^0.0.4",
@@ -40,6 +41,8 @@
 	},
 	"devDependencies": {
 		"@gtsc/nameof-transformer": "^0.0.4",
+		"@gtsc/blob-storage-connector-memory": "next",
+		"@gtsc/attestation-connector-entity-storage": "0.0.3-next.2",
 		"@gtsc/ts-to-openapi": "next",
 		"@vitest/coverage-v8": "^1.6.0",
 		"copyfiles": "^2.4.1",

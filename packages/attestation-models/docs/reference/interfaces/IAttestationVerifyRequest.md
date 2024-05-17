@@ -1,6 +1,6 @@
 # Interface: IAttestationVerifyRequest
 
-Verify that the proof is valid for the data set.
+Verify that the proof is valid for the data.
 
 ## Properties
 
@@ -10,14 +10,8 @@ Verify that the proof is valid for the data set.
 
 The parameters to be used in the verification.
 
-#### data
-
-> **data**: `unknown`
-
-The data set that was signed.
-
 #### proof
 
-> **proof**: `IDidProof`
+> **proof**: [`IAttestationProof`](IAttestationProof.md)
 
-The proof for the data set.
+The proof to verify.

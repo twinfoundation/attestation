@@ -24,11 +24,19 @@ The configuration for the attestation connector.
 
 [`OpenAttestationConnector`](OpenAttestationConnector.md)
 
+## Properties
+
+### NAMESPACE
+
+> `static` `readonly` **NAMESPACE**: `string` = `"open-attestation"`
+
+The namespace for the entities.
+
 ## Methods
 
 ### sign()
 
-> **sign**(`requestContext`, `data`): `Promise`\<`IDidProof`\>
+> **sign**(`requestContext`, `keyId`, `data`): `Promise`\<`IDidProof`\>
 
 Sign the data and return the proof.
 
@@ -37,6 +45,10 @@ Sign the data and return the proof.
 • **requestContext**: `IRequestContext`
 
 The context for the request.
+
+• **keyId**: `string`
+
+The key id from a vault to sign the data.
 
 • **data**: `unknown`
 
@@ -58,7 +70,7 @@ The proof for the data with the id set as a unique identifier for the data.
 
 > **verify**(`requestContext`, `data`, `proof`): `Promise`\<`boolean`\>
 
-Verify the data against the proof the proof.
+Verify the data against the proof.
 
 #### Parameters
 

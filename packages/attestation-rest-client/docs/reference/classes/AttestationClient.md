@@ -96,7 +96,7 @@ The endpoint with namespace prefix attached.
 
 ### sign()
 
-> **sign**(`requestContext`, `data`): `Promise`\<`IDidProof`\>
+> **sign**(`requestContext`, `keyId`, `data`, `attestationNamespace`?): `Promise`\<`IAttestationProof`\>
 
 Sign the data and return the proof.
 
@@ -106,13 +106,21 @@ Sign the data and return the proof.
 
 The context for the request.
 
-• **data**: `unknown`
+• **keyId**: `string`
 
-The data to sign.
+The key id from a vault to sign the data.
+
+• **data**: `string`
+
+The data to store in blob storage and sign as base64.
+
+• **attestationNamespace?**: `string`
+
+The namespace of the attestation service to use. The service has a built in default if none is supplied.
 
 #### Returns
 
-`Promise`\<`IDidProof`\>
+`Promise`\<`IAttestationProof`\>
 
 The proof for the data with the id set as a unique identifier for the data.
 
@@ -124,9 +132,9 @@ The proof for the data with the id set as a unique identifier for the data.
 
 ### verify()
 
-> **verify**(`requestContext`, `data`, `proof`): `Promise`\<`boolean`\>
+> **verify**(`requestContext`, `proof`): `Promise`\<`boolean`\>
 
-Verify the data against the proof the proof.
+Verify the data against the proof.
 
 #### Parameters
 
@@ -134,11 +142,7 @@ Verify the data against the proof the proof.
 
 The context for the request.
 
-• **data**: `unknown`
-
-The data to verify.
-
-• **proof**: `IDidProof`
+• **proof**: `IAttestationProof`
 
 The proof to verify against.
 

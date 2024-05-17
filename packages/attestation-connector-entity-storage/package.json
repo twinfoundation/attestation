@@ -34,7 +34,8 @@
 		"@gtsc/entity-storage-models": "next",
 		"@gtsc/entity-storage-connector-memory": "next",
 		"@gtsc/nameof": "^0.0.4",
-		"@gtsc/standards-w3c-did": "next"
+		"@gtsc/standards-w3c-did": "next",
+		"@gtsc/vault-models": "next"
 	},
 	"devDependencies": {
 		"@gtsc/nameof-transformer": "^0.0.4",

@@ -20,6 +20,10 @@ Create a new instance of EntityStorageAttestationConnector.
 
 The dependencies for the attestation connector.
 
+• **dependencies.a**: `string`
+
+The dependency for the attestation connector.
+
 • **config?**: [`IEntityStorageAttestationConnectorConfig`](../interfaces/IEntityStorageAttestationConnectorConfig.md)
 
 The configuration for the attestation connector.
@@ -28,11 +32,19 @@ The configuration for the attestation connector.
 
 [`EntityStorageAttestationConnector`](EntityStorageAttestationConnector.md)
 
+## Properties
+
+### NAMESPACE
+
+> `static` `readonly` **NAMESPACE**: `string` = `"entity-attestation"`
+
+The namespace for the entities.
+
 ## Methods
 
 ### sign()
 
-> **sign**(`requestContext`, `data`): `Promise`\<`IDidProof`\>
+> **sign**(`requestContext`, `keyId`, `data`): `Promise`\<`IDidProof`\>
 
 Sign the data and return the proof.
 
@@ -41,6 +53,10 @@ Sign the data and return the proof.
 • **requestContext**: `IRequestContext`
 
 The context for the request.
+
+• **keyId**: `string`
+
+The key id from a vault to sign the data.
 
 • **data**: `unknown`
 
@@ -62,7 +78,7 @@ The proof for the data with the id set as a unique identifier for the data.
 
 > **verify**(`requestContext`, `data`, `proof`): `Promise`\<`boolean`\>
 
-Verify the data against the proof the proof.
+Verify the data against the proof.
 
 #### Parameters
 
