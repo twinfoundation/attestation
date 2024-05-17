@@ -8,18 +8,21 @@ Service for performing attestation operations to a connector.
 
 ## Constructors
 
-### constructor
+### new AttestationService()
 
-• **new AttestationService**(`dependencies`): [`AttestationService`](AttestationService.md)
+> **new AttestationService**(`dependencies`): [`AttestationService`](AttestationService.md)
 
 Create a new instance of AttestationService.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `dependencies` | `Object` | The connectors to use. |
-| `dependencies.attestationConnector` | `IAttestationConnector` | The attestation connector. |
+• **dependencies**
+
+The connectors to use.
+
+• **dependencies.attestationConnector**: `IAttestationConnector`
+
+The attestation connector.
 
 #### Returns
 
@@ -27,18 +30,21 @@ Create a new instance of AttestationService.
 
 ## Methods
 
-### sign
+### sign()
 
-▸ **sign**(`requestContext`, `data`): `Promise`\<`IDidProof`\>
+> **sign**(`requestContext`, `data`): `Promise`\<`IDidProof`\>
 
 Sign the data and return the proof.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `data` | `unknown` | The data to sign. |
+• **requestContext**: `IRequestContext`
+
+The context for the request.
+
+• **data**: `unknown`
+
+The data to sign.
 
 #### Returns
 
@@ -48,23 +54,29 @@ The proof for the data with the id set as a unique identifier for the data.
 
 #### Implementation of
 
-IAttestation.sign
+`IAttestation.sign`
 
-___
+***
 
-### verify
+### verify()
 
-▸ **verify**(`requestContext`, `data`, `proof`): `Promise`\<`boolean`\>
+> **verify**(`requestContext`, `data`, `proof`): `Promise`\<`boolean`\>
 
 Verify the data against the proof the proof.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `data` | `unknown` | The data to verify. |
-| `proof` | `IDidProof` | The proof to verify against. |
+• **requestContext**: `IRequestContext`
+
+The context for the request.
+
+• **data**: `unknown`
+
+The data to verify.
+
+• **proof**: `IDidProof`
+
+The proof to verify against.
 
 #### Returns
 
@@ -74,4 +86,4 @@ True if the verification is successful.
 
 #### Implementation of
 
-IAttestation.verify
+`IAttestation.verify`

@@ -2,25 +2,23 @@
 
 Interface describing a attestation connector.
 
-## Hierarchy
+## Extends
 
 - `IService`
 
-  ↳ **`IAttestationConnector`**
-
 ## Methods
 
-### bootstrap
+### bootstrap()?
 
-▸ **bootstrap**(`requestContext`): `Promise`\<`void`\>
+> `optional` **bootstrap**(`requestContext`): `Promise`\<`void`\>
 
 Bootstrap the service by creating and initializing any resources it needs.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The request context for bootstrapping. |
+• **requestContext**: `IRequestContext`
+
+The request context for bootstrapping.
 
 #### Returns
 
@@ -30,22 +28,25 @@ Nothing.
 
 #### Inherited from
 
-IService.bootstrap
+`IService.bootstrap`
 
-___
+***
 
-### sign
+### sign()
 
-▸ **sign**(`requestContext`, `data`): `Promise`\<`IDidProof`\>
+> **sign**(`requestContext`, `data`): `Promise`\<`IDidProof`\>
 
 Sign the data and return the proof.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `data` | `unknown` | The data to sign. |
+• **requestContext**: `IRequestContext`
+
+The context for the request.
+
+• **data**: `unknown`
+
+The data to sign.
 
 #### Returns
 
@@ -53,11 +54,11 @@ Sign the data and return the proof.
 
 The proof for the data with the id set as a unique identifier for the data.
 
-___
+***
 
-### start
+### start()?
 
-▸ **start**(): `Promise`\<`void`\>
+> `optional` **start**(): `Promise`\<`void`\>
 
 The service needs to be started when the application is initialized.
 
@@ -69,13 +70,13 @@ Nothing.
 
 #### Inherited from
 
-IService.start
+`IService.start`
 
-___
+***
 
-### stop
+### stop()?
 
-▸ **stop**(): `Promise`\<`void`\>
+> `optional` **stop**(): `Promise`\<`void`\>
 
 The service needs to be stopped when the application is closed.
 
@@ -87,23 +88,29 @@ Nothing.
 
 #### Inherited from
 
-IService.stop
+`IService.stop`
 
-___
+***
 
-### verify
+### verify()
 
-▸ **verify**(`requestContext`, `data`, `proof`): `Promise`\<`boolean`\>
+> **verify**(`requestContext`, `data`, `proof`): `Promise`\<`boolean`\>
 
 Verify the data against the proof the proof.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `data` | `unknown` | The data to verify. |
-| `proof` | `IDidProof` | The proof to verify against. |
+• **requestContext**: `IRequestContext`
+
+The context for the request.
+
+• **data**: `unknown`
+
+The data to verify.
+
+• **proof**: `IDidProof`
+
+The proof to verify against.
 
 #### Returns
 

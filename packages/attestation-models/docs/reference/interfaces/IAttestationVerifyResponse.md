@@ -6,12 +6,10 @@ The response to verifying a data set and proof.
 
 ### body
 
-• **body**: `Object`
+> **body**: `object`
 
 The data to be used in the verification.
 
-#### Type declaration
+#### verified
 
-| Name | Type |
-| :------ | :------ |
-| `verified` | `boolean` |
+> **verified**: `boolean`

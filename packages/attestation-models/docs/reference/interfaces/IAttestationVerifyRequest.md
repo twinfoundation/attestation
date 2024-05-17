@@ -6,13 +6,18 @@ Verify that the proof is valid for the data set.
 
 ### body
 
-• **body**: `Object`
+> **body**: `object`
 
 The parameters to be used in the verification.
 
-#### Type declaration
+#### data
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `data` | `unknown` | The data set that was signed. |
-| `proof` | `IDidProof` | The proof for the data set. |
+> **data**: `unknown`
+
+The data set that was signed.
+
+#### proof
+
+> **proof**: `IDidProof`
+
+The proof for the data set.

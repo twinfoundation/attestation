@@ -11,8 +11,4 @@
 
 ## Variables
 
-### AttestationConnectorFactory
-
-• `Const` **AttestationConnectorFactory**: `Factory`\<[`IAttestationConnector`](interfaces/IAttestationConnector.md)\>
-
-Factory for creating attestation connectors.
+- [AttestationConnectorFactory](variables/AttestationConnectorFactory.md)

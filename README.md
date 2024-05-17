@@ -1,4 +1,4 @@
-# GTSC / Attestation
+# GTSC Attestation
 
 This mono-repository contains the packages to use with attestation in GTSC applications.
 

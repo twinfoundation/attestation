@@ -6,12 +6,12 @@ Sign the data set and return the proof.
 
 ### body
 
-• **body**: `Object`
+> **body**: `object`
 
 The data to be used in the signing.
 
-#### Type declaration
+#### data
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `data` | `unknown` | The data set that was signed. |
+> **data**: `unknown`
+
+The data set that was signed.
