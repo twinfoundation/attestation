@@ -255,10 +255,6 @@
             "AttestationSignRequest": {
                 "type": "object",
                 "properties": {
-                    "attestationNamespace": {
-                        "type": "string",
-                        "description": "The namespace of the attestation service to use. The service has a built in default if none is supplied."
-                    },
                     "keyId": {
                         "type": "string",
                         "description": "The key id from a vault to sign the data."
@@ -266,6 +262,10 @@
                     "data": {
                         "type": "string",
                         "description": "The base64 encoded data to sign."
+                    },
+                    "namespace": {
+                        "type": "string",
+                        "description": "The namespace to store the data in, defaults to service configured namespace."
                     }
                 },
                 "required": [

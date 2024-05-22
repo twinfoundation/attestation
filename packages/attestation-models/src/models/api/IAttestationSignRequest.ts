@@ -10,11 +10,6 @@ export interface IAttestationSignRequest {
 	 */
 	body: {
 		/**
-		 * The namespace of the attestation service to use. The service has a built in default if none is supplied.
-		 */
-		attestationNamespace?: string;
-
-		/**
 		 * The key id from a vault to sign the data.
 		 */
 		keyId: string;
@@ -23,5 +18,10 @@ export interface IAttestationSignRequest {
 		 * The base64 encoded data to sign.
 		 */
 		data: string;
+
+		/**
+		 * The namespace to store the data in, defaults to service configured namespace.
+		 */
+		namespace?: string;
 	};
 }

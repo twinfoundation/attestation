@@ -12,14 +12,17 @@ export interface IAttestation extends IService {
 	 * @param requestContext The context for the request.
 	 * @param keyId The key id from a vault to sign the data.
 	 * @param data The data to store in blob storage and sign as base64.
-	 * @param attestationNamespace The namespace of the attestation service to use. The service has a built in default if none is supplied.
+	 * @param options Additional options for the attestation service.
+	 * @param options.namespace The namespace to use for storing, defaults to service configured namespace.
 	 * @returns The proof for the data with the id set as a unique identifier for the data.
 	 */
 	sign(
 		requestContext: IRequestContext,
 		keyId: string,
 		data: string,
-		attestationNamespace?: string
+		options?: {
+			namespace?: string;
+		}
 	): Promise<IAttestationProof>;
 
 	/**

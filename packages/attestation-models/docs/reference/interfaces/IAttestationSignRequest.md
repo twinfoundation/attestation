@@ -10,12 +10,6 @@ Sign the data set and return the proof.
 
 The data to be used in the signing.
 
-#### attestationNamespace?
-
-> `optional` **attestationNamespace**: `string`
-
-The namespace of the attestation service to use. The service has a built in default if none is supplied.
-
 #### data
 
 > **data**: `string`
@@ -27,3 +21,9 @@ The base64 encoded data to sign.
 > **keyId**: `string`
 
 The key id from a vault to sign the data.
+
+#### namespace?
+
+> `optional` **namespace**: `string`
+
+The namespace to store the data in, defaults to service configured namespace.

@@ -36,7 +36,7 @@ The configuration for the service.
 
 ### sign()
 
-> **sign**(`requestContext`, `keyId`, `data`, `attestationNamespace`?): `Promise`\<`IAttestationProof`\>
+> **sign**(`requestContext`, `keyId`, `data`, `options`?): `Promise`\<`IAttestationProof`\>
 
 Sign the data and return the proof.
 
@@ -54,9 +54,13 @@ The key id from a vault to sign the data.
 
 The data to store in blob storage and sign as base64.
 
-• **attestationNamespace?**: `string`
+• **options?**
 
-The namespace of the attestation service to use. The service has a built in default if none is supplied.
+Additional options for the attestation service.
+
+• **options.namespace?**: `string`
+
+The namespace to use for storing, defaults to service configured namespace.
 
 #### Returns
 

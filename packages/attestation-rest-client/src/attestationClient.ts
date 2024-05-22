@@ -36,16 +36,23 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 	 * @param requestContext The context for the request.
 	 * @param keyId The key id from a vault to sign the data.
 	 * @param data The data to store in blob storage and sign as base64.
-	 * @param attestationNamespace The namespace of the attestation service to use. The service has a built in default if none is supplied.
+	 * @param options Additional options for the attestation service.
+	 * @param options.namespace The namespace to use for storing, defaults to service configured namespace.
 	 * @returns The proof for the data with the id set as a unique identifier for the data.
 	 */
 	public async sign(
 		requestContext: IRequestContext,
 		keyId: string,
 		data: string,
-		attestationNamespace?: string
+		options?: {
+			namespace?: string;
+		}
 	): Promise<IAttestationProof> {
-		Guards.object(AttestationClient._CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.object<IRequestContext>(
+			AttestationClient._CLASS_NAME,
+			nameof(requestContext),
+			requestContext
+		);
 		Guards.stringValue(
 			AttestationClient._CLASS_NAME,
 			nameof(requestContext.tenantId),
@@ -59,9 +66,9 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 			"POST",
 			{
 				body: {
-					attestationNamespace,
 					keyId,
-					data
+					data,
+					namespace: options?.namespace
 				}
 			}
 		);
@@ -76,13 +83,17 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 	 * @returns True if the verification is successful.
 	 */
 	public async verify(requestContext: IRequestContext, proof: IAttestationProof): Promise<boolean> {
-		Guards.object(AttestationClient._CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.object<IRequestContext>(
+			AttestationClient._CLASS_NAME,
+			nameof(requestContext),
+			requestContext
+		);
 		Guards.stringValue(
 			AttestationClient._CLASS_NAME,
 			nameof(requestContext.tenantId),
 			requestContext.tenantId
 		);
-		Guards.object(AttestationClient._CLASS_NAME, nameof(proof), proof);
+		Guards.object<IAttestationProof>(AttestationClient._CLASS_NAME, nameof(proof), proof);
 		Urn.guard(AttestationClient._CLASS_NAME, nameof(proof.id), proof.id);
 
 		const response = await this.fetch<IAttestationVerifyRequest, IAttestationVerifyResponse>(
