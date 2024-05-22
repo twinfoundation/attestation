@@ -11,12 +11,12 @@
 		"*.yaml",
 		"package.json",
 		"rollup.config.mjs",
-		"vitest.config.ts",
+		"vitest.config.*",
 		"tsconfig.json",
 		"typedoc.json",
 		".eslintrc.cjs",
 		"**/wordlists/**"
 	],
-	"words": ["gtsc", "nameof", "openapi", "Stiftung"],
+	"words": ["gtsc", "ipfs", "nameof", "openapi", "Stiftung"],
 	"ignoreRegExpList": ["/from\\s+(['\"]).*\\1/", "/eslint-disable.*/"]
 }

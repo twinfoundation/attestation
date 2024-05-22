@@ -4,12 +4,13 @@
 import type { IRestRoute, ITag } from "@gtsc/api-models";
 import type {
 	IAttestation,
+	IAttestationProof,
 	IAttestationSignRequest,
 	IAttestationSignResponse,
 	IAttestationVerifyRequest,
 	IAttestationVerifyResponse
 } from "@gtsc/attestation-models";
-import { Guards } from "@gtsc/core";
+import { Converter, Guards } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import { ServiceFactory, type IRequestContext } from "@gtsc/services";
 
@@ -53,10 +54,15 @@ export function generateRestRoutes(
 					id: "attestationSignExample",
 					request: {
 						body: {
-							data: {
-								docName: "foo",
-								docType: "test-doc-type"
-							}
+							keyId: "my-private-key-id",
+							data: Converter.bytesToBase64(
+								Converter.utf8ToBytes(
+									JSON.stringify({
+										docName: "foo",
+										docType: "test-doc-type"
+									})
+								)
+							)
 						}
 					}
 				}
@@ -73,8 +79,9 @@ export function generateRestRoutes(
 								proof: {
 									type: "Ed25519Signature2018",
 									proofPurpose: "assertionMethod",
-									created: new Date().toISOString(),
-									proofValue: "1d9f8d9sd9fjeiweob50ac63129782a1c3y837f6s78s8cg8hjg76hj5h342k33h"
+									created: "2024-05-17T13:36:26.072Z",
+									proofValue: "1d9f8d9sd9fjeiweob50ac63129782a1c3y837f6s78s8cg8hjg76hj5h342k33h",
+									blobStorageId: "urn:ipfs:...."
 								}
 							}
 						}
@@ -99,15 +106,12 @@ export function generateRestRoutes(
 					id: "attestationVerifyExample",
 					request: {
 						body: {
-							data: {
-								docName: "foo",
-								docType: "test-doc-type"
-							},
 							proof: {
 								type: "Ed25519Signature2018",
 								proofPurpose: "assertionMethod",
-								created: new Date().toISOString(),
-								proofValue: "1d9f8d9sd9fjeiweob50ac63129782a1c3y837f6s78s8cg8hjg76hj5h342k33h"
+								created: "2024-05-17T13:36:26.072Z",
+								proofValue: "1d9f8d9sd9fjeiweob50ac63129782a1c3y837f6s78s8cg8hjg76hj5h342k33h",
+								blobStorageId: "urn:ipfs:...."
 							}
 						}
 					}
@@ -148,10 +152,12 @@ export async function attestationSign(
 	request: IAttestationSignRequest,
 	body?: unknown
 ): Promise<IAttestationSignResponse> {
-	Guards.object(ROUTES_SOURCE, nameof(request.body), request.body);
-	Guards.object(ROUTES_SOURCE, nameof(request.body.data), request.body.data);
+	Guards.object<IAttestationSignRequest>(ROUTES_SOURCE, nameof(request), request);
+	Guards.object<IAttestationSignRequest["body"]>(ROUTES_SOURCE, nameof(request.body), request.body);
+	Guards.stringValue(ROUTES_SOURCE, nameof(request.body.keyId), request.body.keyId);
+	Guards.stringValue(ROUTES_SOURCE, nameof(request.body.data), request.body.data);
 	const service = ServiceFactory.get<IAttestation>(factoryServiceName);
-	const proof = await service.sign(requestContext, request.body);
+	const proof = await service.sign(requestContext, request.body.keyId, request.body.data);
 	return {
 		body: {
 			proof
@@ -173,11 +179,17 @@ export async function attestationVerify(
 	request: IAttestationVerifyRequest,
 	body?: unknown
 ): Promise<IAttestationVerifyResponse> {
-	Guards.object(ROUTES_SOURCE, nameof(request.body), request.body);
-	Guards.object(ROUTES_SOURCE, nameof(request.body.data), request.body.data);
-	Guards.object(ROUTES_SOURCE, nameof(request.body.proof), request.body.proof);
+	Guards.object<IAttestationVerifyResponse>(ROUTES_SOURCE, nameof(request), request);
+	Guards.object<IAttestationVerifyResponse["body"]>(
+		ROUTES_SOURCE,
+		nameof(request.body),
+		request.body
+	);
+	Guards.object<IAttestationProof>(ROUTES_SOURCE, nameof(request.body.proof), request.body.proof);
+
 	const service = ServiceFactory.get<IAttestation>(factoryServiceName);
-	const verified = await service.verify(requestContext, request.body, request.body.proof);
+	const verified = await service.verify(requestContext, request.body.proof);
+
 	return {
 		body: {
 			verified

@@ -34,7 +34,7 @@ Nothing.
 
 ### sign()
 
-> **sign**(`requestContext`, `data`): `Promise`\<`IDidProof`\>
+> **sign**(`requestContext`, `keyId`, `data`): `Promise`\<`IDidProof`\>
 
 Sign the data and return the proof.
 
@@ -43,6 +43,10 @@ Sign the data and return the proof.
 • **requestContext**: `IRequestContext`
 
 The context for the request.
+
+• **keyId**: `string`
+
+The key id from a vault to sign the data.
 
 • **data**: `unknown`
 
@@ -96,7 +100,7 @@ Nothing.
 
 > **verify**(`requestContext`, `data`, `proof`): `Promise`\<`boolean`\>
 
-Verify the data against the proof the proof.
+Verify the data against the proof.
 
 #### Parameters
 

@@ -12,6 +12,6 @@ The data to be used in the signing.
 
 #### proof
 
-> **proof**: `IDidProof`
+> **proof**: [`IAttestationProof`](IAttestationProof.md)
 
-The proof for the data set.
+The proof for the data.

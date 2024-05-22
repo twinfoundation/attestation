@@ -10,8 +10,18 @@ export interface IAttestationSignRequest {
 	 */
 	body: {
 		/**
-		 * The data set that was signed.
+		 * The key id from a vault to sign the data.
 		 */
-		data: unknown;
+		keyId: string;
+
+		/**
+		 * The base64 encoded data to sign.
+		 */
+		data: string;
+
+		/**
+		 * The namespace to store the data in, defaults to service configured namespace.
+		 */
+		namespace?: string;
 	};
 }

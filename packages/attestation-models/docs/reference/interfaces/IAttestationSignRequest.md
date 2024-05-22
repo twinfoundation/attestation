@@ -12,6 +12,18 @@ The data to be used in the signing.
 
 #### data
 
-> **data**: `unknown`
+> **data**: `string`
 
-The data set that was signed.
+The base64 encoded data to sign.
+
+#### keyId
+
+> **keyId**: `string`
+
+The key id from a vault to sign the data.
+
+#### namespace?
+
+> `optional` **namespace**: `string`
+
+The namespace to store the data in, defaults to service configured namespace.

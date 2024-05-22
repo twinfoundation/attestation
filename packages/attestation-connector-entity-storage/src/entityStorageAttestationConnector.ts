@@ -12,24 +12,23 @@ import type { IEntityStorageAttestationConnectorConfig } from "./models/IEntityS
  */
 export class EntityStorageAttestationConnector implements IAttestationConnector {
 	/**
+	 * The namespace for the entities.
+	 */
+	public static readonly NAMESPACE: string = "entity-attestation";
+
+	/**
 	 * Runtime name for the class.
 	 * @internal
 	 */
 	private static readonly _CLASS_NAME: string = nameof<EntityStorageAttestationConnector>();
 
 	/**
-	 * The namespace for the entities.
-	 * @internal
-	 */
-	private static readonly _NAMESPACE: string = "entity-attestation";
-
-	/**
 	 * Create a new instance of EntityStorageAttestationConnector.
 	 * @param dependencies The dependencies for the attestation connector.
+	 * @param dependencies.a The dependency for the attestation connector.
 	 * @param config The configuration for the attestation connector.
 	 */
-	// eslint-disable-next-line @typescript-eslint/ban-types
-	constructor(dependencies: {}, config?: IEntityStorageAttestationConnectorConfig) {
+	constructor(dependencies: { a: string }, config?: IEntityStorageAttestationConnectorConfig) {
 		Guards.object(
 			EntityStorageAttestationConnector._CLASS_NAME,
 			nameof(dependencies),
@@ -40,10 +39,15 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 	/**
 	 * Sign the data and return the proof.
 	 * @param requestContext The context for the request.
+	 * @param keyId The key id from a vault to sign the data.
 	 * @param data The data to sign.
 	 * @returns The proof for the data with the id set as a unique identifier for the data.
 	 */
-	public async sign(requestContext: IRequestContext, data: unknown): Promise<IDidProof> {
+	public async sign(
+		requestContext: IRequestContext,
+		keyId: string,
+		data: unknown
+	): Promise<IDidProof> {
 		return {
 			type: "foo",
 			proofPurpose: "assertionMethod"
@@ -51,7 +55,7 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 	}
 
 	/**
-	 * Verify the data against the proof the proof.
+	 * Verify the data against the proof.
 	 * @param requestContext The context for the request.
 	 * @param data The data to verify.
 	 * @param proof The proof to verify against.

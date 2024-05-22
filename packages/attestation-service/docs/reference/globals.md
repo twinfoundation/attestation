@@ -4,6 +4,10 @@
 
 - [AttestationService](classes/AttestationService.md)
 
+## Interfaces
+
+- [IAttestationServiceConfig](interfaces/IAttestationServiceConfig.md)
+
 ## Variables
 
 - [tags](variables/tags.md)

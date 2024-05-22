@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0.
 
 /**
- * The response to verifying a data set and proof.
+ * The response to verifying a proof.
  */
 export interface IAttestationVerifyResponse {
 	/**
-	 * The data to be used in the verification.
+	 * The data to be used in the verification response.
 	 */
 	body: {
 		verified: boolean;
