@@ -1,6 +1,5 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { execSync } from 'child_process';
 import copy from 'rollup-plugin-copy';
 import packageDetails from './package.json' with { type: 'json' };
 
@@ -13,9 +12,22 @@ const plugins = [
 ];
 
 const globs = {};
-for (const dep in packageDetails.dependencies) {
-	globs[dep] = dep;
+if (packageDetails.dependencies) {
+	for (const dep in packageDetails.dependencies) {
+		globs[dep] = dep;
+	}
 }
+if (packageDetails.peerDependencies) {
+	for (const dep in packageDetails.peerDependencies) {
+		globs[dep] = dep;
+	}
+}
+if (packageDetails.devDependencies) {
+	for (const dep in packageDetails.devDependencies) {
+		globs[dep] = dep;
+	}
+}
+
 
 export default {
 	input: `./dist/es/index.js`,
