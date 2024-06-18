@@ -10,6 +10,7 @@ on:
         options:
           - attestation-models
           - attestation-connector-entity-storage
+          - attestation-connector-iota
           - attestation-connector-open-attestation
           - attestation-service
           - attestation-rest-client

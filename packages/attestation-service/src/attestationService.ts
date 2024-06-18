@@ -4,10 +4,9 @@ import {
 	AttestationConnectorFactory,
 	type IAttestation,
 	type IAttestationConnector,
-	type IAttestationProof
+	type IAttestationInformation
 } from "@gtsc/attestation-models";
-import type { IBlobStorageConnector } from "@gtsc/blob-storage-models";
-import { Converter, GeneralError, Guards, Is, NotFoundError, Urn } from "@gtsc/core";
+import { GeneralError, Guards, Urn } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import type { IRequestContext } from "@gtsc/services";
 import type { IAttestationServiceConfig } from "./models/IAttestationServiceConfig";
@@ -23,12 +22,6 @@ export class AttestationService implements IAttestation {
 	private static readonly _CLASS_NAME: string = nameof<AttestationService>();
 
 	/**
-	 * The connection to the blob storage.
-	 * @internal
-	 */
-	private readonly _blobStorageConnection: IBlobStorageConnector;
-
-	/**
 	 * The default namespace for the connector to use.
 	 * @internal
 	 */
@@ -36,24 +29,9 @@ export class AttestationService implements IAttestation {
 
 	/**
 	 * Create a new instance of AttestationService.
-	 * @param dependencies The connectors to use.
-	 * @param dependencies.blobStorageConnection The connection to the blob storage.
 	 * @param config The configuration for the service.
 	 */
-	constructor(
-		dependencies: {
-			blobStorageConnection: IBlobStorageConnector;
-		},
-		config?: IAttestationServiceConfig
-	) {
-		Guards.object(AttestationService._CLASS_NAME, nameof(dependencies), dependencies);
-		Guards.object<IBlobStorageConnector>(
-			AttestationService._CLASS_NAME,
-			nameof(dependencies.blobStorageConnection),
-			dependencies.blobStorageConnection
-		);
-		this._blobStorageConnection = dependencies.blobStorageConnection;
-
+	constructor(config?: IAttestationServiceConfig) {
 		const names = AttestationConnectorFactory.names();
 		if (names.length === 0) {
 			throw new GeneralError(AttestationService._CLASS_NAME, "noConnectors");
@@ -63,22 +41,28 @@ export class AttestationService implements IAttestation {
 	}
 
 	/**
-	 * Sign the data and return the proof.
+	 * Attest the data and return the collated information.
 	 * @param requestContext The context for the request.
-	 * @param keyId The key id from a vault to sign the data.
-	 * @param data The data to store in blob storage and sign as base64.
+	 * @param controllerAddress The controller address for the attestation.
+	 * @param verificationMethodId The identity verification method to use for attesting the data.
+	 * @param dataId An identifier to uniquely identify the attestation data.
+	 * @param type The type which the data adheres to.
+	 * @param data The data to attest.
 	 * @param options Additional options for the attestation service.
-	 * @param options.namespace The namespace to use for storing, defaults to service configured namespace.
-	 * @returns The proof for the data with the id set as a unique identifier for the data.
+	 * @param options.namespace The namespace of the connector to use for the attestation, defaults to service configured namespace.
+	 * @returns The collated attestation data.
 	 */
-	public async sign(
+	public async attest<T = unknown>(
 		requestContext: IRequestContext,
-		keyId: string,
-		data: string,
+		controllerAddress: string,
+		verificationMethodId: string,
+		dataId: string,
+		type: string,
+		data: T,
 		options?: {
 			namespace?: string;
 		}
-	): Promise<IAttestationProof> {
+	): Promise<IAttestationInformation<T>> {
 		Guards.object<IRequestContext>(
 			AttestationService._CLASS_NAME,
 			nameof(requestContext),
@@ -94,37 +78,53 @@ export class AttestationService implements IAttestation {
 			nameof(requestContext.identity),
 			requestContext.identity
 		);
-		Guards.stringValue(AttestationService._CLASS_NAME, nameof(keyId), keyId);
-		Guards.stringBase64(AttestationService._CLASS_NAME, nameof(data), data);
+		Guards.stringValue(
+			AttestationService._CLASS_NAME,
+			nameof(controllerAddress),
+			controllerAddress
+		);
+		Guards.stringValue(
+			AttestationService._CLASS_NAME,
+			nameof(verificationMethodId),
+			verificationMethodId
+		);
+		Guards.stringValue(AttestationService._CLASS_NAME, nameof(dataId), dataId);
+		Guards.stringValue(AttestationService._CLASS_NAME, nameof(type), type);
+		Guards.object<T>(AttestationService._CLASS_NAME, nameof(data), data);
 
 		try {
-			const binary = Converter.base64ToBytes(data);
-
-			const blobStorageId = await this._blobStorageConnection.set(requestContext, binary);
-
 			const connectorNamespace = options?.namespace ?? this._defaultNamespace;
 
 			const attestationConnector =
 				AttestationConnectorFactory.get<IAttestationConnector>(connectorNamespace);
 
-			const proof = await attestationConnector.sign(requestContext, keyId, data);
-
-			return {
-				blobStorageId,
-				...proof
-			};
+			return attestationConnector.attest(
+				requestContext,
+				controllerAddress,
+				verificationMethodId,
+				dataId,
+				type,
+				data
+			);
 		} catch (error) {
-			throw new GeneralError(AttestationService._CLASS_NAME, "signFailed", undefined, error);
+			throw new GeneralError(AttestationService._CLASS_NAME, "attestFailed", undefined, error);
 		}
 	}
 
 	/**
-	 * Verify the data against the proof.
+	 * Resolve and verify the attestation id.
 	 * @param requestContext The context for the request.
-	 * @param proof The proof to verify against.
-	 * @returns True if the verification is successful.
+	 * @param attestationId The attestation id to verify.
+	 * @returns The verified attestation details.
 	 */
-	public async verify(requestContext: IRequestContext, proof: IAttestationProof): Promise<boolean> {
+	public async verify<T>(
+		requestContext: IRequestContext,
+		attestationId: string
+	): Promise<{
+		verified: boolean;
+		failure?: string;
+		information?: Partial<IAttestationInformation<T>>;
+	}> {
 		Guards.object<IRequestContext>(
 			AttestationService._CLASS_NAME,
 			nameof(requestContext),
@@ -135,31 +135,78 @@ export class AttestationService implements IAttestation {
 			nameof(requestContext.tenantId),
 			requestContext.tenantId
 		);
-		Guards.object<IAttestationProof>(AttestationService._CLASS_NAME, nameof(proof), proof);
-		Urn.guard(AttestationService._CLASS_NAME, nameof(proof.id), proof.id);
+		Guards.stringValue(
+			AttestationService._CLASS_NAME,
+			nameof(requestContext.identity),
+			requestContext.identity
+		);
+		Urn.guard(AttestationService._CLASS_NAME, nameof(attestationId), attestationId);
 
 		try {
-			const binary = await this._blobStorageConnection.get(requestContext, proof.blobStorageId);
-
-			if (Is.undefined(binary)) {
-				throw new NotFoundError(
-					AttestationService._CLASS_NAME,
-					"blobNotFound",
-					proof.blobStorageId
-				);
-			}
-
-			const base64 = Converter.bytesToBase64(binary);
-
-			const idUri = Urn.fromValidString(proof.id);
+			const idUri = Urn.fromValidString(attestationId);
 			const connectorNamespace = idUri.namespaceIdentifier();
 
 			const attestationConnector =
 				AttestationConnectorFactory.get<IAttestationConnector>(connectorNamespace);
 
-			return attestationConnector.verify(requestContext, base64, proof);
+			return attestationConnector.verify(requestContext, attestationId);
 		} catch (error) {
 			throw new GeneralError(AttestationService._CLASS_NAME, "verifyFailed", undefined, error);
+		}
+	}
+
+	/**
+	 * Transfer the attestation to a new holder.
+	 * @param requestContext The context for the request.
+	 * @param attestationId The attestation to transfer.
+	 * @param holderControllerAddress The new controller address of the attestation belonging to the holder.
+	 * @param holderIdentity The holder identity of the attestation.
+	 * @returns The updated attestation details.
+	 */
+	public async transfer<T = unknown>(
+		requestContext: IRequestContext,
+		attestationId: string,
+		holderControllerAddress: string,
+		holderIdentity: string
+	): Promise<IAttestationInformation<T>> {
+		Guards.object<IRequestContext>(
+			AttestationService._CLASS_NAME,
+			nameof(requestContext),
+			requestContext
+		);
+		Guards.stringValue(
+			AttestationService._CLASS_NAME,
+			nameof(requestContext.tenantId),
+			requestContext.tenantId
+		);
+		Guards.stringValue(
+			AttestationService._CLASS_NAME,
+			nameof(requestContext.identity),
+			requestContext.identity
+		);
+		Urn.guard(AttestationService._CLASS_NAME, nameof(attestationId), attestationId);
+		Guards.stringValue(
+			AttestationService._CLASS_NAME,
+			nameof(holderControllerAddress),
+			holderControllerAddress
+		);
+		Guards.stringValue(AttestationService._CLASS_NAME, nameof(holderIdentity), holderIdentity);
+
+		try {
+			const idUri = Urn.fromValidString(attestationId);
+			const connectorNamespace = idUri.namespaceIdentifier();
+
+			const attestationConnector =
+				AttestationConnectorFactory.get<IAttestationConnector>(connectorNamespace);
+
+			return attestationConnector.transfer(
+				requestContext,
+				attestationId,
+				holderControllerAddress,
+				holderIdentity
+			);
+		} catch (error) {
+			throw new GeneralError(AttestationService._CLASS_NAME, "transferFailed", undefined, error);
 		}
 	}
 }

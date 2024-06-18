@@ -1,6 +1,6 @@
 {
 	"name": "@gtsc/attestation",
-	"version": "0.0.3-next.3",
+	"version": "0.0.3-next.4",
 	"description": "Attestation",
 	"repository": {
 		"type": "git",
@@ -41,6 +41,7 @@
 	"workspaces": [
 		"packages/attestation-models",
 		"packages/attestation-connector-entity-storage",
+		"packages/attestation-connector-iota",
 		"packages/attestation-connector-open-attestation",
 		"packages/attestation-service",
 		"packages/attestation-rest-client"
