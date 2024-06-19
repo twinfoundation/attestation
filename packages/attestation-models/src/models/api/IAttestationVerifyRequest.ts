@@ -1,18 +1,17 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IAttestationProof } from "../IAttestationProof";
 
 /**
- * Verify that the proof is valid for the data.
+ * Verify that the proof is valid for the attestation.
  */
 export interface IAttestationVerifyRequest {
 	/**
 	 * The parameters to be used in the verification.
 	 */
-	body: {
+	path: {
 		/**
-		 * The proof to verify.
+		 * The attestation id to verify.
 		 */
-		proof: IAttestationProof;
+		attestationId: string;
 	};
 }

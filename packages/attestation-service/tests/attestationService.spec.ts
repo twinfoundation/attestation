@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { EntityStorageAttestationConnector } from "@gtsc/attestation-connector-entity-storage";
 import { AttestationConnectorFactory } from "@gtsc/attestation-models";
-import { MemoryBlobStorageConnector } from "@gtsc/blob-storage-connector-memory";
 import { AttestationService } from "../src/attestationService";
 
 describe("AttestationService", () => {
@@ -11,9 +10,7 @@ describe("AttestationService", () => {
 			EntityStorageAttestationConnector.NAMESPACE,
 			() => new EntityStorageAttestationConnector({ a: "kkk" })
 		);
-		const service = new AttestationService({
-			blobStorageConnection: new MemoryBlobStorageConnector()
-		});
+		const service = new AttestationService();
 		expect(service).toBeDefined();
 	});
 });

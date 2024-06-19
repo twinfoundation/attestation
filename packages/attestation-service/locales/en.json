@@ -2,9 +2,9 @@
 	"error": {
 		"attestationService": {
 			"noConnectors": "There are no connectors registered with the attestation factory",
-			"signFailed": "The signing of the data to produce the attestation failed",
+			"attestFailed": "The attestation of the data failed",
 			"verifyFailed": "The verification of the attestation failed",
-			"blobNotFound": "The data for the proof could not be found"
+			"transferFailed": "The transfer of the attestation failed"
 		}
 	}
 }
