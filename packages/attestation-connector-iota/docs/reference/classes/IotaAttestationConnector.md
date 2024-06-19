@@ -48,7 +48,7 @@ The namespace for the entities.
 
 ### attest()
 
-> **attest**\<`T`\>(`requestContext`, `controllerAddress`, `verificationMethodId`, `dataId`, `type`, `data`): `Promise`\<`IAttestationInformation`\<`T`\>\>
+> **attest**\<`T`\>(`requestContext`, `controllerAddress`, `verificationMethodId`, `data`): `Promise`\<`IAttestationInformation`\<`T`\>\>
 
 Attest the data and return the collated information.
 
@@ -69,14 +69,6 @@ The controlling address for the attestation.
 • **verificationMethodId**: `string`
 
 The identity verification method to use for attesting the data.
-
-• **dataId**: `string`
-
-An identifier to uniquely identify the attestation data.
-
-• **type**: `string`
-
-The type which the data adheres to.
 
 • **data**: `T`
 

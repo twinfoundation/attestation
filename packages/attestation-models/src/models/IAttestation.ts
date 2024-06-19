@@ -12,8 +12,6 @@ export interface IAttestation extends IService {
 	 * @param requestContext The context for the request.
 	 * @param controllerAddress The controller address for the attestation.
 	 * @param verificationMethodId The identity verification method to use for attesting the data.
-	 * @param dataId An identifier to uniquely identify the attestation data.
-	 * @param type The type which the data adheres to.
 	 * @param data The data to attest.
 	 * @param options Additional options for the attestation service.
 	 * @param options.namespace The namespace of the connector to use for the attestation, defaults to service configured namespace.
@@ -23,8 +21,6 @@ export interface IAttestation extends IService {
 		requestContext: IRequestContext,
 		controllerAddress: string,
 		verificationMethodId: string,
-		dataId: string,
-		type: string,
 		data: T,
 		options?: {
 			namespace?: string;

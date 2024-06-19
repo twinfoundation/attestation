@@ -26,18 +26,6 @@ The controller address for the attestation.
 
 The identity verification method to use for attesting the data.
 
-#### dataId
-
-> **dataId**: `string`
-
-An identifier to uniquely identify the attestation data.
-
-#### type
-
-> **type**: `string`
-
-The type which the data adheres to.
-
 #### data
 
 > **data**: `T`

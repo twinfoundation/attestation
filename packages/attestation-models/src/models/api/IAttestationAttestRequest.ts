@@ -20,16 +20,6 @@ export interface IAttestationAttestRequest<T = unknown> {
 		verificationMethodId: string;
 
 		/**
-		 * An identifier to uniquely identify the attestation data.
-		 */
-		dataId: string;
-
-		/**
-		 * The type which the data adheres to.
-		 */
-		type: string;
-
-		/**
 		 * The data object to attest.
 		 */
 		data: T;

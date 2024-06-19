@@ -33,16 +33,6 @@ export interface IAttestationInformation<T = unknown> {
 	holderIdentity?: string;
 
 	/**
-	 * The id of the data.
-	 */
-	dataId: string;
-
-	/**
-	 * The type that the data adhere to.
-	 */
-	type: string;
-
-	/**
 	 * The data that was attested.
 	 */
 	data: T;

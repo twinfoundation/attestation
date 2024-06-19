@@ -58,8 +58,6 @@ export function generateRestRoutes(
 							controllerAddress: "tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv",
 							verificationMethodId:
 								"did:iota:tst:0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f#attestation",
-							dataId: "urn:uuid:1234",
-							type: "DocDescriptionType",
 							data: {
 								docName: "bill-of-lading",
 								mimeType: "application/pdf",
@@ -83,8 +81,6 @@ export function generateRestRoutes(
 									created: "2024-06-18T13:34:51Z",
 									ownerIdentity:
 										"did:iota:tst:0x8992c426116f21b2a4c7a2854300748d3e94a8ce089d5be62e11f105bd2a0f9e",
-									dataId: "urn:example:12345678",
-									type: "DocDescriptionType",
 									data: {
 										docName: "bill-of-lading",
 										mimeType: "application/pdf",
@@ -142,8 +138,6 @@ export function generateRestRoutes(
 									created: "2024-06-18T13:34:51Z",
 									ownerIdentity:
 										"did:iota:tst:0x8992c426116f21b2a4c7a2854300748d3e94a8ce089d5be62e11f105bd2a0f9e",
-									dataId: "urn:example:12345678",
-									type: "DocDescriptionType",
 									data: {
 										docName: "bill-of-lading",
 										mimeType: "application/pdf",
@@ -170,8 +164,6 @@ export function generateRestRoutes(
 									created: "2024-06-18T13:34:51Z",
 									ownerIdentity:
 										"did:iota:tst:0x8992c426116f21b2a4c7a2854300748d3e94a8ce089d5be62e11f105bd2a0f9e",
-									dataId: "urn:example:12345678",
-									type: "DocDescriptionType",
 									data: {
 										docName: "bill-of-lading",
 										mimeType: "application/pdf",
@@ -236,8 +228,6 @@ export function generateRestRoutes(
 									holderIdentity:
 										"did:iota:tst:0x06ae1034f9f4af1b408a0b54e877bb476259666a14f221400d3746aecefa7105",
 									transferred: "2024-06-18T13:35:45.642Z",
-									dataId: "urn:example:12345678",
-									type: "DocDescriptionType",
 									data: {
 										docName: "bill-of-lading",
 										fingerprint:
@@ -291,16 +281,12 @@ export async function attestationAttest(
 		nameof(request.body.verificationMethodId),
 		request.body.verificationMethodId
 	);
-	Guards.stringValue(ROUTES_SOURCE, nameof(request.body.dataId), request.body.dataId);
-	Guards.stringValue(ROUTES_SOURCE, nameof(request.body.type), request.body.type);
 	Guards.object(ROUTES_SOURCE, nameof(request.body.data), request.body.data);
 	const service = ServiceFactory.get<IAttestation>(factoryServiceName);
 	const information = await service.attest(
 		requestContext,
 		request.body.controllerAddress,
 		request.body.verificationMethodId,
-		request.body.dataId,
-		request.body.type,
 		request.body.data,
 		{
 			namespace: request.body.namespace

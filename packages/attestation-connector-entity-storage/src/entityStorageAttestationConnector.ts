@@ -40,8 +40,6 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 	 * @param requestContext The context for the request.
 	 * @param controllerAddress The controller address for the attestation.
 	 * @param verificationMethodId The identity verification method to use for attesting the data.
-	 * @param dataId The id of the attestation data.
-	 * @param type The type which the data adheres to.
 	 * @param data The data to attest.
 	 * @returns The collated attestation data.
 	 */
@@ -49,8 +47,6 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 		requestContext: IRequestContext,
 		controllerAddress: string,
 		verificationMethodId: string,
-		dataId: string,
-		type: string,
 		data: T
 	): Promise<IAttestationInformation<T>> {
 		throw new NotImplementedError(EntityStorageAttestationConnector._CLASS_NAME, "attest");

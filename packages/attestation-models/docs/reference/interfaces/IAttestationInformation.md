@@ -48,22 +48,6 @@ The identity of the current holder, can be undefined if owner is still the holde
 
 ***
 
-### dataId
-
-> **dataId**: `string`
-
-The id of the data.
-
-***
-
-### type
-
-> **type**: `string`
-
-The type that the data adhere to.
-
-***
-
 ### data
 
 > **data**: `T`

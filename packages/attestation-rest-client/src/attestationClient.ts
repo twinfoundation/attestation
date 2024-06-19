@@ -38,8 +38,6 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 	 * @param requestContext The context for the request.
 	 * @param controllerAddress The controller address for the attestation.
 	 * @param verificationMethodId The identity verification method to use for attesting the data.
-	 * @param dataId An identifier to uniquely identify the attestation data.
-	 * @param type The type which the data adheres to.
 	 * @param data The data to attest.
 	 * @param options Additional options for the attestation service.
 	 * @param options.namespace The namespace of the connector to use for the attestation, defaults to service configured namespace.
@@ -49,8 +47,6 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 		requestContext: IRequestContext,
 		controllerAddress: string,
 		verificationMethodId: string,
-		dataId: string,
-		type: string,
 		data: T,
 		options?: {
 			namespace?: string;
@@ -77,8 +73,6 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 			nameof(verificationMethodId),
 			verificationMethodId
 		);
-		Guards.stringValue(AttestationClient._CLASS_NAME, nameof(dataId), dataId);
-		Guards.stringValue(AttestationClient._CLASS_NAME, nameof(type), type);
 		Guards.object<T>(AttestationClient._CLASS_NAME, nameof(data), data);
 
 		const response = await this.fetch<IAttestationAttestRequest, IAttestationAttestResponse<T>>(
@@ -89,8 +83,6 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 				body: {
 					verificationMethodId,
 					controllerAddress,
-					dataId,
-					type,
 					data,
 					namespace: options?.namespace
 				}

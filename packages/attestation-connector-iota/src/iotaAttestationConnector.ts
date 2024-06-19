@@ -88,8 +88,6 @@ export class IotaAttestationConnector implements IAttestationConnector {
 	 * @param requestContext The context for the request.
 	 * @param controllerAddress The controlling address for the attestation.
 	 * @param verificationMethodId The identity verification method to use for attesting the data.
-	 * @param dataId An identifier to uniquely identify the attestation data.
-	 * @param type The type which the data adheres to.
 	 * @param data The data to attest.
 	 * @returns The collated attestation data.
 	 */
@@ -97,8 +95,6 @@ export class IotaAttestationConnector implements IAttestationConnector {
 		requestContext: IRequestContext,
 		controllerAddress: string,
 		verificationMethodId: string,
-		dataId: string,
-		type: string,
 		data: T
 	): Promise<IAttestationInformation<T>> {
 		Guards.object<IRequestContext>(
@@ -126,18 +122,15 @@ export class IotaAttestationConnector implements IAttestationConnector {
 			nameof(verificationMethodId),
 			verificationMethodId
 		);
-		Guards.stringValue(IotaAttestationConnector._CLASS_NAME, nameof(dataId), dataId);
-		Guards.stringValue(IotaAttestationConnector._CLASS_NAME, nameof(type), type);
 		Guards.object<T>(IotaAttestationConnector._CLASS_NAME, nameof(data), data);
 
 		try {
 			const verifiableCredential = await this._identityConnector.createVerifiableCredential(
 				requestContext,
 				verificationMethodId,
-				dataId,
-				type,
-				data,
-				0
+				undefined,
+				undefined,
+				data
 			);
 
 			const attestationPayload: IIotaAttestationPayload = {
@@ -166,10 +159,8 @@ export class IotaAttestationConnector implements IAttestationConnector {
 
 			const attestationInformation: IAttestationInformation<T> = {
 				id: attestationId.toString(false),
-				created: verifiableCredential.verifiableCredential.issuanceDate,
-				ownerIdentity: verifiableCredential.verifiableCredential.issuer,
-				dataId,
-				type,
+				created: verifiableCredential.verifiableCredential?.issuanceDate ?? "",
+				ownerIdentity: verifiableCredential.verifiableCredential.issuer ?? "",
 				data,
 				proof: {
 					type: "jwt",
@@ -271,9 +262,6 @@ export class IotaAttestationConnector implements IAttestationConnector {
 					ownerIdentity: checkResult?.verifiableCredential?.issuer,
 					holderIdentity: resolved.metadata?.holderIdentity,
 					transferred: resolved.metadata?.transferred,
-					dataId: checkResult?.verifiableCredential?.id,
-					type:
-						checkResult?.verifiableCredential?.type.find(t => t !== "VerifiableCredential") ?? "",
 					data: checkResult?.verifiableCredential?.credentialSubject as T,
 					proof: Is.stringValue(jwtProof)
 						? {

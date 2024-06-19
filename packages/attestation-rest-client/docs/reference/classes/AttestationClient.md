@@ -96,7 +96,7 @@ The response.
 
 ### attest()
 
-> **attest**\<`T`\>(`requestContext`, `controllerAddress`, `verificationMethodId`, `dataId`, `type`, `data`, `options`?): `Promise`\<`IAttestationInformation`\<`T`\>\>
+> **attest**\<`T`\>(`requestContext`, `controllerAddress`, `verificationMethodId`, `data`, `options`?): `Promise`\<`IAttestationInformation`\<`T`\>\>
 
 Attest the data and return the collated information.
 
@@ -117,14 +117,6 @@ The controller address for the attestation.
 • **verificationMethodId**: `string`
 
 The identity verification method to use for attesting the data.
-
-• **dataId**: `string`
-
-An identifier to uniquely identify the attestation data.
-
-• **type**: `string`
-
-The type which the data adheres to.
 
 • **data**: `T`
 

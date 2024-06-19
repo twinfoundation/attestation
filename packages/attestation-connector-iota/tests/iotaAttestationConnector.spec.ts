@@ -54,7 +54,6 @@ describe("IotaAttestationConnector", () => {
 			nftConnector: TEST_NFT_CONNECTOR
 		});
 
-		const dataId = "urn:example:12345678";
 		const dataPayload = {
 			docName: "bill-of-lading",
 			mimeType: "application/pdf",
@@ -65,8 +64,6 @@ describe("IotaAttestationConnector", () => {
 			TEST_CONTEXT,
 			TEST_IDENTITY_ADDRESS_BECH32,
 			verificationMethodId,
-			dataId,
-			"DocDescriptionType",
 			dataPayload
 		);
 
@@ -76,8 +73,6 @@ describe("IotaAttestationConnector", () => {
 		expect(attested.ownerIdentity).toEqual(ownerIdentity);
 		expect(attested.holderIdentity).toEqual(undefined);
 		expect(attested.transferred).toEqual(undefined);
-		expect(attested.dataId).toEqual(dataId);
-		expect(attested.type).toEqual("DocDescriptionType");
 		expect(attested.data).toEqual(dataPayload);
 		expect(attested.proof?.type).toEqual("jwt");
 		expect(attested.proof?.value.split(".").length).toEqual(3);
@@ -106,8 +101,6 @@ describe("IotaAttestationConnector", () => {
 		expect(attested.information?.ownerIdentity).toEqual(ownerIdentity);
 		expect(attested.information?.holderIdentity).toEqual(undefined);
 		expect(attested.information?.transferred).toEqual(undefined);
-		expect(attested.information?.dataId).toEqual("urn:example:12345678");
-		expect(attested.information?.type).toEqual("DocDescriptionType");
 		expect(attested.information?.data).toEqual({
 			docName: "bill-of-lading",
 			mimeType: "application/pdf",
@@ -141,8 +134,6 @@ describe("IotaAttestationConnector", () => {
 		expect(transfered.ownerIdentity).toEqual(ownerIdentity);
 		expect(transfered.holderIdentity).toEqual(testIdentity2.id);
 		expect(Is.dateTimeString(transfered.transferred)).toEqual(true);
-		expect(transfered.dataId).toEqual("urn:example:12345678");
-		expect(transfered.type).toEqual("DocDescriptionType");
 		expect(transfered.data).toEqual({
 			docName: "bill-of-lading",
 			mimeType: "application/pdf",
