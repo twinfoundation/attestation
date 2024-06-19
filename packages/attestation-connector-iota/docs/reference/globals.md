@@ -3,6 +3,7 @@
 ## Classes
 
 - [IotaAttestationConnector](classes/IotaAttestationConnector.md)
+- [IotaAttestationUtils](classes/IotaAttestationUtils.md)
 
 ## Interfaces
 

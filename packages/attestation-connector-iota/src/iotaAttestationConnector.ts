@@ -1,13 +1,14 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IAttestationConnector, IAttestationInformation } from "@gtsc/attestation-models";
-import { Coerce, Converter, GeneralError, Guards, Is, Urn } from "@gtsc/core";
+import { Coerce, GeneralError, Guards, Is, Urn } from "@gtsc/core";
 import type { IIdentityConnector } from "@gtsc/identity-models";
 import { nameof } from "@gtsc/nameof";
 import type { INftConnector } from "@gtsc/nft-models";
 import type { IRequestContext } from "@gtsc/services";
 import type { IDidVerifiableCredential } from "@gtsc/standards-w3c-did";
 import type { IVaultConnector } from "@gtsc/vault-models";
+import { IotaAttestationUtils } from "./iotaAttestationUtils";
 import type { IIotaAttestationConnectorConfig } from "./models/IIotaAttestationConnectorConfig";
 import type { IIotaAttestationHolder } from "./models/IIotaAttestationHolder";
 import type { IIotaAttestationPayload } from "./models/IIotaAttestationPayload";
@@ -151,14 +152,10 @@ export class IotaAttestationConnector implements IAttestationConnector {
 			// Convert the nftId urn to a form we can use as the namespace specific part of the
 			// attestation urn but can be decoded back to the nftId, as we need to maintain the
 			// details of which connector created the NFT
-			const nftUrn = Urn.fromValidString(nftId);
-			const namespaceSpecific = Converter.bytesToBase64(
-				Converter.utf8ToBytes(nftUrn.toString(true))
-			);
-			const attestationId = new Urn(IotaAttestationConnector.NAMESPACE, namespaceSpecific);
+			const attestationId = IotaAttestationUtils.nftIdToAttestationId(nftId);
 
 			const attestationInformation: IAttestationInformation<T> = {
-				id: attestationId.toString(false),
+				id: attestationId,
 				created: verifiableCredential.verifiableCredential?.issuanceDate ?? "",
 				ownerIdentity: verifiableCredential.verifiableCredential.issuer ?? "",
 				data,
@@ -220,14 +217,12 @@ export class IotaAttestationConnector implements IAttestationConnector {
 		}
 
 		try {
-			const nftId = Urn.fromValidString(
-				Converter.bytesToUtf8(Converter.base64ToBytes(urnParsed.namespaceSpecific()))
-			);
+			const nftId = IotaAttestationUtils.attestationIdToNftId(attestationId);
 
 			const resolved = await this._nftConnector.resolve<
 				IIotaAttestationPayload,
 				IIotaAttestationHolder
-			>(requestContext, nftId.toString(false));
+			>(requestContext, nftId);
 
 			let failure: string | undefined;
 			let checkResult:
@@ -253,23 +248,35 @@ export class IotaAttestationConnector implements IAttestationConnector {
 				}
 			}
 
+			const information: Partial<IAttestationInformation<T>> = {
+				id: attestationId,
+				created: checkResult?.verifiableCredential?.issuanceDate,
+				ownerIdentity: checkResult?.verifiableCredential?.issuer,
+				data: checkResult?.verifiableCredential?.credentialSubject as T
+			};
+
+			if (Is.stringValue(jwtProof)) {
+				information.proof = Is.stringValue(jwtProof)
+					? {
+							type: "jwt",
+							value: jwtProof
+						}
+					: undefined;
+			}
+
+			if (
+				Is.object<IIotaAttestationHolder>(resolved.metadata) &&
+				Is.stringValue(resolved.metadata.holderIdentity) &&
+				Is.stringValue(resolved.metadata.transferred)
+			) {
+				information.holderIdentity = resolved.metadata.holderIdentity;
+				information.transferred = resolved.metadata.transferred;
+			}
+
 			return {
 				verified: Is.empty(failure),
 				failure,
-				information: {
-					id: attestationId,
-					created: checkResult?.verifiableCredential?.issuanceDate,
-					ownerIdentity: checkResult?.verifiableCredential?.issuer,
-					holderIdentity: resolved.metadata?.holderIdentity,
-					transferred: resolved.metadata?.transferred,
-					data: checkResult?.verifiableCredential?.credentialSubject as T,
-					proof: Is.stringValue(jwtProof)
-						? {
-								type: "jwt",
-								value: jwtProof
-							}
-						: undefined
-				}
+				information
 			};
 		} catch (error) {
 			throw new GeneralError(
@@ -342,21 +349,14 @@ export class IotaAttestationConnector implements IAttestationConnector {
 				);
 			}
 
-			const nftId = Urn.fromValidString(
-				Converter.bytesToUtf8(Converter.base64ToBytes(urnParsed.namespaceSpecific()))
-			);
+			const nftId = IotaAttestationUtils.attestationIdToNftId(attestationId);
 
 			const holder: IIotaAttestationHolder = {
 				transferred: new Date().toISOString(),
 				holderIdentity
 			};
 
-			await this._nftConnector.transfer(
-				requestContext,
-				nftId.toString(false),
-				holderControllerAddress,
-				holder
-			);
+			await this._nftConnector.transfer(requestContext, nftId, holderControllerAddress, holder);
 
 			return {
 				...(verificationResult.information as IAttestationInformation<T>),

@@ -44,7 +44,8 @@
 		"packages/attestation-connector-iota",
 		"packages/attestation-connector-open-attestation",
 		"packages/attestation-service",
-		"packages/attestation-rest-client"
+		"packages/attestation-rest-client",
+		"packages/attestation-cli"
 	],
 	"type": "module"
 }
