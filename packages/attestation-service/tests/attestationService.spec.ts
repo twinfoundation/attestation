@@ -8,7 +8,7 @@ describe("AttestationService", () => {
 	test("Can create an instance", async () => {
 		AttestationConnectorFactory.register(
 			EntityStorageAttestationConnector.NAMESPACE,
-			() => new EntityStorageAttestationConnector({ a: "kkk" })
+			() => new EntityStorageAttestationConnector()
 		);
 		const service = new AttestationService();
 		expect(service).toBeDefined();

@@ -10,25 +10,25 @@ Class for performing attestation operations on IOTA network.
 
 ### new IotaAttestationConnector()
 
-> **new IotaAttestationConnector**(`dependencies`, `config`?): [`IotaAttestationConnector`](IotaAttestationConnector.md)
+> **new IotaAttestationConnector**(`options`?): [`IotaAttestationConnector`](IotaAttestationConnector.md)
 
 Create a new instance of IotaAttestationConnector.
 
 #### Parameters
 
-• **dependencies**
+• **options?**
 
-The dependencies for the class.
+The options for the class.
 
-• **dependencies.identityConnector**: `IIdentityConnector`
+• **options.identityConnectorType?**: `string`
 
-The identity connector.
+The identity connector type, defaults to "identity".
 
-• **dependencies.nftConnector?**: `INftConnector`
+• **options.nftConnectorType?**: `string`
 
-The NFT connector.
+The nft connector type, defaults to "nft".
 
-• **config?**: [`IIotaAttestationConnectorConfig`](../interfaces/IIotaAttestationConnectorConfig.md)
+• **options.config?**: [`IIotaAttestationConnectorConfig`](../interfaces/IIotaAttestationConnectorConfig.md)
 
 The configuration for the connector.
 

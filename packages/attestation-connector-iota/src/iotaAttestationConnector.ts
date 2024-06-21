@@ -2,12 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0.
 import type { IAttestationConnector, IAttestationInformation } from "@gtsc/attestation-models";
 import { Coerce, GeneralError, Guards, Is, Urn } from "@gtsc/core";
-import type { IIdentityConnector } from "@gtsc/identity-models";
+import { IdentityConnectorFactory, type IIdentityConnector } from "@gtsc/identity-models";
 import { nameof } from "@gtsc/nameof";
-import type { INftConnector } from "@gtsc/nft-models";
+import { NftConnectorFactory, type INftConnector } from "@gtsc/nft-models";
 import type { IRequestContext } from "@gtsc/services";
 import type { IDidVerifiableCredential } from "@gtsc/standards-w3c-did";
-import type { IVaultConnector } from "@gtsc/vault-models";
 import { IotaAttestationUtils } from "./iotaAttestationUtils";
 import type { IIotaAttestationConnectorConfig } from "./models/IIotaAttestationConnectorConfig";
 import type { IIotaAttestationHolder } from "./models/IIotaAttestationHolder";
@@ -54,33 +53,21 @@ export class IotaAttestationConnector implements IAttestationConnector {
 
 	/**
 	 * Create a new instance of IotaAttestationConnector.
-	 * @param dependencies The dependencies for the class.
-	 * @param dependencies.identityConnector The identity connector.
-	 * @param dependencies.nftConnector The NFT connector.
-	 * @param config The configuration for the connector.
+	 * @param options The options for the class.
+	 * @param options.identityConnectorType The identity connector type, defaults to "identity".
+	 * @param options.nftConnectorType The nft connector type, defaults to "nft".
+	 * @param options.config The configuration for the connector.
 	 */
-	constructor(
-		dependencies: {
-			identityConnector: IIdentityConnector;
-			nftConnector: INftConnector;
-		},
-		config?: IIotaAttestationConnectorConfig
-	) {
-		Guards.object(IotaAttestationConnector._CLASS_NAME, nameof(dependencies), dependencies);
-		Guards.object<IVaultConnector>(
-			IotaAttestationConnector._CLASS_NAME,
-			nameof(dependencies.identityConnector),
-			dependencies.identityConnector
+	constructor(options?: {
+		identityConnectorType?: string;
+		nftConnectorType?: string;
+		config?: IIotaAttestationConnectorConfig;
+	}) {
+		this._identityConnector = IdentityConnectorFactory.get(
+			options?.identityConnectorType ?? "identity"
 		);
-		Guards.object<IVaultConnector>(
-			IotaAttestationConnector._CLASS_NAME,
-			nameof(dependencies.nftConnector),
-			dependencies.nftConnector
-		);
-
-		this._identityConnector = dependencies.identityConnector;
-		this._nftConnector = dependencies.nftConnector;
-		this._config = config ?? {};
+		this._nftConnector = NftConnectorFactory.get(options?.nftConnectorType ?? "nft");
+		this._config = options?.config ?? {};
 		this._config.tag ??= IotaAttestationConnector._DEFAULT_TAG;
 	}
 

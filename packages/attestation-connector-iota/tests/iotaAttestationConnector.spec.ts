@@ -8,7 +8,6 @@ import {
 	TEST_IDENTITY_ADDRESS_BECH32,
 	TEST_IDENTITY_ADDRESS_BECH32_2,
 	TEST_IDENTITY_CONNECTOR,
-	TEST_NFT_CONNECTOR,
 	setupTestEnv
 } from "./setupTestEnv";
 import { IotaAttestationConnector } from "../src/iotaAttestationConnector";
@@ -41,18 +40,12 @@ describe("IotaAttestationConnector", () => {
 	});
 
 	test("can construct", async () => {
-		const attestation = new IotaAttestationConnector({
-			identityConnector: TEST_IDENTITY_CONNECTOR,
-			nftConnector: TEST_NFT_CONNECTOR
-		});
+		const attestation = new IotaAttestationConnector();
 		expect(attestation).toBeDefined();
 	});
 
 	test("can attest some data", async () => {
-		const attestation = new IotaAttestationConnector({
-			identityConnector: TEST_IDENTITY_CONNECTOR,
-			nftConnector: TEST_NFT_CONNECTOR
-		});
+		const attestation = new IotaAttestationConnector();
 
 		const dataPayload = {
 			docName: "bill-of-lading",
@@ -86,10 +79,7 @@ describe("IotaAttestationConnector", () => {
 	});
 
 	test("can verify an attestation", async () => {
-		const attestation = new IotaAttestationConnector({
-			identityConnector: TEST_IDENTITY_CONNECTOR,
-			nftConnector: TEST_NFT_CONNECTOR
-		});
+		const attestation = new IotaAttestationConnector();
 
 		const attested = await attestation.verify(TEST_CONTEXT, attestationId);
 
@@ -111,10 +101,7 @@ describe("IotaAttestationConnector", () => {
 	});
 
 	test("can transfer an attestation", async () => {
-		const attestation = new IotaAttestationConnector({
-			identityConnector: TEST_IDENTITY_CONNECTOR,
-			nftConnector: TEST_NFT_CONNECTOR
-		});
+		const attestation = new IotaAttestationConnector();
 
 		const testIdentity2 = await TEST_IDENTITY_CONNECTOR.createDocument(
 			TEST_CONTEXT,

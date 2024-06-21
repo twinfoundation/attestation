@@ -10,21 +10,17 @@ Class for performing attestation operations in entity storage.
 
 ### new EntityStorageAttestationConnector()
 
-> **new EntityStorageAttestationConnector**(`dependencies`, `config`?): [`EntityStorageAttestationConnector`](EntityStorageAttestationConnector.md)
+> **new EntityStorageAttestationConnector**(`options`?): [`EntityStorageAttestationConnector`](EntityStorageAttestationConnector.md)
 
 Create a new instance of EntityStorageAttestationConnector.
 
 #### Parameters
 
-• **dependencies**
+• **options?**
 
 The dependencies for the attestation connector.
 
-• **dependencies.a**: `string`
-
-The dependency for the attestation connector.
-
-• **config?**: [`IEntityStorageAttestationConnectorConfig`](../interfaces/IEntityStorageAttestationConnectorConfig.md)
+• **options.config?**: [`IEntityStorageAttestationConnectorConfig`](../interfaces/IEntityStorageAttestationConnectorConfig.md)
 
 The configuration for the attestation connector.
 
@@ -39,6 +35,12 @@ The configuration for the attestation connector.
 > `static` `readonly` **NAMESPACE**: `string` = `"entity-attestation"`
 
 The namespace for the entities.
+
+***
+
+### \_config
+
+> `private` `readonly` **\_config**: [`IEntityStorageAttestationConnectorConfig`](../interfaces/IEntityStorageAttestationConnectorConfig.md)
 
 ## Methods
 

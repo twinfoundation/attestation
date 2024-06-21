@@ -3,16 +3,12 @@
 import { IotaAttestationConnector, IotaAttestationUtils } from "@gtsc/attestation-connector-iota";
 import { CLIDisplay, CLIOptions, CLIParam, CLIUtils, type CliOutputOptions } from "@gtsc/cli-core";
 import { I18n, Is, StringHelper } from "@gtsc/core";
-import { EntitySchemaHelper } from "@gtsc/entity";
-import { MemoryEntityStorageConnector } from "@gtsc/entity-storage-connector-memory";
 import { IotaIdentityConnector } from "@gtsc/identity-connector-iota";
+import { IdentityConnectorFactory } from "@gtsc/identity-models";
 import { IotaNftConnector, IotaNftUtils } from "@gtsc/nft-connector-iota";
-import {
-	EntityStorageVaultConnector,
-	VaultKey,
-	VaultSecret
-} from "@gtsc/vault-connector-entity-storage";
+import { NftConnectorFactory } from "@gtsc/nft-models";
 import { Command } from "commander";
+import { setupVault } from "./setupCommands";
 
 /**
  * Build the attestation resolve command for the CLI.
@@ -75,45 +71,37 @@ export async function actionCommandAttestationVerify(
 	CLIDisplay.value(I18n.formatMessage("commands.common.labels.node"), nodeEndpoint);
 	CLIDisplay.break();
 
-	const vaultConnector = new EntityStorageVaultConnector({
-		vaultKeyEntityStorageConnector: new MemoryEntityStorageConnector<VaultKey>(
-			EntitySchemaHelper.getSchema(VaultKey)
-		),
-		vaultSecretEntityStorageConnector: new MemoryEntityStorageConnector<VaultSecret>(
-			EntitySchemaHelper.getSchema(VaultSecret)
-		)
-	});
+	setupVault();
 
 	const requestContext = { identity: "local", tenantId: "local" };
 
-	const iotaIdentityConnector = new IotaIdentityConnector(
-		{
-			vaultConnector
-		},
-		{
-			clientOptions: {
-				nodes: [nodeEndpoint],
-				localPow: true
-			}
-		}
+	IdentityConnectorFactory.register(
+		"identity",
+		() =>
+			new IotaIdentityConnector({
+				config: {
+					clientOptions: {
+						nodes: [nodeEndpoint],
+						localPow: true
+					}
+				}
+			})
 	);
 
-	const iotaNftConnector = new IotaNftConnector(
-		{
-			vaultConnector
-		},
-		{
-			clientOptions: {
-				nodes: [nodeEndpoint],
-				localPow: true
-			}
-		}
+	NftConnectorFactory.register(
+		"nft",
+		() =>
+			new IotaNftConnector({
+				config: {
+					clientOptions: {
+						nodes: [nodeEndpoint],
+						localPow: true
+					}
+				}
+			})
 	);
 
-	const iotaAttestationConnector = new IotaAttestationConnector({
-		identityConnector: iotaIdentityConnector,
-		nftConnector: iotaNftConnector
-	});
+	const iotaAttestationConnector = new IotaAttestationConnector();
 
 	CLIDisplay.task(I18n.formatMessage("commands.attestation-verify.progress.verifyingAttestation"));
 	CLIDisplay.break();

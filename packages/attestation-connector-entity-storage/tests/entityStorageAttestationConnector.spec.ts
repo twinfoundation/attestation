@@ -4,7 +4,7 @@ import { EntityStorageAttestationConnector } from "../src/entityStorageAttestati
 
 describe("EntityStorageAttestationConnector", () => {
 	test("can construct", async () => {
-		const attestation = new EntityStorageAttestationConnector({ a: "" });
+		const attestation = new EntityStorageAttestationConnector();
 		expect(attestation).toBeDefined();
 	});
 });

@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IAttestationConnector, IAttestationInformation } from "@gtsc/attestation-models";
-import { Guards, NotImplementedError } from "@gtsc/core";
+import { NotImplementedError } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import type { IRequestContext } from "@gtsc/services";
 import type { IEntityStorageAttestationConnectorConfig } from "./models/IEntityStorageAttestationConnectorConfig";
@@ -21,18 +21,15 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 	 */
 	private static readonly _CLASS_NAME: string = nameof<EntityStorageAttestationConnector>();
 
+	private readonly _config: IEntityStorageAttestationConnectorConfig;
+
 	/**
 	 * Create a new instance of EntityStorageAttestationConnector.
-	 * @param dependencies The dependencies for the attestation connector.
-	 * @param dependencies.a The dependency for the attestation connector.
-	 * @param config The configuration for the attestation connector.
+	 * @param options The dependencies for the attestation connector.
+	 * @param options.config The configuration for the attestation connector.
 	 */
-	constructor(dependencies: { a: string }, config?: IEntityStorageAttestationConnectorConfig) {
-		Guards.object(
-			EntityStorageAttestationConnector._CLASS_NAME,
-			nameof(dependencies),
-			dependencies
-		);
+	constructor(options?: { config?: IEntityStorageAttestationConnectorConfig }) {
+		this._config = options?.config ?? {};
 	}
 
 	/**
