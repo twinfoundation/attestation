@@ -77,7 +77,7 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 
 		const response = await this.fetch<IAttestationAttestRequest, IAttestationAttestResponse<T>>(
 			requestContext,
-			"/sign",
+			"/attest",
 			"POST",
 			{
 				body: {
