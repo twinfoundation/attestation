@@ -1,6 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { BaseRestClient, type IBaseRestClientConfig } from "@gtsc/api-models";
+import { BaseRestClient } from "@gtsc/api-core";
+import type { IBaseRestClientConfig } from "@gtsc/api-models";
 import type {
 	IAttestation,
 	IAttestationAttestRequest,
@@ -77,7 +78,7 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 
 		const response = await this.fetch<IAttestationAttestRequest, IAttestationAttestResponse<T>>(
 			requestContext,
-			"/attest",
+			"/",
 			"POST",
 			{
 				body: {
@@ -125,11 +126,11 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 
 		const response = await this.fetch<IAttestationVerifyRequest, IAttestationVerifyResponse<T>>(
 			requestContext,
-			"/verify/:attestationId",
+			"/:id",
 			"GET",
 			{
-				path: {
-					attestationId
+				pathParams: {
+					id: attestationId
 				}
 			}
 		);
@@ -176,11 +177,11 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 
 		const response = await this.fetch<IAttestationTransferRequest, IAttestationTransferResponse<T>>(
 			requestContext,
-			"/transfer/:attestationId",
+			"/:id/transfer",
 			"PUT",
 			{
-				path: {
-					attestationId
+				pathParams: {
+					id: attestationId
 				},
 				body: {
 					holderControllerAddress,

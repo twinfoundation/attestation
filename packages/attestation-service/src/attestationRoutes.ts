@@ -45,9 +45,9 @@ export function generateRestRoutes(
 		summary: "Attest a data set",
 		tag: tags[0].name,
 		method: "POST",
-		path: `${baseRouteName}/attest/`,
-		handler: async (requestContext, request, body) =>
-			attestationAttest(requestContext, factoryServiceName, request, body),
+		path: `${baseRouteName}/`,
+		handler: async (requestContext, request) =>
+			attestationAttest(requestContext, factoryServiceName, request),
 		requestType: {
 			type: nameof<IAttestationAttestRequest>(),
 			examples: [
@@ -106,18 +106,17 @@ export function generateRestRoutes(
 		summary: "Verify an attestation",
 		tag: tags[0].name,
 		method: "GET",
-		path: `${baseRouteName}/verify/:attestationId`,
-		handler: async (requestContext, request, body) =>
-			attestationVerify(requestContext, factoryServiceName, request, body),
+		path: `${baseRouteName}/:id`,
+		handler: async (requestContext, request) =>
+			attestationVerify(requestContext, factoryServiceName, request),
 		requestType: {
 			type: nameof<IAttestationVerifyRequest>(),
 			examples: [
 				{
 					id: "attestationVerifyExample",
 					request: {
-						path: {
-							attestationId:
-								"urn:iota-attestation:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
+						pathParams: {
+							id: "urn:iota-attestation:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
 						}
 					}
 				}
@@ -189,18 +188,17 @@ export function generateRestRoutes(
 		summary: "Transfer an attestation",
 		tag: tags[0].name,
 		method: "PUT",
-		path: `${baseRouteName}/transfer/:attestationId`,
-		handler: async (requestContext, request, body) =>
-			attestationTransfer(requestContext, factoryServiceName, request, body),
+		path: `${baseRouteName}/:id/transfer`,
+		handler: async (requestContext, request) =>
+			attestationTransfer(requestContext, factoryServiceName, request),
 		requestType: {
 			type: nameof<IAttestationTransferRequest>(),
 			examples: [
 				{
 					id: "attestationVerifyExample",
 					request: {
-						path: {
-							attestationId:
-								"urn:iota-attestation:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
+						pathParams: {
+							id: "urn:iota-attestation:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
 						},
 						body: {
 							holderControllerAddress:
@@ -314,15 +312,15 @@ export async function attestationVerify(
 	body?: unknown
 ): Promise<IAttestationVerifyResponse> {
 	Guards.object<IAttestationVerifyRequest>(ROUTES_SOURCE, nameof(request), request);
-	Guards.object<IAttestationVerifyRequest["path"]>(
+	Guards.object<IAttestationVerifyRequest["pathParams"]>(
 		ROUTES_SOURCE,
-		nameof(request.path),
-		request.path
+		nameof(request.pathParams),
+		request.pathParams
 	);
-	Guards.stringValue(ROUTES_SOURCE, nameof(request.path.attestationId), request.path.attestationId);
+	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
 	const service = ServiceFactory.get<IAttestation>(factoryServiceName);
-	const verificationResult = await service.verify(requestContext, request.path.attestationId);
+	const verificationResult = await service.verify(requestContext, request.pathParams.id);
 
 	return {
 		body: verificationResult
@@ -344,12 +342,12 @@ export async function attestationTransfer(
 	body?: unknown
 ): Promise<IAttestationTransferResponse> {
 	Guards.object<IAttestationTransferRequest>(ROUTES_SOURCE, nameof(request), request);
-	Guards.object<IAttestationTransferRequest["path"]>(
+	Guards.object<IAttestationTransferRequest["pathParams"]>(
 		ROUTES_SOURCE,
-		nameof(request.path),
-		request.path
+		nameof(request.pathParams),
+		request.pathParams
 	);
-	Guards.stringValue(ROUTES_SOURCE, nameof(request.path.attestationId), request.path.attestationId);
+	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 	Guards.object<IAttestationTransferRequest["body"]>(
 		ROUTES_SOURCE,
 		nameof(request.body),
@@ -369,7 +367,7 @@ export async function attestationTransfer(
 	const service = ServiceFactory.get<IAttestation>(factoryServiceName);
 	const information = await service.transfer(
 		requestContext,
-		request.path.attestationId,
+		request.pathParams.id,
 		request.body.holderControllerAddress,
 		request.body.holderIdentity
 	);

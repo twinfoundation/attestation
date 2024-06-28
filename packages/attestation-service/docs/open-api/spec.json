@@ -14,9 +14,14 @@
             "url": "https://localhost"
         }
     ],
-    "tags": [],
+    "tags": [
+        {
+            "name": "Attestation",
+            "description": "Endpoints which are modelled to access an attestation contract."
+        }
+    ],
     "paths": {
-        "/attestation/attest": {
+        "/attestation": {
             "post": {
                 "operationId": "attestationAttest",
                 "summary": "Attest a data set",
@@ -71,7 +76,7 @@
                 }
             }
         },
-        "/attestation/verify/{attestationId}": {
+        "/attestation/{id}": {
             "get": {
                 "operationId": "attestationVerify",
                 "summary": "Verify an attestation",
@@ -80,7 +85,7 @@
                 ],
                 "parameters": [
                     {
-                        "name": "attestationId",
+                        "name": "id",
                         "description": "The attestation id to verify.",
                         "in": "path",
                         "required": true,
@@ -139,7 +144,7 @@
                 }
             }
         },
-        "/attestation/transfer/{attestationId}": {
+        "/attestation/{id}/transfer": {
             "put": {
                 "operationId": "attestationTransfer",
                 "summary": "Transfer an attestation",
@@ -148,7 +153,7 @@
                 ],
                 "parameters": [
                     {
-                        "name": "attestationId",
+                        "name": "id",
                         "description": "The attestation id to verify.",
                         "in": "path",
                         "required": true,

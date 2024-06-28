@@ -8,10 +8,10 @@ export interface IAttestationVerifyRequest {
 	/**
 	 * The parameters to be used in the verification.
 	 */
-	path: {
+	pathParams: {
 		/**
 		 * The attestation id to verify.
 		 */
-		attestationId: string;
+		id: string;
 	};
 }

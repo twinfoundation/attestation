@@ -8,11 +8,11 @@ export interface IAttestationTransferRequest {
 	/**
 	 * The parameters to be used in the transfer.
 	 */
-	path: {
+	pathParams: {
 		/**
 		 * The attestation id to verify.
 		 */
-		attestationId: string;
+		id: string;
 	};
 
 	/**
