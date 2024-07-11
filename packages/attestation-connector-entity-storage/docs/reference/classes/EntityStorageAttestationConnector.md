@@ -38,9 +38,23 @@ The namespace for the entities.
 
 ***
 
+### CLASS\_NAME
+
+> `readonly` **CLASS\_NAME**: `string`
+
+Runtime name for the class.
+
+#### Implementation of
+
+`IAttestationConnector.CLASS_NAME`
+
+***
+
 ### \_config
 
 > `private` `readonly` **\_config**: [`IEntityStorageAttestationConnectorConfig`](../interfaces/IEntityStorageAttestationConnectorConfig.md)
+
+The configuration for the attestation connector.
 
 ## Methods
 

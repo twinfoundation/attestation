@@ -17,9 +17,8 @@ export class OpenAttestationConnector implements IAttestationConnector {
 
 	/**
 	 * Runtime name for the class.
-	 * @internal
 	 */
-	private static readonly _CLASS_NAME: string = nameof<OpenAttestationConnector>();
+	public readonly CLASS_NAME: string = nameof<OpenAttestationConnector>();
 
 	/**
 	 * Create a new instance of OpenAttestationConnector.
@@ -42,7 +41,7 @@ export class OpenAttestationConnector implements IAttestationConnector {
 		verificationMethodId: string,
 		data: T
 	): Promise<IAttestationInformation<T>> {
-		throw new NotImplementedError(OpenAttestationConnector._CLASS_NAME, "attest");
+		throw new NotImplementedError(this.CLASS_NAME, "attest");
 	}
 
 	/**
@@ -59,7 +58,7 @@ export class OpenAttestationConnector implements IAttestationConnector {
 		failure?: string;
 		information?: Partial<IAttestationInformation<T>>;
 	}> {
-		throw new NotImplementedError(OpenAttestationConnector._CLASS_NAME, "verify");
+		throw new NotImplementedError(this.CLASS_NAME, "verify");
 	}
 
 	/**
@@ -76,6 +75,6 @@ export class OpenAttestationConnector implements IAttestationConnector {
 		holderControllerAddress: string,
 		holderIdentity: string
 	): Promise<IAttestationInformation<T>> {
-		throw new NotImplementedError(OpenAttestationConnector._CLASS_NAME, "transfer");
+		throw new NotImplementedError(this.CLASS_NAME, "transfer");
 	}
 }

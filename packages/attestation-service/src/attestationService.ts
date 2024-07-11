@@ -17,9 +17,8 @@ import type { IAttestationServiceConfig } from "./models/IAttestationServiceConf
 export class AttestationService implements IAttestation {
 	/**
 	 * Runtime name for the class.
-	 * @internal
 	 */
-	private static readonly _CLASS_NAME: string = nameof<AttestationService>();
+	public readonly CLASS_NAME: string = nameof<AttestationService>();
 
 	/**
 	 * The default namespace for the connector to use.
@@ -34,7 +33,7 @@ export class AttestationService implements IAttestation {
 	constructor(config?: IAttestationServiceConfig) {
 		const names = AttestationConnectorFactory.names();
 		if (names.length === 0) {
-			throw new GeneralError(AttestationService._CLASS_NAME, "noConnectors");
+			throw new GeneralError(this.CLASS_NAME, "noConnectors");
 		}
 
 		this._defaultNamespace = config?.defaultNamespace ?? names[0];
@@ -59,32 +58,12 @@ export class AttestationService implements IAttestation {
 			namespace?: string;
 		}
 	): Promise<IAttestationInformation<T>> {
-		Guards.object<IRequestContext>(
-			AttestationService._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			AttestationService._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Guards.stringValue(
-			AttestationService._CLASS_NAME,
-			nameof(requestContext.identity),
-			requestContext.identity
-		);
-		Guards.stringValue(
-			AttestationService._CLASS_NAME,
-			nameof(controllerAddress),
-			controllerAddress
-		);
-		Guards.stringValue(
-			AttestationService._CLASS_NAME,
-			nameof(verificationMethodId),
-			verificationMethodId
-		);
-		Guards.object<T>(AttestationService._CLASS_NAME, nameof(data), data);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.identity), requestContext.identity);
+		Guards.stringValue(this.CLASS_NAME, nameof(controllerAddress), controllerAddress);
+		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
+		Guards.object<T>(this.CLASS_NAME, nameof(data), data);
 
 		try {
 			const connectorNamespace = options?.namespace ?? this._defaultNamespace;
@@ -99,7 +78,7 @@ export class AttestationService implements IAttestation {
 				data
 			);
 		} catch (error) {
-			throw new GeneralError(AttestationService._CLASS_NAME, "attestFailed", undefined, error);
+			throw new GeneralError(this.CLASS_NAME, "attestFailed", undefined, error);
 		}
 	}
 
@@ -117,22 +96,10 @@ export class AttestationService implements IAttestation {
 		failure?: string;
 		information?: Partial<IAttestationInformation<T>>;
 	}> {
-		Guards.object<IRequestContext>(
-			AttestationService._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			AttestationService._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Guards.stringValue(
-			AttestationService._CLASS_NAME,
-			nameof(requestContext.identity),
-			requestContext.identity
-		);
-		Urn.guard(AttestationService._CLASS_NAME, nameof(attestationId), attestationId);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.identity), requestContext.identity);
+		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 
 		try {
 			const idUri = Urn.fromValidString(attestationId);
@@ -143,7 +110,7 @@ export class AttestationService implements IAttestation {
 
 			return attestationConnector.verify(requestContext, attestationId);
 		} catch (error) {
-			throw new GeneralError(AttestationService._CLASS_NAME, "verifyFailed", undefined, error);
+			throw new GeneralError(this.CLASS_NAME, "verifyFailed", undefined, error);
 		}
 	}
 
@@ -161,28 +128,12 @@ export class AttestationService implements IAttestation {
 		holderControllerAddress: string,
 		holderIdentity: string
 	): Promise<IAttestationInformation<T>> {
-		Guards.object<IRequestContext>(
-			AttestationService._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			AttestationService._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Guards.stringValue(
-			AttestationService._CLASS_NAME,
-			nameof(requestContext.identity),
-			requestContext.identity
-		);
-		Urn.guard(AttestationService._CLASS_NAME, nameof(attestationId), attestationId);
-		Guards.stringValue(
-			AttestationService._CLASS_NAME,
-			nameof(holderControllerAddress),
-			holderControllerAddress
-		);
-		Guards.stringValue(AttestationService._CLASS_NAME, nameof(holderIdentity), holderIdentity);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.identity), requestContext.identity);
+		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
+		Guards.stringValue(this.CLASS_NAME, nameof(holderControllerAddress), holderControllerAddress);
+		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
 
 		try {
 			const idUri = Urn.fromValidString(attestationId);
@@ -198,7 +149,7 @@ export class AttestationService implements IAttestation {
 				holderIdentity
 			);
 		} catch (error) {
-			throw new GeneralError(AttestationService._CLASS_NAME, "transferFailed", undefined, error);
+			throw new GeneralError(this.CLASS_NAME, "transferFailed", undefined, error);
 		}
 	}
 }

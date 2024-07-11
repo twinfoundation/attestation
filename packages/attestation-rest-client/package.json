@@ -1,6 +1,6 @@
 {
 	"name": "@gtsc/attestation-rest-client",
-	"version": "0.0.3-next.8",
+	"version": "0.0.3-next.9",
 	"description": "Attestation contract implementation which can connect to REST endpoints",
 	"repository": {
 		"type": "git",
@@ -30,7 +30,7 @@
 	"dependencies": {
 		"@gtsc/api-core": "next",
 		"@gtsc/api-models": "next",
-		"@gtsc/attestation-models": "0.0.3-next.8",
+		"@gtsc/attestation-models": "0.0.3-next.9",
 		"@gtsc/core": "next",
 		"@gtsc/entity": "next",
 		"@gtsc/nameof": "0.0.4",

@@ -24,6 +24,18 @@ The configuration for the service.
 
 [`AttestationService`](AttestationService.md)
 
+## Properties
+
+### CLASS\_NAME
+
+> `readonly` **CLASS\_NAME**: `string`
+
+Runtime name for the class.
+
+#### Implementation of
+
+`IAttestation.CLASS_NAME`
+
 ## Methods
 
 ### attest()

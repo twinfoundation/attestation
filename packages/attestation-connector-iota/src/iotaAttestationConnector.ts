@@ -22,16 +22,15 @@ export class IotaAttestationConnector implements IAttestationConnector {
 	public static readonly NAMESPACE: string = "iota-attestation";
 
 	/**
-	 * Runtime name for the class.
-	 * @internal
-	 */
-	private static readonly _CLASS_NAME: string = nameof<IotaAttestationConnector>();
-
-	/**
 	 * Default tag.
 	 * @internal
 	 */
 	private static readonly _DEFAULT_TAG: string = "GTSC-ATTESTATION";
+
+	/**
+	 * Runtime name for the class.
+	 */
+	public readonly CLASS_NAME: string = nameof<IotaAttestationConnector>();
 
 	/**
 	 * Connector for identity operations.
@@ -85,32 +84,12 @@ export class IotaAttestationConnector implements IAttestationConnector {
 		verificationMethodId: string,
 		data: T
 	): Promise<IAttestationInformation<T>> {
-		Guards.object<IRequestContext>(
-			IotaAttestationConnector._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			IotaAttestationConnector._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Guards.stringValue(
-			IotaAttestationConnector._CLASS_NAME,
-			nameof(requestContext.identity),
-			requestContext.identity
-		);
-		Guards.stringValue(
-			IotaAttestationConnector._CLASS_NAME,
-			nameof(controllerAddress),
-			controllerAddress
-		);
-		Guards.stringValue(
-			IotaAttestationConnector._CLASS_NAME,
-			nameof(verificationMethodId),
-			verificationMethodId
-		);
-		Guards.object<T>(IotaAttestationConnector._CLASS_NAME, nameof(data), data);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.identity), requestContext.identity);
+		Guards.stringValue(this.CLASS_NAME, nameof(controllerAddress), controllerAddress);
+		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
+		Guards.object<T>(this.CLASS_NAME, nameof(data), data);
 
 		try {
 			const verifiableCredential = await this._identityConnector.createVerifiableCredential(
@@ -154,12 +133,7 @@ export class IotaAttestationConnector implements IAttestationConnector {
 
 			return attestationInformation;
 		} catch (error) {
-			throw new GeneralError(
-				IotaAttestationConnector._CLASS_NAME,
-				"attestingFailed",
-				undefined,
-				error
-			);
+			throw new GeneralError(this.CLASS_NAME, "attestingFailed", undefined, error);
 		}
 	}
 
@@ -177,27 +151,15 @@ export class IotaAttestationConnector implements IAttestationConnector {
 		failure?: string;
 		information?: Partial<IAttestationInformation<T>>;
 	}> {
-		Guards.object<IRequestContext>(
-			IotaAttestationConnector._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			IotaAttestationConnector._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Guards.stringValue(
-			IotaAttestationConnector._CLASS_NAME,
-			nameof(requestContext.identity),
-			requestContext.identity
-		);
-		Urn.guard(IotaAttestationConnector._CLASS_NAME, nameof(attestationId), attestationId);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.identity), requestContext.identity);
+		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 
 		const urnParsed = Urn.fromValidString(attestationId);
 
 		if (urnParsed.namespaceIdentifier() !== IotaAttestationConnector.NAMESPACE) {
-			throw new GeneralError(IotaAttestationConnector._CLASS_NAME, "namespaceMismatch", {
+			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
 				namespace: IotaAttestationConnector.NAMESPACE,
 				attestationId
 			});
@@ -221,7 +183,7 @@ export class IotaAttestationConnector implements IAttestationConnector {
 
 			const jwtProof = Coerce.string(resolved.immutableMetadata?.proof);
 			if (Is.empty(jwtProof) || Is.empty(resolved.metadata)) {
-				failure = `${IotaAttestationConnector._CLASS_NAME}.verificationFailures.noData`;
+				failure = `${this.CLASS_NAME}.verificationFailures.noData`;
 			} else {
 				checkResult = await this._identityConnector.checkVerifiableCredential(
 					requestContext,
@@ -229,9 +191,9 @@ export class IotaAttestationConnector implements IAttestationConnector {
 				);
 
 				if (Is.empty(checkResult.verifiableCredential)) {
-					failure = `${IotaAttestationConnector._CLASS_NAME}.verificationFailures.proofFailed`;
+					failure = `${this.CLASS_NAME}.verificationFailures.proofFailed`;
 				} else if (checkResult.revoked) {
-					failure = `${IotaAttestationConnector._CLASS_NAME}.verificationFailures.revoked`;
+					failure = `${this.CLASS_NAME}.verificationFailures.revoked`;
 				}
 			}
 
@@ -266,12 +228,7 @@ export class IotaAttestationConnector implements IAttestationConnector {
 				information
 			};
 		} catch (error) {
-			throw new GeneralError(
-				IotaAttestationConnector._CLASS_NAME,
-				"verificationFailed",
-				undefined,
-				error
-			);
+			throw new GeneralError(this.CLASS_NAME, "verificationFailed", undefined, error);
 		}
 	}
 
@@ -289,37 +246,17 @@ export class IotaAttestationConnector implements IAttestationConnector {
 		holderControllerAddress: string,
 		holderIdentity: string
 	): Promise<IAttestationInformation<T>> {
-		Guards.object<IRequestContext>(
-			IotaAttestationConnector._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			IotaAttestationConnector._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Guards.stringValue(
-			IotaAttestationConnector._CLASS_NAME,
-			nameof(requestContext.identity),
-			requestContext.identity
-		);
-		Urn.guard(IotaAttestationConnector._CLASS_NAME, nameof(attestationId), attestationId);
-		Guards.stringValue(
-			IotaAttestationConnector._CLASS_NAME,
-			nameof(holderControllerAddress),
-			holderControllerAddress
-		);
-		Guards.stringValue(
-			IotaAttestationConnector._CLASS_NAME,
-			nameof(holderIdentity),
-			holderIdentity
-		);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.identity), requestContext.identity);
+		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
+		Guards.stringValue(this.CLASS_NAME, nameof(holderControllerAddress), holderControllerAddress);
+		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
 
 		const urnParsed = Urn.fromValidString(attestationId);
 
 		if (urnParsed.namespaceIdentifier() !== IotaAttestationConnector.NAMESPACE) {
-			throw new GeneralError(IotaAttestationConnector._CLASS_NAME, "namespaceMismatch", {
+			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
 				namespace: IotaAttestationConnector.NAMESPACE,
 				attestationId
 			});
@@ -329,10 +266,10 @@ export class IotaAttestationConnector implements IAttestationConnector {
 			const verificationResult = await this.verify<T>(requestContext, attestationId);
 			if (Is.stringValue(verificationResult.failure)) {
 				throw new GeneralError(
-					IotaAttestationConnector._CLASS_NAME,
+					this.CLASS_NAME,
 					"verificationFailed",
 					undefined,
-					new GeneralError(IotaAttestationConnector._CLASS_NAME, verificationResult.failure)
+					new GeneralError(this.CLASS_NAME, verificationResult.failure)
 				);
 			}
 
@@ -350,12 +287,7 @@ export class IotaAttestationConnector implements IAttestationConnector {
 				...holder
 			};
 		} catch (error) {
-			throw new GeneralError(
-				IotaAttestationConnector._CLASS_NAME,
-				"transferFailed",
-				undefined,
-				error
-			);
+			throw new GeneralError(this.CLASS_NAME, "transferFailed", undefined, error);
 		}
 	}
 }

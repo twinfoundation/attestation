@@ -27,6 +27,11 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 	private static readonly _CLASS_NAME: string = nameof<AttestationClient>();
 
 	/**
+	 * Runtime name for the class.
+	 */
+	public readonly CLASS_NAME: string = AttestationClient._CLASS_NAME;
+
+	/**
 	 * Create a new instance of AttestationClient.
 	 * @param config The configuration for the client.
 	 */
@@ -53,28 +58,12 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 			namespace?: string;
 		}
 	): Promise<IAttestationInformation<T>> {
-		Guards.object<IRequestContext>(
-			AttestationClient._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			AttestationClient._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Guards.stringValue(
-			AttestationClient._CLASS_NAME,
-			nameof(requestContext.identity),
-			requestContext.identity
-		);
-		Guards.stringValue(AttestationClient._CLASS_NAME, nameof(controllerAddress), controllerAddress);
-		Guards.stringValue(
-			AttestationClient._CLASS_NAME,
-			nameof(verificationMethodId),
-			verificationMethodId
-		);
-		Guards.object<T>(AttestationClient._CLASS_NAME, nameof(data), data);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.identity), requestContext.identity);
+		Guards.stringValue(this.CLASS_NAME, nameof(controllerAddress), controllerAddress);
+		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
+		Guards.object<T>(this.CLASS_NAME, nameof(data), data);
 
 		const response = await this.fetch<IAttestationAttestRequest, IAttestationAttestResponse<T>>(
 			requestContext,
@@ -107,22 +96,10 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 		failure?: string;
 		information?: Partial<IAttestationInformation<T>>;
 	}> {
-		Guards.object<IRequestContext>(
-			AttestationClient._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			AttestationClient._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Guards.stringValue(
-			AttestationClient._CLASS_NAME,
-			nameof(requestContext.identity),
-			requestContext.identity
-		);
-		Urn.guard(AttestationClient._CLASS_NAME, nameof(attestationId), attestationId);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.identity), requestContext.identity);
+		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 
 		const response = await this.fetch<IAttestationVerifyRequest, IAttestationVerifyResponse<T>>(
 			requestContext,
@@ -152,28 +129,12 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 		holderControllerAddress: string,
 		holderIdentity: string
 	): Promise<IAttestationInformation<T>> {
-		Guards.object<IRequestContext>(
-			AttestationClient._CLASS_NAME,
-			nameof(requestContext),
-			requestContext
-		);
-		Guards.stringValue(
-			AttestationClient._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Guards.stringValue(
-			AttestationClient._CLASS_NAME,
-			nameof(requestContext.identity),
-			requestContext.identity
-		);
-		Urn.guard(AttestationClient._CLASS_NAME, nameof(attestationId), attestationId);
-		Guards.stringValue(
-			AttestationClient._CLASS_NAME,
-			nameof(holderControllerAddress),
-			holderControllerAddress
-		);
-		Guards.stringValue(AttestationClient._CLASS_NAME, nameof(holderIdentity), holderIdentity);
+		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
+		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.identity), requestContext.identity);
+		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
+		Guards.stringValue(this.CLASS_NAME, nameof(holderControllerAddress), holderControllerAddress);
+		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
 
 		const response = await this.fetch<IAttestationTransferRequest, IAttestationTransferResponse<T>>(
 			requestContext,

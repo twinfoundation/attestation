@@ -17,10 +17,12 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 
 	/**
 	 * Runtime name for the class.
-	 * @internal
 	 */
-	private static readonly _CLASS_NAME: string = nameof<EntityStorageAttestationConnector>();
+	public readonly CLASS_NAME: string = nameof<EntityStorageAttestationConnector>();
 
+	/**
+	 * The configuration for the attestation connector.
+	 */
 	private readonly _config: IEntityStorageAttestationConnectorConfig;
 
 	/**
@@ -46,7 +48,7 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 		verificationMethodId: string,
 		data: T
 	): Promise<IAttestationInformation<T>> {
-		throw new NotImplementedError(EntityStorageAttestationConnector._CLASS_NAME, "attest");
+		throw new NotImplementedError(this.CLASS_NAME, "attest");
 	}
 
 	/**
@@ -63,7 +65,7 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 		failure?: string;
 		information?: Partial<IAttestationInformation<T>>;
 	}> {
-		throw new NotImplementedError(EntityStorageAttestationConnector._CLASS_NAME, "verify");
+		throw new NotImplementedError(this.CLASS_NAME, "verify");
 	}
 
 	/**
@@ -80,6 +82,6 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 		holderControllerAddress: string,
 		holderIdentity: string
 	): Promise<IAttestationInformation<T>> {
-		throw new NotImplementedError(EntityStorageAttestationConnector._CLASS_NAME, "transfer");
+		throw new NotImplementedError(this.CLASS_NAME, "transfer");
 	}
 }
