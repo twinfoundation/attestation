@@ -254,14 +254,12 @@ export function generateRestRoutes(
  * @param requestContext The request context for the API.
  * @param factoryServiceName The name of the service to use in the routes.
  * @param request The request.
- * @param body The body if required for pure content.
  * @returns The response object with additional http response properties.
  */
 export async function attestationAttest(
 	requestContext: IRequestContext,
 	factoryServiceName: string,
-	request: IAttestationAttestRequest,
-	body?: unknown
+	request: IAttestationAttestRequest
 ): Promise<IAttestationAttestResponse> {
 	Guards.object<IAttestationAttestRequest>(ROUTES_SOURCE, nameof(request), request);
 	Guards.object<IAttestationAttestResponse["body"]>(
@@ -302,14 +300,12 @@ export async function attestationAttest(
  * @param requestContext The request context for the API.
  * @param factoryServiceName The name of the service to use in the routes.
  * @param request The request.
- * @param body The body if required for pure content.
  * @returns The response object with additional http response properties.
  */
 export async function attestationVerify(
 	requestContext: IRequestContext,
 	factoryServiceName: string,
-	request: IAttestationVerifyRequest,
-	body?: unknown
+	request: IAttestationVerifyRequest
 ): Promise<IAttestationVerifyResponse> {
 	Guards.object<IAttestationVerifyRequest>(ROUTES_SOURCE, nameof(request), request);
 	Guards.object<IAttestationVerifyRequest["pathParams"]>(
@@ -332,14 +328,12 @@ export async function attestationVerify(
  * @param requestContext The request context for the API.
  * @param factoryServiceName The name of the service to use in the routes.
  * @param request The request.
- * @param body The body if required for pure content.
  * @returns The response object with additional http response properties.
  */
 export async function attestationTransfer(
 	requestContext: IRequestContext,
 	factoryServiceName: string,
-	request: IAttestationTransferRequest,
-	body?: unknown
+	request: IAttestationTransferRequest
 ): Promise<IAttestationTransferResponse> {
 	Guards.object<IAttestationTransferRequest>(ROUTES_SOURCE, nameof(request), request);
 	Guards.object<IAttestationTransferRequest["pathParams"]>(
