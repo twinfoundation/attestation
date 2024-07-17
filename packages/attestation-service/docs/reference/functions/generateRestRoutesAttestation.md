@@ -1,6 +1,6 @@
-# Function: generateRestRoutes()
+# Function: generateRestRoutesAttestation()
 
-> **generateRestRoutes**(`baseRouteName`, `factoryServiceName`): `IRestRoute`[]
+> **generateRestRoutesAttestation**(`baseRouteName`, `factoryServiceName`): `IRestRoute`[]
 
 The REST routes for attestation.
 

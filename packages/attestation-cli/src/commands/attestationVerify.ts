@@ -73,7 +73,7 @@ export async function actionCommandAttestationVerify(
 
 	setupVault();
 
-	const requestContext = { identity: "local", tenantId: "local" };
+	const requestContext = { identity: "local", partitionId: "local" };
 
 	IdentityConnectorFactory.register(
 		"identity",
@@ -108,7 +108,7 @@ export async function actionCommandAttestationVerify(
 
 	CLIDisplay.spinnerStart();
 
-	const verificationResult = await iotaAttestationConnector.verify(requestContext, id);
+	const verificationResult = await iotaAttestationConnector.verify(id, requestContext);
 
 	CLIDisplay.spinnerStop();
 

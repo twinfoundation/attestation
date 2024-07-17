@@ -14,7 +14,6 @@ import type {
 } from "@gtsc/attestation-models";
 import { Guards, StringHelper, Urn } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
-import type { IRequestContext } from "@gtsc/services";
 
 /**
  * Client for performing attestation through to REST endpoints.
@@ -22,26 +21,19 @@ import type { IRequestContext } from "@gtsc/services";
 export class AttestationClient extends BaseRestClient implements IAttestation {
 	/**
 	 * Runtime name for the class.
-	 * @internal
 	 */
-	private static readonly _CLASS_NAME: string = nameof<AttestationClient>();
-
-	/**
-	 * Runtime name for the class.
-	 */
-	public readonly CLASS_NAME: string = AttestationClient._CLASS_NAME;
+	public readonly CLASS_NAME: string = nameof<AttestationClient>();
 
 	/**
 	 * Create a new instance of AttestationClient.
 	 * @param config The configuration for the client.
 	 */
 	constructor(config: IBaseRestClientConfig) {
-		super(AttestationClient._CLASS_NAME, config, StringHelper.kebabCase(nameof<IAttestation>()));
+		super(nameof<AttestationClient>(), config, StringHelper.kebabCase(nameof<IAttestation>()));
 	}
 
 	/**
 	 * Attest the data and return the collated information.
-	 * @param requestContext The context for the request.
 	 * @param controllerAddress The controller address for the attestation.
 	 * @param verificationMethodId The identity verification method to use for attesting the data.
 	 * @param data The data to attest.
@@ -50,7 +42,6 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 	 * @returns The collated attestation data.
 	 */
 	public async attest<T = unknown>(
-		requestContext: IRequestContext,
 		controllerAddress: string,
 		verificationMethodId: string,
 		data: T,
@@ -58,15 +49,11 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 			namespace?: string;
 		}
 	): Promise<IAttestationInformation<T>> {
-		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
-		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
-		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.identity), requestContext.identity);
 		Guards.stringValue(this.CLASS_NAME, nameof(controllerAddress), controllerAddress);
 		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
 		Guards.object<T>(this.CLASS_NAME, nameof(data), data);
 
-		const response = await this.fetch<IAttestationAttestRequest, IAttestationAttestResponse<T>>(
-			requestContext,
+		const response = await this.fetch<IAttestationAttestRequest, IAttestationAttestResponse>(
 			"/",
 			"POST",
 			{
@@ -79,30 +66,22 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 			}
 		);
 
-		return response.body.information;
+		return response.body.information as IAttestationInformation<T>;
 	}
 
 	/**
 	 * Resolve and verify the attestation id.
-	 * @param requestContext The context for the request.
 	 * @param attestationId The attestation id to verify.
 	 * @returns The verified attestation details.
 	 */
-	public async verify<T>(
-		requestContext: IRequestContext,
-		attestationId: string
-	): Promise<{
+	public async verify<T>(attestationId: string): Promise<{
 		verified: boolean;
 		failure?: string;
 		information?: Partial<IAttestationInformation<T>>;
 	}> {
-		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
-		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
-		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.identity), requestContext.identity);
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 
-		const response = await this.fetch<IAttestationVerifyRequest, IAttestationVerifyResponse<T>>(
-			requestContext,
+		const response = await this.fetch<IAttestationVerifyRequest, IAttestationVerifyResponse>(
 			"/:id",
 			"GET",
 			{
@@ -112,32 +91,30 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 			}
 		);
 
-		return response.body;
+		return {
+			verified: response.body.verified,
+			failure: response.body.failure,
+			information: response.body.information as IAttestationInformation<T>
+		};
 	}
 
 	/**
 	 * Transfer the attestation to a new holder.
-	 * @param requestContext The context for the request.
 	 * @param attestationId The attestation to transfer.
 	 * @param holderControllerAddress The new controller address of the attestation belonging to the holder.
 	 * @param holderIdentity The holder identity of the attestation.
 	 * @returns The updated attestation details.
 	 */
 	public async transfer<T = unknown>(
-		requestContext: IRequestContext,
 		attestationId: string,
 		holderControllerAddress: string,
 		holderIdentity: string
 	): Promise<IAttestationInformation<T>> {
-		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
-		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
-		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.identity), requestContext.identity);
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 		Guards.stringValue(this.CLASS_NAME, nameof(holderControllerAddress), holderControllerAddress);
 		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
 
-		const response = await this.fetch<IAttestationTransferRequest, IAttestationTransferResponse<T>>(
-			requestContext,
+		const response = await this.fetch<IAttestationTransferRequest, IAttestationTransferResponse>(
 			"/:id/transfer",
 			"PUT",
 			{
@@ -151,6 +128,6 @@ export class AttestationClient extends BaseRestClient implements IAttestation {
 			}
 		);
 
-		return response.body.information;
+		return response.body.information as IAttestationInformation<T>;
 	}
 }

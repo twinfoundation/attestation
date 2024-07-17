@@ -5,11 +5,11 @@ import type { IAttestationInformation } from "../IAttestationInformation";
 /**
  * The response when creating the attestation for some data.
  */
-export interface IAttestationAttestResponse<T = unknown> {
+export interface IAttestationAttestResponse {
 	/**
 	 * The result of the attestation process.
 	 */
 	body: {
-		information: IAttestationInformation<T>;
+		information: IAttestationInformation;
 	};
 }

@@ -5,7 +5,7 @@ import type { IAttestationInformation } from "../IAttestationInformation";
 /**
  * The response to transferring the attestation.
  */
-export interface IAttestationTransferResponse<T = unknown> {
+export interface IAttestationTransferResponse {
 	/**
 	 * The data returned from the transfer response.
 	 */
@@ -13,6 +13,6 @@ export interface IAttestationTransferResponse<T = unknown> {
 		/**
 		 * The updated attestation information.
 		 */
-		information: IAttestationInformation<T>;
+		information: IAttestationInformation;
 	};
 }

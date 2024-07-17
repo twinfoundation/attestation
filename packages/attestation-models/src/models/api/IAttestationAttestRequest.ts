@@ -4,7 +4,7 @@
 /**
  * Attest the data and return the collated attestation details.
  */
-export interface IAttestationAttestRequest<T = unknown> {
+export interface IAttestationAttestRequest {
 	/**
 	 * The data to be used in the signing.
 	 */
@@ -22,7 +22,7 @@ export interface IAttestationAttestRequest<T = unknown> {
 		/**
 		 * The data object to attest.
 		 */
-		data: T;
+		data: unknown;
 
 		/**
 		 * The namespace of the connector to use for the attestation, defaults to service configured namespace.

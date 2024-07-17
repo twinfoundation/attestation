@@ -1,7 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-
-import type { IRestRoute, ITag } from "@gtsc/api-models";
+import type { IHttpRequestContext, IRestRoute, ITag } from "@gtsc/api-models";
 import type {
 	IAttestation,
 	IAttestationAttestRequest,
@@ -13,7 +12,7 @@ import type {
 } from "@gtsc/attestation-models";
 import { Guards } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
-import { ServiceFactory, type IRequestContext } from "@gtsc/services";
+import { ServiceFactory } from "@gtsc/services";
 
 /**
  * The source used when communicating about these routes.
@@ -23,7 +22,7 @@ const ROUTES_SOURCE = "attestationRoutes";
 /**
  * The tag to associate with the routes.
  */
-export const tags: ITag[] = [
+export const tagsAttestation: ITag[] = [
 	{
 		name: "Attestation",
 		description: "Endpoints which are modelled to access an attestation contract."
@@ -36,14 +35,14 @@ export const tags: ITag[] = [
  * @param factoryServiceName The name of the service to use in the routes store in the ServiceFactory.
  * @returns The generated routes.
  */
-export function generateRestRoutes(
+export function generateRestRoutesAttestation(
 	baseRouteName: string,
 	factoryServiceName: string
 ): IRestRoute[] {
 	const attestRoute: IRestRoute<IAttestationAttestRequest, IAttestationAttestResponse> = {
 		operationId: "attestationAttest",
 		summary: "Attest a data set",
-		tag: tags[0].name,
+		tag: tagsAttestation[0].name,
 		method: "POST",
 		path: `${baseRouteName}/`,
 		handler: async (requestContext, request) =>
@@ -81,6 +80,8 @@ export function generateRestRoutes(
 									created: "2024-06-18T13:34:51Z",
 									ownerIdentity:
 										"did:iota:tst:0x8992c426116f21b2a4c7a2854300748d3e94a8ce089d5be62e11f105bd2a0f9e",
+									holderIdentity:
+										"did:iota:tst:0x8992c426116f21b2a4c7a2854300748d3e94a8ce089d5be62e11f105bd2a0f9e",
 									data: {
 										docName: "bill-of-lading",
 										mimeType: "application/pdf",
@@ -104,7 +105,7 @@ export function generateRestRoutes(
 	const verifyRoute: IRestRoute<IAttestationVerifyRequest, IAttestationVerifyResponse> = {
 		operationId: "attestationVerify",
 		summary: "Verify an attestation",
-		tag: tags[0].name,
+		tag: tagsAttestation[0].name,
 		method: "GET",
 		path: `${baseRouteName}/:id`,
 		handler: async (requestContext, request) =>
@@ -137,6 +138,8 @@ export function generateRestRoutes(
 									created: "2024-06-18T13:34:51Z",
 									ownerIdentity:
 										"did:iota:tst:0x8992c426116f21b2a4c7a2854300748d3e94a8ce089d5be62e11f105bd2a0f9e",
+									holderIdentity:
+										"did:iota:tst:0x8992c426116f21b2a4c7a2854300748d3e94a8ce089d5be62e11f105bd2a0f9e",
 									data: {
 										docName: "bill-of-lading",
 										mimeType: "application/pdf",
@@ -163,6 +166,8 @@ export function generateRestRoutes(
 									created: "2024-06-18T13:34:51Z",
 									ownerIdentity:
 										"did:iota:tst:0x8992c426116f21b2a4c7a2854300748d3e94a8ce089d5be62e11f105bd2a0f9e",
+									holderIdentity:
+										"did:iota:tst:0x8992c426116f21b2a4c7a2854300748d3e94a8ce089d5be62e11f105bd2a0f9e",
 									data: {
 										docName: "bill-of-lading",
 										mimeType: "application/pdf",
@@ -186,7 +191,7 @@ export function generateRestRoutes(
 	const transferRoute: IRestRoute<IAttestationTransferRequest, IAttestationTransferResponse> = {
 		operationId: "attestationTransfer",
 		summary: "Transfer an attestation",
-		tag: tags[0].name,
+		tag: tagsAttestation[0].name,
 		method: "PUT",
 		path: `${baseRouteName}/:id/transfer`,
 		handler: async (requestContext, request) =>
@@ -257,7 +262,7 @@ export function generateRestRoutes(
  * @returns The response object with additional http response properties.
  */
 export async function attestationAttest(
-	requestContext: IRequestContext,
+	requestContext: IHttpRequestContext,
 	factoryServiceName: string,
 	request: IAttestationAttestRequest
 ): Promise<IAttestationAttestResponse> {
@@ -280,13 +285,13 @@ export async function attestationAttest(
 	Guards.object(ROUTES_SOURCE, nameof(request.body.data), request.body.data);
 	const service = ServiceFactory.get<IAttestation>(factoryServiceName);
 	const information = await service.attest(
-		requestContext,
 		request.body.controllerAddress,
 		request.body.verificationMethodId,
 		request.body.data,
 		{
 			namespace: request.body.namespace
-		}
+		},
+		requestContext
 	);
 	return {
 		body: {
@@ -303,7 +308,7 @@ export async function attestationAttest(
  * @returns The response object with additional http response properties.
  */
 export async function attestationVerify(
-	requestContext: IRequestContext,
+	requestContext: IHttpRequestContext,
 	factoryServiceName: string,
 	request: IAttestationVerifyRequest
 ): Promise<IAttestationVerifyResponse> {
@@ -316,7 +321,7 @@ export async function attestationVerify(
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
 	const service = ServiceFactory.get<IAttestation>(factoryServiceName);
-	const verificationResult = await service.verify(requestContext, request.pathParams.id);
+	const verificationResult = await service.verify(request.pathParams.id, requestContext);
 
 	return {
 		body: verificationResult
@@ -331,7 +336,7 @@ export async function attestationVerify(
  * @returns The response object with additional http response properties.
  */
 export async function attestationTransfer(
-	requestContext: IRequestContext,
+	requestContext: IHttpRequestContext,
 	factoryServiceName: string,
 	request: IAttestationTransferRequest
 ): Promise<IAttestationTransferResponse> {
@@ -360,10 +365,10 @@ export async function attestationTransfer(
 
 	const service = ServiceFactory.get<IAttestation>(factoryServiceName);
 	const information = await service.transfer(
-		requestContext,
 		request.pathParams.id,
 		request.body.holderControllerAddress,
-		request.body.holderIdentity
+		request.body.holderIdentity,
+		requestContext
 	);
 
 	return {

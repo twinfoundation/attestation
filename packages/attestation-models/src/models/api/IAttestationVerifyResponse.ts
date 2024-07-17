@@ -5,7 +5,7 @@ import type { IAttestationInformation } from "../IAttestationInformation";
 /**
  * The response to verifying the attestation.
  */
-export interface IAttestationVerifyResponse<T = unknown> {
+export interface IAttestationVerifyResponse {
 	/**
 	 * The data returned from the verification response.
 	 */
@@ -23,6 +23,6 @@ export interface IAttestationVerifyResponse<T = unknown> {
 		/**
 		 * The attestation information.
 		 */
-		information?: Partial<IAttestationInformation<T>>;
+		information?: Partial<IAttestationInformation>;
 	};
 }

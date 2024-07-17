@@ -93,11 +93,11 @@ export async function actionCommandAttestationTransfer(opts: {
 
 	setupVault();
 
-	const requestContext = { identity: "local", tenantId: "local" };
+	const requestContext = { identity: "local", partitionId: "local" };
 	const vaultSeedId = "local-seed";
 
 	const vaultConnector = VaultConnectorFactory.get("vault");
-	await vaultConnector.setSecret(requestContext, vaultSeedId, Converter.bytesToBase64(seed));
+	await vaultConnector.setSecret(vaultSeedId, Converter.bytesToBase64(seed), requestContext);
 
 	IdentityConnectorFactory.register(
 		"identity",
@@ -136,10 +136,10 @@ export async function actionCommandAttestationTransfer(opts: {
 	CLIDisplay.spinnerStart();
 
 	const attestationInformation = await iotaAttestationConnector.transfer(
-		requestContext,
 		id,
 		holderAddress,
-		holderIdentity
+		holderIdentity,
+		requestContext
 	);
 
 	CLIDisplay.spinnerStop();

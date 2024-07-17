@@ -36,7 +36,7 @@ The configuration for the client.
 
 ### CLASS\_NAME
 
-> `readonly` **CLASS\_NAME**: `string` = `AttestationClient._CLASS_NAME`
+> `readonly` **CLASS\_NAME**: `string`
 
 Runtime name for the class.
 
@@ -66,27 +66,23 @@ The endpoint with namespace prefix attached.
 
 ### fetch()
 
-> **fetch**\<`T`, `U`\>(`requestContext`, `route`, `method`, `request`?): `Promise`\<`U`\>
+> **fetch**\<`T`, `U`\>(`route`, `method`, `request`?): `Promise`\<`U`\>
 
 Perform a request in json format.
 
 #### Type parameters
 
-• **T** *extends* `IHttpRequest`\<`unknown`\>
+• **T** *extends* `IHttpRequest`\<`any`\>
 
-• **U** *extends* `IHttpResponse`\<`unknown`\>
+• **U** *extends* `IHttpResponse`\<`any`\>
 
 #### Parameters
-
-• **requestContext**: `IRequestContext`
-
-The context for the request.
 
 • **route**: `string`
 
 The route of the request.
 
-• **method**: `HttpMethods`
+• **method**: `HttpMethod`
 
 The http method.
 
@@ -108,7 +104,7 @@ The response.
 
 ### attest()
 
-> **attest**\<`T`\>(`requestContext`, `controllerAddress`, `verificationMethodId`, `data`, `options`?): `Promise`\<`IAttestationInformation`\<`T`\>\>
+> **attest**\<`T`\>(`controllerAddress`, `verificationMethodId`, `data`, `options`?): `Promise`\<`IAttestationInformation`\<`T`\>\>
 
 Attest the data and return the collated information.
 
@@ -117,10 +113,6 @@ Attest the data and return the collated information.
 • **T** = `unknown`
 
 #### Parameters
-
-• **requestContext**: `IRequestContext`
-
-The context for the request.
 
 • **controllerAddress**: `string`
 
@@ -156,7 +148,7 @@ The collated attestation data.
 
 ### verify()
 
-> **verify**\<`T`\>(`requestContext`, `attestationId`): `Promise`\<`object`\>
+> **verify**\<`T`\>(`attestationId`): `Promise`\<`object`\>
 
 Resolve and verify the attestation id.
 
@@ -165,10 +157,6 @@ Resolve and verify the attestation id.
 • **T**
 
 #### Parameters
-
-• **requestContext**: `IRequestContext`
-
-The context for the request.
 
 • **attestationId**: `string`
 
@@ -200,7 +188,7 @@ The verified attestation details.
 
 ### transfer()
 
-> **transfer**\<`T`\>(`requestContext`, `attestationId`, `holderControllerAddress`, `holderIdentity`): `Promise`\<`IAttestationInformation`\<`T`\>\>
+> **transfer**\<`T`\>(`attestationId`, `holderControllerAddress`, `holderIdentity`): `Promise`\<`IAttestationInformation`\<`T`\>\>
 
 Transfer the attestation to a new holder.
 
@@ -209,10 +197,6 @@ Transfer the attestation to a new holder.
 • **T** = `unknown`
 
 #### Parameters
-
-• **requestContext**: `IRequestContext`
-
-The context for the request.
 
 • **attestationId**: `string`
 

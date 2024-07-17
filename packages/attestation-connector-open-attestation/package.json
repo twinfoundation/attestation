@@ -1,6 +1,6 @@
 {
 	"name": "@gtsc/attestation-connector-open-attestation",
-	"version": "0.0.3-next.9",
+	"version": "0.0.3-next.10",
 	"description": "Attestation connector implementation using OpenAttestation",
 	"repository": {
 		"type": "git",
@@ -28,15 +28,15 @@
 		"dist": "npm run clean && npm run build && npm run test && npm run bundle && npm run docs"
 	},
 	"dependencies": {
-		"@gtsc/attestation-models": "0.0.3-next.9",
+		"@gtsc/attestation-models": "0.0.3-next.10",
 		"@gtsc/core": "next",
 		"@gtsc/entity": "next",
-		"@gtsc/nameof": "0.0.4",
+		"@gtsc/nameof": "next",
 		"@gtsc/standards-w3c-did": "next",
 		"@govtechsg/open-attestation": "6.9.3"
 	},
 	"devDependencies": {
-		"@gtsc/nameof-transformer": "0.0.4",
+		"@gtsc/nameof-transformer": "next",
 		"@vitest/coverage-v8": "1.6.0",
 		"copyfiles": "2.4.1",
 		"replace-in-files-cli": "2.2.0",

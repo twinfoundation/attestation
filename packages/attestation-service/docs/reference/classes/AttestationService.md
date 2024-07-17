@@ -40,7 +40,7 @@ Runtime name for the class.
 
 ### attest()
 
-> **attest**\<`T`\>(`requestContext`, `controllerAddress`, `verificationMethodId`, `data`, `options`?): `Promise`\<`IAttestationInformation`\<`T`\>\>
+> **attest**\<`T`\>(`controllerAddress`, `verificationMethodId`, `data`, `options`?, `requestContext`?): `Promise`\<`IAttestationInformation`\<`T`\>\>
 
 Attest the data and return the collated information.
 
@@ -49,10 +49,6 @@ Attest the data and return the collated information.
 • **T** = `unknown`
 
 #### Parameters
-
-• **requestContext**: `IRequestContext`
-
-The context for the request.
 
 • **controllerAddress**: `string`
 
@@ -74,6 +70,10 @@ Additional options for the attestation service.
 
 The namespace of the connector to use for the attestation, defaults to service configured namespace.
 
+• **requestContext?**: `IServiceRequestContext`
+
+The context for the request.
+
 #### Returns
 
 `Promise`\<`IAttestationInformation`\<`T`\>\>
@@ -88,7 +88,7 @@ The collated attestation data.
 
 ### verify()
 
-> **verify**\<`T`\>(`requestContext`, `attestationId`): `Promise`\<`object`\>
+> **verify**\<`T`\>(`attestationId`, `requestContext`?): `Promise`\<`object`\>
 
 Resolve and verify the attestation id.
 
@@ -98,13 +98,13 @@ Resolve and verify the attestation id.
 
 #### Parameters
 
-• **requestContext**: `IRequestContext`
-
-The context for the request.
-
 • **attestationId**: `string`
 
 The attestation id to verify.
+
+• **requestContext?**: `IServiceRequestContext`
+
+The context for the request.
 
 #### Returns
 
@@ -132,7 +132,7 @@ The verified attestation details.
 
 ### transfer()
 
-> **transfer**\<`T`\>(`requestContext`, `attestationId`, `holderControllerAddress`, `holderIdentity`): `Promise`\<`IAttestationInformation`\<`T`\>\>
+> **transfer**\<`T`\>(`attestationId`, `holderControllerAddress`, `holderIdentity`, `requestContext`?): `Promise`\<`IAttestationInformation`\<`T`\>\>
 
 Transfer the attestation to a new holder.
 
@@ -141,10 +141,6 @@ Transfer the attestation to a new holder.
 • **T** = `unknown`
 
 #### Parameters
-
-• **requestContext**: `IRequestContext`
-
-The context for the request.
 
 • **attestationId**: `string`
 
@@ -157,6 +153,10 @@ The new controller address of the attestation belonging to the holder.
 • **holderIdentity**: `string`
 
 The holder identity of the attestation.
+
+• **requestContext?**: `IServiceRequestContext`
+
+The context for the request.
 
 #### Returns
 

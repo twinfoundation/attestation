@@ -22,13 +22,13 @@ The name of the service.
 
 ### bootstrap()?
 
-> `optional` **bootstrap**(`requestContext`): `Promise`\<`void`\>
+> `optional` **bootstrap**(`requestContext`?): `Promise`\<`void`\>
 
 Bootstrap the service by creating and initializing any resources it needs.
 
 #### Parameters
 
-• **requestContext**: `IRequestContext`
+• **requestContext?**: `IServiceRequestContext`
 
 The request context for bootstrapping.
 
@@ -82,7 +82,7 @@ Nothing.
 
 ### attest()
 
-> **attest**\<`T`\>(`requestContext`, `controllerAddress`, `verificationMethodId`, `data`): `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
+> **attest**\<`T`\>(`controllerAddress`, `verificationMethodId`, `data`, `requestContext`?): `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
 
 Attest the data and return the collated information.
 
@@ -91,10 +91,6 @@ Attest the data and return the collated information.
 • **T** = `unknown`
 
 #### Parameters
-
-• **requestContext**: `IRequestContext`
-
-The context for the request.
 
 • **controllerAddress**: `string`
 
@@ -108,6 +104,10 @@ The identity verification method to use for attesting the data.
 
 The data to attest.
 
+• **requestContext?**: `IServiceRequestContext`
+
+The context for the request.
+
 #### Returns
 
 `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
@@ -118,7 +118,7 @@ The collated attestation data.
 
 ### verify()
 
-> **verify**\<`T`\>(`requestContext`, `attestationId`): `Promise`\<`object`\>
+> **verify**\<`T`\>(`attestationId`, `requestContext`?): `Promise`\<`object`\>
 
 Resolve and verify the attestation id.
 
@@ -128,13 +128,13 @@ Resolve and verify the attestation id.
 
 #### Parameters
 
-• **requestContext**: `IRequestContext`
-
-The context for the request.
-
 • **attestationId**: `string`
 
 The attestation id to verify.
+
+• **requestContext?**: `IServiceRequestContext`
+
+The context for the request.
 
 #### Returns
 
@@ -158,7 +158,7 @@ The verified attestation details.
 
 ### transfer()
 
-> **transfer**\<`T`\>(`requestContext`, `attestationId`, `holderControllerAddress`, `holderIdentity`): `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
+> **transfer**\<`T`\>(`attestationId`, `holderControllerAddress`, `holderIdentity`, `requestContext`?): `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
 
 Transfer the attestation to a new holder.
 
@@ -167,10 +167,6 @@ Transfer the attestation to a new holder.
 • **T** = `unknown`
 
 #### Parameters
-
-• **requestContext**: `IRequestContext`
-
-The context for the request.
 
 • **attestationId**: `string`
 
@@ -183,6 +179,10 @@ The new controller address of the attestation belonging to the holder.
 • **holderIdentity**: `string`
 
 The holder identity of the attestation.
+
+• **requestContext?**: `IServiceRequestContext`
+
+The context for the request.
 
 #### Returns
 

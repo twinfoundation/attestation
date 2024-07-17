@@ -21,8 +21,8 @@ describe("IotaAttestationConnector", () => {
 		await setupTestEnv();
 
 		const testIdentity = await TEST_IDENTITY_CONNECTOR.createDocument(
-			TEST_CONTEXT,
-			TEST_IDENTITY_ADDRESS_BECH32
+			TEST_IDENTITY_ADDRESS_BECH32,
+			TEST_CONTEXT
 		);
 		ownerIdentity = testIdentity.id;
 		console.debug(
@@ -31,10 +31,10 @@ describe("IotaAttestationConnector", () => {
 		);
 
 		const verificationMethod = await TEST_IDENTITY_CONNECTOR.addVerificationMethod(
-			TEST_CONTEXT,
 			testIdentity.id,
 			"assertionMethod",
-			"attestation"
+			"attestation",
+			TEST_CONTEXT
 		);
 		verificationMethodId = verificationMethod.id;
 	});
@@ -54,17 +54,17 @@ describe("IotaAttestationConnector", () => {
 		};
 
 		const attested = await attestation.attest(
-			TEST_CONTEXT,
 			TEST_IDENTITY_ADDRESS_BECH32,
 			verificationMethodId,
-			dataPayload
+			dataPayload,
+			TEST_CONTEXT
 		);
 
 		expect(attested).toBeDefined();
 		expect(attested.id.startsWith("urn:iota-attestation")).toEqual(true);
 		expect(Is.dateTimeString(attested.created)).toEqual(true);
 		expect(attested.ownerIdentity).toEqual(ownerIdentity);
-		expect(attested.holderIdentity).toEqual(undefined);
+		expect(attested.holderIdentity).toEqual(ownerIdentity);
 		expect(attested.transferred).toEqual(undefined);
 		expect(attested.data).toEqual(dataPayload);
 		expect(attested.proof?.type).toEqual("jwt");
@@ -81,7 +81,7 @@ describe("IotaAttestationConnector", () => {
 	test("can verify an attestation", async () => {
 		const attestation = new IotaAttestationConnector();
 
-		const attested = await attestation.verify(TEST_CONTEXT, attestationId);
+		const attested = await attestation.verify(attestationId, TEST_CONTEXT);
 
 		expect(attested).toBeDefined();
 		expect(attested.verified).toEqual(true);
@@ -89,7 +89,7 @@ describe("IotaAttestationConnector", () => {
 		expect(attested.information?.id?.startsWith("urn:iota-attestation")).toEqual(true);
 		expect(Is.dateTimeString(attested.information?.created)).toEqual(true);
 		expect(attested.information?.ownerIdentity).toEqual(ownerIdentity);
-		expect(attested.information?.holderIdentity).toEqual(undefined);
+		expect(attested.information?.holderIdentity).toEqual(ownerIdentity);
 		expect(attested.information?.transferred).toEqual(undefined);
 		expect(attested.information?.data).toEqual({
 			docName: "bill-of-lading",
@@ -104,15 +104,15 @@ describe("IotaAttestationConnector", () => {
 		const attestation = new IotaAttestationConnector();
 
 		const testIdentity2 = await TEST_IDENTITY_CONNECTOR.createDocument(
-			TEST_CONTEXT,
-			TEST_IDENTITY_ADDRESS_BECH32_2
+			TEST_IDENTITY_ADDRESS_BECH32_2,
+			TEST_CONTEXT
 		);
 
 		const transfered = await attestation.transfer(
-			TEST_CONTEXT,
 			attestationId,
 			TEST_IDENTITY_ADDRESS_BECH32_2,
-			testIdentity2.id
+			testIdentity2.id,
+			TEST_CONTEXT
 		);
 
 		expect(transfered).toBeDefined();

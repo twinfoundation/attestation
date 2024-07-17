@@ -5,7 +5,7 @@ import { Coerce, GeneralError, Guards, Is, Urn } from "@gtsc/core";
 import { IdentityConnectorFactory, type IIdentityConnector } from "@gtsc/identity-models";
 import { nameof } from "@gtsc/nameof";
 import { NftConnectorFactory, type INftConnector } from "@gtsc/nft-models";
-import type { IRequestContext } from "@gtsc/services";
+import type { IServiceRequestContext } from "@gtsc/services";
 import type { IDidVerifiableCredential } from "@gtsc/standards-w3c-did";
 import { IotaAttestationUtils } from "./iotaAttestationUtils";
 import type { IIotaAttestationConnectorConfig } from "./models/IIotaAttestationConnectorConfig";
@@ -72,32 +72,31 @@ export class IotaAttestationConnector implements IAttestationConnector {
 
 	/**
 	 * Attest the data and return the collated information.
-	 * @param requestContext The context for the request.
 	 * @param controllerAddress The controlling address for the attestation.
 	 * @param verificationMethodId The identity verification method to use for attesting the data.
 	 * @param data The data to attest.
+	 * @param requestContext The context for the request.
 	 * @returns The collated attestation data.
 	 */
 	public async attest<T>(
-		requestContext: IRequestContext,
 		controllerAddress: string,
 		verificationMethodId: string,
-		data: T
+		data: T,
+		requestContext?: IServiceRequestContext
 	): Promise<IAttestationInformation<T>> {
-		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
-		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
-		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.identity), requestContext.identity);
 		Guards.stringValue(this.CLASS_NAME, nameof(controllerAddress), controllerAddress);
 		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
 		Guards.object<T>(this.CLASS_NAME, nameof(data), data);
 
 		try {
 			const verifiableCredential = await this._identityConnector.createVerifiableCredential(
-				requestContext,
 				verificationMethodId,
 				undefined,
 				undefined,
-				data
+				data,
+				undefined,
+				undefined,
+				requestContext
 			);
 
 			const attestationPayload: IIotaAttestationPayload = {
@@ -108,11 +107,11 @@ export class IotaAttestationConnector implements IAttestationConnector {
 			const holder: IIotaAttestationHolder = {};
 
 			const nftId = await this._nftConnector.mint(
-				requestContext,
 				controllerAddress,
 				this._config.tag ?? IotaAttestationConnector._DEFAULT_TAG,
 				attestationPayload,
-				holder
+				holder,
+				requestContext
 			);
 
 			// Convert the nftId urn to a form we can use as the namespace specific part of the
@@ -124,6 +123,7 @@ export class IotaAttestationConnector implements IAttestationConnector {
 				id: attestationId,
 				created: verifiableCredential.verifiableCredential?.issuanceDate ?? "",
 				ownerIdentity: verifiableCredential.verifiableCredential.issuer ?? "",
+				holderIdentity: verifiableCredential.verifiableCredential.issuer ?? "",
 				data,
 				proof: {
 					type: "jwt",
@@ -139,21 +139,18 @@ export class IotaAttestationConnector implements IAttestationConnector {
 
 	/**
 	 * Resolve and verify the attestation id.
-	 * @param requestContext The context for the request.
 	 * @param attestationId The attestation id to verify.
+	 * @param requestContext The context for the request.
 	 * @returns The resolved attestation details.
 	 */
 	public async verify<T>(
-		requestContext: IRequestContext,
-		attestationId: string
+		attestationId: string,
+		requestContext?: IServiceRequestContext
 	): Promise<{
 		verified: boolean;
 		failure?: string;
 		information?: Partial<IAttestationInformation<T>>;
 	}> {
-		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
-		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
-		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.identity), requestContext.identity);
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 
 		const urnParsed = Urn.fromValidString(attestationId);
@@ -171,7 +168,7 @@ export class IotaAttestationConnector implements IAttestationConnector {
 			const resolved = await this._nftConnector.resolve<
 				IIotaAttestationPayload,
 				IIotaAttestationHolder
-			>(requestContext, nftId);
+			>(nftId, requestContext);
 
 			let failure: string | undefined;
 			let checkResult:
@@ -186,8 +183,8 @@ export class IotaAttestationConnector implements IAttestationConnector {
 				failure = `${this.CLASS_NAME}.verificationFailures.noData`;
 			} else {
 				checkResult = await this._identityConnector.checkVerifiableCredential(
-					requestContext,
-					jwtProof
+					jwtProof,
+					requestContext
 				);
 
 				if (Is.empty(checkResult.verifiableCredential)) {
@@ -201,6 +198,7 @@ export class IotaAttestationConnector implements IAttestationConnector {
 				id: attestationId,
 				created: checkResult?.verifiableCredential?.issuanceDate,
 				ownerIdentity: checkResult?.verifiableCredential?.issuer,
+				holderIdentity: checkResult?.verifiableCredential?.issuer,
 				data: checkResult?.verifiableCredential?.credentialSubject as T
 			};
 
@@ -234,21 +232,18 @@ export class IotaAttestationConnector implements IAttestationConnector {
 
 	/**
 	 * Transfer the attestation to a new holder.
-	 * @param requestContext The context for the request.
 	 * @param attestationId The attestation to transfer.
 	 * @param holderControllerAddress The new controller address of the attestation belonging to the holder.
 	 * @param holderIdentity The holder identity of the attestation.
+	 * @param requestContext The context for the request.
 	 * @returns The updated attestation details.
 	 */
 	public async transfer<T>(
-		requestContext: IRequestContext,
 		attestationId: string,
 		holderControllerAddress: string,
-		holderIdentity: string
+		holderIdentity: string,
+		requestContext?: IServiceRequestContext
 	): Promise<IAttestationInformation<T>> {
-		Guards.object<IRequestContext>(this.CLASS_NAME, nameof(requestContext), requestContext);
-		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.tenantId), requestContext.tenantId);
-		Guards.stringValue(this.CLASS_NAME, nameof(requestContext.identity), requestContext.identity);
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 		Guards.stringValue(this.CLASS_NAME, nameof(holderControllerAddress), holderControllerAddress);
 		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
@@ -263,7 +258,7 @@ export class IotaAttestationConnector implements IAttestationConnector {
 		}
 
 		try {
-			const verificationResult = await this.verify<T>(requestContext, attestationId);
+			const verificationResult = await this.verify<T>(attestationId, requestContext);
 			if (Is.stringValue(verificationResult.failure)) {
 				throw new GeneralError(
 					this.CLASS_NAME,
@@ -280,7 +275,7 @@ export class IotaAttestationConnector implements IAttestationConnector {
 				holderIdentity
 			};
 
-			await this._nftConnector.transfer(requestContext, nftId, holderControllerAddress, holder);
+			await this._nftConnector.transfer(nftId, holderControllerAddress, holder, requestContext);
 
 			return {
 				...(verificationResult.information as IAttestationInformation<T>),
