@@ -6,6 +6,7 @@ import { generateRestRoutesAttestation, tagsAttestation } from "./attestationRou
 export const restEntryPoints: IRestRouteEntryPoint[] = [
 	{
 		name: "attestation",
+		defaultBaseRoute: "attestation",
 		tags: tagsAttestation,
 		generateRoutes: generateRestRoutesAttestation
 	}
