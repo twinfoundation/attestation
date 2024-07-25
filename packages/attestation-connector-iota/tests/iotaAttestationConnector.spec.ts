@@ -61,7 +61,7 @@ describe("IotaAttestationConnector", () => {
 		);
 
 		expect(attested).toBeDefined();
-		expect(attested.id.startsWith("urn:iota-attestation")).toEqual(true);
+		expect(attested.id.startsWith("attestation:iota")).toEqual(true);
 		expect(Is.dateTimeString(attested.created)).toEqual(true);
 		expect(attested.ownerIdentity).toEqual(ownerIdentity);
 		expect(attested.holderIdentity).toEqual(ownerIdentity);
@@ -71,7 +71,7 @@ describe("IotaAttestationConnector", () => {
 		expect(attested.proof?.value.split(".").length).toEqual(3);
 
 		const idUrn = Urn.fromValidString(attested.id);
-		const nftId = Converter.bytesToUtf8(Converter.base64ToBytes(idUrn.namespaceSpecific()));
+		const nftId = Converter.bytesToUtf8(Converter.base64ToBytes(idUrn.namespaceSpecific(1)));
 		const nftAddress = IotaNftUtils.nftIdToAddress(nftId);
 		console.debug("Attestation NFT", `${process.env.TEST_EXPLORER_URL}addr/${nftAddress}`);
 
@@ -86,7 +86,7 @@ describe("IotaAttestationConnector", () => {
 		expect(attested).toBeDefined();
 		expect(attested.verified).toEqual(true);
 		expect(attested.failure).toEqual(undefined);
-		expect(attested.information?.id?.startsWith("urn:iota-attestation")).toEqual(true);
+		expect(attested.information?.id?.startsWith("attestation:iota")).toEqual(true);
 		expect(Is.dateTimeString(attested.information?.created)).toEqual(true);
 		expect(attested.information?.ownerIdentity).toEqual(ownerIdentity);
 		expect(attested.information?.holderIdentity).toEqual(ownerIdentity);
@@ -116,7 +116,7 @@ describe("IotaAttestationConnector", () => {
 		);
 
 		expect(transfered).toBeDefined();
-		expect(transfered.id.startsWith("urn:iota-attestation")).toEqual(true);
+		expect(transfered.id.startsWith("attestation:iota")).toEqual(true);
 		expect(Is.dateTimeString(transfered.created)).toEqual(true);
 		expect(transfered.ownerIdentity).toEqual(ownerIdentity);
 		expect(transfered.holderIdentity).toEqual(testIdentity2.id);

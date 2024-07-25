@@ -19,7 +19,7 @@ export class IotaAttestationConnector implements IAttestationConnector {
 	/**
 	 * The namespace for the entities.
 	 */
-	public static readonly NAMESPACE: string = "iota-attestation";
+	public static readonly NAMESPACE: string = "iota";
 
 	/**
 	 * Default tag.
@@ -155,7 +155,7 @@ export class IotaAttestationConnector implements IAttestationConnector {
 
 		const urnParsed = Urn.fromValidString(attestationId);
 
-		if (urnParsed.namespaceIdentifier() !== IotaAttestationConnector.NAMESPACE) {
+		if (urnParsed.namespaceMethod() !== IotaAttestationConnector.NAMESPACE) {
 			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
 				namespace: IotaAttestationConnector.NAMESPACE,
 				attestationId
@@ -250,7 +250,7 @@ export class IotaAttestationConnector implements IAttestationConnector {
 
 		const urnParsed = Urn.fromValidString(attestationId);
 
-		if (urnParsed.namespaceIdentifier() !== IotaAttestationConnector.NAMESPACE) {
+		if (urnParsed.namespaceMethod() !== IotaAttestationConnector.NAMESPACE) {
 			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
 				namespace: IotaAttestationConnector.NAMESPACE,
 				attestationId

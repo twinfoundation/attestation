@@ -1,12 +1,12 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { Converter, Urn } from "@gtsc/core";
-import { IotaAttestationConnector } from "./iotaAttestationConnector";
+import { EntityStorageAttestationConnector } from "./entityStorageAttestationConnector";
 
 /**
- * Utility functions for the iota attestation.
+ * Utility functions for the entity storage attestation.
  */
-export class IotaAttestationUtils {
+export class EntityStorageAttestationUtils {
 	/**
 	 * Convert an attestation id to an nft id.
 	 * @param attestationId The attestation id to convert.
@@ -28,7 +28,7 @@ export class IotaAttestationUtils {
 	public static nftIdToAttestationId(nftId: string): string {
 		const nftUrn = Urn.fromValidString(nftId);
 		const namespaceSpecific = Converter.bytesToBase64(Converter.utf8ToBytes(nftUrn.toString(true)));
-		const attestationId = new Urn(IotaAttestationConnector.NAMESPACE, namespaceSpecific);
+		const attestationId = new Urn(EntityStorageAttestationConnector.NAMESPACE, namespaceSpecific);
 		return `attestation:${attestationId.toString()}`;
 	}
 }

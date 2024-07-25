@@ -4,5 +4,10 @@
 /**
  * Configuration for the Entity Storage Attestation Connector.
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface IEntityStorageAttestationConnectorConfig {}
+export interface IEntityStorageAttestationConnectorConfig {
+	/**
+	 * The tag to use for the attestation NFTs.
+	 * @default GTSC-ATTESTATION
+	 */
+	tag?: string;
+}
