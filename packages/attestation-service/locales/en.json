@@ -4,7 +4,8 @@
 			"noConnectors": "There are no connectors registered with the attestation factory",
 			"attestFailed": "The attestation of the data failed",
 			"verifyFailed": "The verification of the attestation failed",
-			"transferFailed": "The transfer of the attestation failed"
+			"transferFailed": "The transfer of the attestation failed",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the attestation service \"{namespace}\""
 		}
 	}
 }

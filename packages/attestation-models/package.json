@@ -1,6 +1,6 @@
 {
 	"name": "@gtsc/attestation-models",
-	"version": "0.0.3-next.12",
+	"version": "0.0.3-next.13",
 	"description": "Models which define the structure of the attestation connectors and services",
 	"repository": {
 		"type": "git",

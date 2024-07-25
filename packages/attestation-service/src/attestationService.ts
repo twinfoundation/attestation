@@ -16,6 +16,11 @@ import type { IAttestationServiceConfig } from "./models/IAttestationServiceConf
  */
 export class AttestationService implements IAttestation {
 	/**
+	 * The namespace supported by the attestation service.
+	 */
+	public static readonly NAMESPACE: string = "attestation";
+
+	/**
 	 * Runtime name for the class.
 	 */
 	public readonly CLASS_NAME: string = nameof<AttestationService>();
@@ -96,11 +101,7 @@ export class AttestationService implements IAttestation {
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 
 		try {
-			const idUri = Urn.fromValidString(attestationId);
-			const connectorNamespace = idUri.namespaceIdentifier();
-
-			const attestationConnector =
-				AttestationConnectorFactory.get<IAttestationConnector>(connectorNamespace);
+			const attestationConnector = this.getConnector(attestationId);
 
 			return attestationConnector.verify(attestationId, requestContext);
 		} catch (error) {
@@ -127,11 +128,7 @@ export class AttestationService implements IAttestation {
 		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
 
 		try {
-			const idUri = Urn.fromValidString(attestationId);
-			const connectorNamespace = idUri.namespaceIdentifier();
-
-			const attestationConnector =
-				AttestationConnectorFactory.get<IAttestationConnector>(connectorNamespace);
+			const attestationConnector = this.getConnector(attestationId);
 
 			return attestationConnector.transfer(
 				attestationId,
@@ -142,5 +139,24 @@ export class AttestationService implements IAttestation {
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "transferFailed", undefined, error);
 		}
+	}
+
+	/**
+	 * Get the connector from the uri.
+	 * @param id The id of the attestation in urn format.
+	 * @returns The connector.
+	 * @internal
+	 */
+	private getConnector(id: string): IAttestationConnector {
+		const idUri = Urn.fromValidString(id);
+
+		if (idUri.namespaceIdentifier() !== AttestationService.NAMESPACE) {
+			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
+				namespace: AttestationService.NAMESPACE,
+				id
+			});
+		}
+
+		return AttestationConnectorFactory.get<IAttestationConnector>(idUri.namespaceMethod());
 	}
 }
