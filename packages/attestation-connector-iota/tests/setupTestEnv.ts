@@ -95,7 +95,7 @@ NftConnectorFactory.register("nft", () => TEST_NFT_CONNECTOR);
 
 export const TEST_CONTEXT: IServiceRequestContext = {
 	partitionId: TEST_PARTITION_ID,
-	identity: TEST_IDENTITY_ID
+	userIdentity: TEST_IDENTITY_ID
 };
 
 await secretEntityStorage.set(

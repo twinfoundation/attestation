@@ -73,7 +73,7 @@ export async function actionCommandAttestationVerify(
 
 	setupVault();
 
-	const requestContext = { identity: "local", partitionId: "local" };
+	const requestContext = { userIdentity: "local", partitionId: "local" };
 
 	IdentityConnectorFactory.register(
 		"identity",
