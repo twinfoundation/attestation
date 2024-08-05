@@ -59,23 +59,23 @@ export function buildCommandAttestationTransfer(): Command {
  * @param opts The options for the command.
  * @param opts.seed The seed required for signing by the issuer.
  * @param opts.id The id of the attestation to transfer in urn format.
- * @param opts.holderAddress The new holder address of the attestation.
  * @param opts.holderIdentity The new holder identity of the attestation.
+ * @param opts.holderAddress The new holder address of the attestation.
  * @param opts.node The node URL.
  * @param opts.explorer The explorer URL.
  */
 export async function actionCommandAttestationTransfer(opts: {
 	seed: string;
 	id: string;
-	holderAddress: string;
 	holderIdentity: string;
+	holderAddress: string;
 	node: string;
 	explorer: string;
 }): Promise<void> {
 	const seed: Uint8Array = CLIParam.hexBase64("seed", opts.seed);
 	const id: string = CLIParam.stringValue("id", opts.id);
-	const holderAddress: string = CLIParam.bech32("recipient", opts.holderAddress);
 	const holderIdentity: string = CLIParam.stringValue("recipient", opts.holderIdentity);
+	const holderAddress: string = CLIParam.bech32("recipient", opts.holderAddress);
 	const nodeEndpoint: string = CLIParam.url("node", opts.node);
 	const explorerEndpoint: string = CLIParam.url("explorer", opts.explorer);
 
@@ -93,11 +93,11 @@ export async function actionCommandAttestationTransfer(opts: {
 
 	setupVault();
 
-	const requestContext = { userIdentity: "local", partitionId: "local" };
+	const localIdentity = "identity";
 	const vaultSeedId = "local-seed";
 
 	const vaultConnector = VaultConnectorFactory.get("vault");
-	await vaultConnector.setSecret(vaultSeedId, Converter.bytesToBase64(seed), requestContext);
+	await vaultConnector.setSecret(`${localIdentity}/${vaultSeedId}`, Converter.bytesToBase64(seed));
 
 	IdentityConnectorFactory.register(
 		"identity",
@@ -136,10 +136,10 @@ export async function actionCommandAttestationTransfer(opts: {
 	CLIDisplay.spinnerStart();
 
 	const attestationInformation = await iotaAttestationConnector.transfer(
+		localIdentity,
 		id,
-		holderAddress,
 		holderIdentity,
-		requestContext
+		holderAddress
 	);
 
 	CLIDisplay.spinnerStop();

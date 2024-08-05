@@ -45,8 +45,8 @@ export function generateRestRoutesAttestation(
 		tag: tagsAttestation[0].name,
 		method: "POST",
 		path: `${baseRouteName}/`,
-		handler: async (requestContext, request) =>
-			attestationAttest(requestContext, factoryServiceName, request),
+		handler: async (httpRequestContext, request) =>
+			attestationAttest(httpRequestContext, factoryServiceName, request),
 		requestType: {
 			type: nameof<IAttestationAttestRequest>(),
 			examples: [
@@ -54,7 +54,7 @@ export function generateRestRoutesAttestation(
 					id: "attestationAttestExample",
 					request: {
 						body: {
-							controllerAddress: "tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv",
+							address: "tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv",
 							verificationMethodId:
 								"did:iota:tst:0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f#attestation",
 							data: {
@@ -108,8 +108,8 @@ export function generateRestRoutesAttestation(
 		tag: tagsAttestation[0].name,
 		method: "GET",
 		path: `${baseRouteName}/:id`,
-		handler: async (requestContext, request) =>
-			attestationVerify(requestContext, factoryServiceName, request),
+		handler: async (httpRequestContext, request) =>
+			attestationVerify(httpRequestContext, factoryServiceName, request),
 		requestType: {
 			type: nameof<IAttestationVerifyRequest>(),
 			examples: [
@@ -194,8 +194,8 @@ export function generateRestRoutesAttestation(
 		tag: tagsAttestation[0].name,
 		method: "PUT",
 		path: `${baseRouteName}/:id/transfer`,
-		handler: async (requestContext, request) =>
-			attestationTransfer(requestContext, factoryServiceName, request),
+		handler: async (httpRequestContext, request) =>
+			attestationTransfer(httpRequestContext, factoryServiceName, request),
 		requestType: {
 			type: nameof<IAttestationTransferRequest>(),
 			examples: [
@@ -206,8 +206,7 @@ export function generateRestRoutesAttestation(
 							id: "attestation:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
 						},
 						body: {
-							holderControllerAddress:
-								"tst1pqr2uyp5l8627x6q3g94f6rhhdrkyktxdg20yg2qp5m5dtkwlfcs2h5djap",
+							holderAddress: "tst1pqr2uyp5l8627x6q3g94f6rhhdrkyktxdg20yg2qp5m5dtkwlfcs2h5djap",
 							holderIdentity:
 								"did:iota:tst:0x06ae1034f9f4af1b408a0b54e877bb476259666a14f221400d3746aecefa7105"
 						}
@@ -256,13 +255,13 @@ export function generateRestRoutesAttestation(
 
 /**
  * Sign the data and return the proof.
- * @param requestContext The request context for the API.
+ * @param httpRequestContext The request context for the API.
  * @param factoryServiceName The name of the service to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function attestationAttest(
-	requestContext: IHttpRequestContext,
+	httpRequestContext: IHttpRequestContext,
 	factoryServiceName: string,
 	request: IAttestationAttestRequest
 ): Promise<IAttestationAttestResponse> {
@@ -272,11 +271,7 @@ export async function attestationAttest(
 		nameof(request.body),
 		request.body
 	);
-	Guards.stringValue(
-		ROUTES_SOURCE,
-		nameof(request.body.controllerAddress),
-		request.body.controllerAddress
-	);
+	Guards.stringValue(ROUTES_SOURCE, nameof(request.body.address), request.body.address);
 	Guards.stringValue(
 		ROUTES_SOURCE,
 		nameof(request.body.verificationMethodId),
@@ -285,13 +280,13 @@ export async function attestationAttest(
 	Guards.object(ROUTES_SOURCE, nameof(request.body.data), request.body.data);
 	const service = ServiceFactory.get<IAttestation>(factoryServiceName);
 	const information = await service.attest(
-		request.body.controllerAddress,
+		request.body.address,
 		request.body.verificationMethodId,
 		request.body.data,
 		{
 			namespace: request.body.namespace
 		},
-		requestContext
+		httpRequestContext.userIdentity
 	);
 	return {
 		body: {
@@ -302,13 +297,13 @@ export async function attestationAttest(
 
 /**
  * Resolve and verify the attestation id.
- * @param requestContext The request context for the API.
+ * @param httpRequestContext The request context for the API.
  * @param factoryServiceName The name of the service to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function attestationVerify(
-	requestContext: IHttpRequestContext,
+	httpRequestContext: IHttpRequestContext,
 	factoryServiceName: string,
 	request: IAttestationVerifyRequest
 ): Promise<IAttestationVerifyResponse> {
@@ -321,7 +316,7 @@ export async function attestationVerify(
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
 	const service = ServiceFactory.get<IAttestation>(factoryServiceName);
-	const verificationResult = await service.verify(request.pathParams.id, requestContext);
+	const verificationResult = await service.verify(request.pathParams.id);
 
 	return {
 		body: verificationResult
@@ -330,13 +325,13 @@ export async function attestationVerify(
 
 /**
  * Transfer the attestation to a new holder.
- * @param requestContext The request context for the API.
+ * @param httpRequestContext The request context for the API.
  * @param factoryServiceName The name of the service to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function attestationTransfer(
-	requestContext: IHttpRequestContext,
+	httpRequestContext: IHttpRequestContext,
 	factoryServiceName: string,
 	request: IAttestationTransferRequest
 ): Promise<IAttestationTransferResponse> {
@@ -352,11 +347,7 @@ export async function attestationTransfer(
 		nameof(request.body),
 		request.body
 	);
-	Guards.stringValue(
-		ROUTES_SOURCE,
-		nameof(request.body.holderControllerAddress),
-		request.body.holderControllerAddress
-	);
+	Guards.stringValue(ROUTES_SOURCE, nameof(request.body.holderAddress), request.body.holderAddress);
 	Guards.stringValue(
 		ROUTES_SOURCE,
 		nameof(request.body.holderIdentity),
@@ -366,9 +357,9 @@ export async function attestationTransfer(
 	const service = ServiceFactory.get<IAttestation>(factoryServiceName);
 	const information = await service.transfer(
 		request.pathParams.id,
-		request.body.holderControllerAddress,
 		request.body.holderIdentity,
-		requestContext
+		request.body.holderAddress,
+		httpRequestContext.userIdentity
 	);
 
 	return {

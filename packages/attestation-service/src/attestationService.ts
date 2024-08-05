@@ -8,7 +8,6 @@ import {
 } from "@gtsc/attestation-models";
 import { GeneralError, Guards, Urn } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
-import type { IServiceRequestContext } from "@gtsc/services";
 import type { IAttestationServiceConfig } from "./models/IAttestationServiceConfig";
 
 /**
@@ -46,26 +45,27 @@ export class AttestationService implements IAttestation {
 
 	/**
 	 * Attest the data and return the collated information.
-	 * @param controllerAddress The controller address for the attestation.
+	 * @param address The controller address for the attestation.
 	 * @param verificationMethodId The identity verification method to use for attesting the data.
 	 * @param data The data to attest.
 	 * @param options Additional options for the attestation service.
 	 * @param options.namespace The namespace of the connector to use for the attestation, defaults to service configured namespace.
-	 * @param requestContext The context for the request.
+	 * @param identity The identity to perform the attestation operation with.
 	 * @returns The collated attestation data.
 	 */
 	public async attest<T = unknown>(
-		controllerAddress: string,
+		address: string,
 		verificationMethodId: string,
 		data: T,
 		options?: {
 			namespace?: string;
 		},
-		requestContext?: IServiceRequestContext
+		identity?: string
 	): Promise<IAttestationInformation<T>> {
-		Guards.stringValue(this.CLASS_NAME, nameof(controllerAddress), controllerAddress);
+		Guards.stringValue(this.CLASS_NAME, nameof(address), address);
 		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
 		Guards.object<T>(this.CLASS_NAME, nameof(data), data);
+		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
 
 		try {
 			const connectorNamespace = options?.namespace ?? this._defaultNamespace;
@@ -73,12 +73,7 @@ export class AttestationService implements IAttestation {
 			const attestationConnector =
 				AttestationConnectorFactory.get<IAttestationConnector>(connectorNamespace);
 
-			return attestationConnector.attest(
-				controllerAddress,
-				verificationMethodId,
-				data,
-				requestContext
-			);
+			return attestationConnector.attest(identity, address, verificationMethodId, data);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "attestFailed", undefined, error);
 		}
@@ -87,13 +82,9 @@ export class AttestationService implements IAttestation {
 	/**
 	 * Resolve and verify the attestation id.
 	 * @param attestationId The attestation id to verify.
-	 * @param requestContext The context for the request.
 	 * @returns The verified attestation details.
 	 */
-	public async verify<T>(
-		attestationId: string,
-		requestContext?: IServiceRequestContext
-	): Promise<{
+	public async verify<T>(attestationId: string): Promise<{
 		verified: boolean;
 		failure?: string;
 		information?: Partial<IAttestationInformation<T>>;
@@ -103,7 +94,7 @@ export class AttestationService implements IAttestation {
 		try {
 			const attestationConnector = this.getConnector(attestationId);
 
-			return attestationConnector.verify(attestationId, requestContext);
+			return attestationConnector.verify(attestationId);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "verifyFailed", undefined, error);
 		}
@@ -112,30 +103,26 @@ export class AttestationService implements IAttestation {
 	/**
 	 * Transfer the attestation to a new holder.
 	 * @param attestationId The attestation to transfer.
-	 * @param holderControllerAddress The new controller address of the attestation belonging to the holder.
 	 * @param holderIdentity The holder identity of the attestation.
-	 * @param requestContext The context for the request.
+	 * @param holderAddress The new controller address of the attestation belonging to the holder.
+	 * @param identity The identity to perform the attestation operation with.
 	 * @returns The updated attestation details.
 	 */
 	public async transfer<T = unknown>(
 		attestationId: string,
-		holderControllerAddress: string,
 		holderIdentity: string,
-		requestContext?: IServiceRequestContext
+		holderAddress: string,
+		identity: string
 	): Promise<IAttestationInformation<T>> {
+		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
-		Guards.stringValue(this.CLASS_NAME, nameof(holderControllerAddress), holderControllerAddress);
 		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
+		Guards.stringValue(this.CLASS_NAME, nameof(holderAddress), holderAddress);
 
 		try {
 			const attestationConnector = this.getConnector(attestationId);
 
-			return attestationConnector.transfer(
-				attestationId,
-				holderControllerAddress,
-				holderIdentity,
-				requestContext
-			);
+			return attestationConnector.transfer(identity, attestationId, holderIdentity, holderAddress);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "transferFailed", undefined, error);
 		}

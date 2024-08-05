@@ -12,7 +12,7 @@ export interface IAttestationAttestRequest {
 		/**
 		 * The controller address for the attestation.
 		 */
-		controllerAddress: string;
+		address: string;
 
 		/**
 		 * The identity verification method to use for attesting the data.

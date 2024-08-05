@@ -4,10 +4,10 @@ import { Converter, Is, Urn } from "@gtsc/core";
 import { IotaIdentityUtils } from "@gtsc/identity-connector-iota";
 import { IotaNftUtils } from "@gtsc/nft-connector-iota";
 import {
-	TEST_CONTEXT,
 	TEST_IDENTITY_ADDRESS_BECH32,
 	TEST_IDENTITY_ADDRESS_BECH32_2,
 	TEST_IDENTITY_CONNECTOR,
+	TEST_IDENTITY_ID,
 	setupTestEnv
 } from "./setupTestEnv";
 import { IotaAttestationConnector } from "../src/iotaAttestationConnector";
@@ -20,10 +20,7 @@ describe("IotaAttestationConnector", () => {
 	beforeAll(async () => {
 		await setupTestEnv();
 
-		const testIdentity = await TEST_IDENTITY_CONNECTOR.createDocument(
-			TEST_IDENTITY_ADDRESS_BECH32,
-			TEST_CONTEXT
-		);
+		const testIdentity = await TEST_IDENTITY_CONNECTOR.createDocument(TEST_IDENTITY_ID);
 		ownerIdentity = testIdentity.id;
 		console.debug(
 			"DID Document",
@@ -31,10 +28,10 @@ describe("IotaAttestationConnector", () => {
 		);
 
 		const verificationMethod = await TEST_IDENTITY_CONNECTOR.addVerificationMethod(
+			TEST_IDENTITY_ID,
 			testIdentity.id,
 			"assertionMethod",
-			"attestation",
-			TEST_CONTEXT
+			"attestation"
 		);
 		verificationMethodId = verificationMethod.id;
 	});
@@ -54,10 +51,10 @@ describe("IotaAttestationConnector", () => {
 		};
 
 		const attested = await attestation.attest(
+			TEST_IDENTITY_ID,
 			TEST_IDENTITY_ADDRESS_BECH32,
 			verificationMethodId,
-			dataPayload,
-			TEST_CONTEXT
+			dataPayload
 		);
 
 		expect(attested).toBeDefined();
@@ -81,7 +78,7 @@ describe("IotaAttestationConnector", () => {
 	test("can verify an attestation", async () => {
 		const attestation = new IotaAttestationConnector();
 
-		const attested = await attestation.verify(attestationId, TEST_CONTEXT);
+		const attested = await attestation.verify(attestationId);
 
 		expect(attested).toBeDefined();
 		expect(attested.verified).toEqual(true);
@@ -103,16 +100,13 @@ describe("IotaAttestationConnector", () => {
 	test("can transfer an attestation", async () => {
 		const attestation = new IotaAttestationConnector();
 
-		const testIdentity2 = await TEST_IDENTITY_CONNECTOR.createDocument(
-			TEST_IDENTITY_ADDRESS_BECH32_2,
-			TEST_CONTEXT
-		);
+		const testIdentity2 = await TEST_IDENTITY_CONNECTOR.createDocument(TEST_IDENTITY_ID);
 
 		const transfered = await attestation.transfer(
+			TEST_IDENTITY_ID,
 			attestationId,
-			TEST_IDENTITY_ADDRESS_BECH32_2,
 			testIdentity2.id,
-			TEST_CONTEXT
+			TEST_IDENTITY_ADDRESS_BECH32_2
 		);
 
 		expect(transfered).toBeDefined();

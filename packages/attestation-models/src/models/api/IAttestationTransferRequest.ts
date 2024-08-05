@@ -20,13 +20,13 @@ export interface IAttestationTransferRequest {
 	 */
 	body: {
 		/**
-		 * The new holder controller address.
-		 */
-		holderControllerAddress: string;
-
-		/**
 		 * The new holder identity.
 		 */
 		holderIdentity: string;
+
+		/**
+		 * The new holder controller address.
+		 */
+		holderAddress: string;
 	};
 }

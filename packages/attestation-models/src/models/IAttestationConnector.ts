@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IServiceRequestContext, IService } from "@gtsc/services";
+import type { IService } from "@gtsc/services";
 import type { IAttestationInformation } from "./IAttestationInformation";
 
 /**
@@ -9,28 +9,26 @@ import type { IAttestationInformation } from "./IAttestationInformation";
 export interface IAttestationConnector extends IService {
 	/**
 	 * Attest the data and return the collated information.
-	 * @param controllerAddress The controller address for the attestation.
+	 * @param controller The controller identity of the user to access the vault keys.
+	 * @param address The controller address for the attestation.
 	 * @param verificationMethodId The identity verification method to use for attesting the data.
 	 * @param data The data to attest.
-	 * @param requestContext The context for the request.
 	 * @returns The collated attestation data.
 	 */
 	attest<T = unknown>(
-		controllerAddress: string,
+		controller: string,
+		address: string,
 		verificationMethodId: string,
-		data: T,
-		requestContext?: IServiceRequestContext
+		data: T
 	): Promise<IAttestationInformation<T>>;
 
 	/**
 	 * Resolve and verify the attestation id.
 	 * @param attestationId The attestation id to verify.
-	 * @param requestContext The context for the request.
 	 * @returns The verified attestation details.
 	 */
 	verify<T = unknown>(
-		attestationId: string,
-		requestContext?: IServiceRequestContext
+		attestationId: string
 	): Promise<{
 		verified: boolean;
 		failure?: string;
@@ -39,16 +37,16 @@ export interface IAttestationConnector extends IService {
 
 	/**
 	 * Transfer the attestation to a new holder.
+	 * @param controller The controller identity of the user to access the vault keys.
 	 * @param attestationId The attestation to transfer.
-	 * @param holderControllerAddress The new controller address of the attestation belonging to the holder.
+	 * @param holderAddress The new controller address of the attestation belonging to the holder.
 	 * @param holderIdentity The holder identity of the attestation.
-	 * @param requestContext The context for the request.
 	 * @returns The updated attestation details.
 	 */
 	transfer<T = unknown>(
+		controller: string,
 		attestationId: string,
-		holderControllerAddress: string,
 		holderIdentity: string,
-		requestContext?: IServiceRequestContext
+		holderAddress: string
 	): Promise<IAttestationInformation<T>>;
 }

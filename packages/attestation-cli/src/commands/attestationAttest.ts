@@ -114,17 +114,16 @@ export async function actionCommandAttestationAttest(
 
 	setupVault();
 
-	const requestContext = { userIdentity: "local", partitionId: "local" };
+	const localIdentity = "identity";
 	const vaultSeedId = "local-seed";
 
 	const vaultConnector = VaultConnectorFactory.get("vault");
-	await vaultConnector.setSecret(vaultSeedId, Converter.bytesToBase64(seed), requestContext);
+	await vaultConnector.setSecret(`${localIdentity}/${vaultSeedId}`, Converter.bytesToBase64(seed));
 	await vaultConnector.addKey(
 		verificationMethodId,
 		VaultKeyType.Ed25519,
 		privateKey,
-		new Uint8Array(),
-		requestContext
+		new Uint8Array()
 	);
 
 	IdentityConnectorFactory.register(
@@ -170,10 +169,10 @@ export async function actionCommandAttestationAttest(
 	CLIDisplay.spinnerStart();
 
 	const attestationInformation = await iotaAttestationConnector.attest(
+		localIdentity,
 		owner,
 		verificationMethodId,
-		dataJson,
-		requestContext
+		dataJson
 	);
 
 	const attestationId = attestationInformation.id;
