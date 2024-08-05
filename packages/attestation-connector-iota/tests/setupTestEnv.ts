@@ -39,7 +39,6 @@ if (!Is.stringValue(process.env.TEST_MNEMONIC)) {
 	);
 }
 
-export const TEST_PARTITION_ID = "test-partition";
 export const TEST_IDENTITY_ID = "test-identity";
 export const TEST_MNEMONIC_NAME = "test-mnemonic";
 

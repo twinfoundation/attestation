@@ -120,7 +120,7 @@ export async function actionCommandAttestationAttest(
 	const vaultConnector = VaultConnectorFactory.get("vault");
 	await vaultConnector.setSecret(`${localIdentity}/${vaultSeedId}`, Converter.bytesToBase64(seed));
 	await vaultConnector.addKey(
-		verificationMethodId,
+		`${localIdentity}/${verificationMethodId}`,
 		VaultKeyType.Ed25519,
 		privateKey,
 		new Uint8Array()

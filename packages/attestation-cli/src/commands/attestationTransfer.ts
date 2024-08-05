@@ -81,12 +81,12 @@ export async function actionCommandAttestationTransfer(opts: {
 
 	CLIDisplay.value(I18n.formatMessage("commands.attestation-transfer.labels.attestationId"), id);
 	CLIDisplay.value(
-		I18n.formatMessage("commands.attestation-transfer.labels.holderAddress"),
-		holderAddress
-	);
-	CLIDisplay.value(
 		I18n.formatMessage("commands.attestation-transfer.labels.holderIdentity"),
 		holderIdentity
+	);
+	CLIDisplay.value(
+		I18n.formatMessage("commands.attestation-transfer.labels.holderAddress"),
+		holderAddress
 	);
 	CLIDisplay.value(I18n.formatMessage("commands.common.labels.node"), nodeEndpoint);
 	CLIDisplay.break();
