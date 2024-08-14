@@ -4,7 +4,7 @@ Interface describing an attestation connector.
 
 ## Extends
 
-- `IService`
+- `IComponent`
 
 ## Properties
 
@@ -12,19 +12,19 @@ Interface describing an attestation connector.
 
 > `readonly` **CLASS\_NAME**: `string`
 
-The name of the service.
+The name of the component.
 
 #### Inherited from
 
-`IService.CLASS_NAME`
+`IComponent.CLASS_NAME`
 
 ## Methods
 
 ### bootstrap()?
 
-> `optional` **bootstrap**(`nodeLoggingConnectorType`?): `Promise`\<`void`\>
+> `optional` **bootstrap**(`nodeLoggingConnectorType`?): `Promise`\<`boolean`\>
 
-Bootstrap the service by creating and initializing any resources it needs.
+Bootstrap the component by creating and initializing any resources it needs.
 
 #### Parameters
 
@@ -34,13 +34,13 @@ The node logging connector type, defaults to "node-logging".
 
 #### Returns
 
-`Promise`\<`void`\>
+`Promise`\<`boolean`\>
 
-Nothing.
+True if the bootstrapping process was successful.
 
 #### Inherited from
 
-`IService.bootstrap`
+`IComponent.bootstrap`
 
 ***
 
@@ -48,13 +48,13 @@ Nothing.
 
 > `optional` **start**(`nodeIdentity`, `nodeLoggingConnectorType`?): `Promise`\<`void`\>
 
-The service needs to be started when the node is initialized.
+The component needs to be started when the node is initialized.
 
 #### Parameters
 
 • **nodeIdentity**: `string`
 
-The identity of the node starting the service.
+The identity of the node starting the component.
 
 • **nodeLoggingConnectorType?**: `string`
 
@@ -68,7 +68,7 @@ Nothing.
 
 #### Inherited from
 
-`IService.start`
+`IComponent.start`
 
 ***
 
@@ -76,13 +76,13 @@ Nothing.
 
 > `optional` **stop**(`nodeIdentity`, `nodeLoggingConnectorType`?): `Promise`\<`void`\>
 
-The service needs to be stopped when the node is closed.
+The component needs to be stopped when the node is closed.
 
 #### Parameters
 
 • **nodeIdentity**: `string`
 
-The identity of the node stopping the service.
+The identity of the node stopping the component.
 
 • **nodeLoggingConnectorType?**: `string`
 
@@ -96,7 +96,7 @@ Nothing.
 
 #### Inherited from
 
-`IService.stop`
+`IComponent.stop`
 
 ***
 
@@ -205,3 +205,27 @@ The new controller address of the attestation belonging to the holder.
 `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
 
 The updated attestation details.
+
+***
+
+### destroy()
+
+> **destroy**(`controller`, `attestationId`): `Promise`\<`void`\>
+
+Destroy the attestation.
+
+#### Parameters
+
+• **controller**: `string`
+
+The controller identity of the user to access the vault keys.
+
+• **attestationId**: `string`
+
+The attestation to destroy.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Nothing.

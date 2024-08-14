@@ -74,4 +74,14 @@ export class OpenAttestationConnector implements IAttestationConnector {
 	): Promise<IAttestationInformation<T>> {
 		throw new NotImplementedError(this.CLASS_NAME, "transfer");
 	}
+
+	/**
+	 * Destroy the attestation.
+	 * @param controller The controller identity of the user to access the vault keys.
+	 * @param attestationId The attestation to destroy.
+	 * @returns Nothing.
+	 */
+	public async destroy(controller: string, attestationId: string): Promise<void> {
+		throw new NotImplementedError(this.CLASS_NAME, "destroy");
+	}
 }

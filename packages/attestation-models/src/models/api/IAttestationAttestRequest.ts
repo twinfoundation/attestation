@@ -25,7 +25,7 @@ export interface IAttestationAttestRequest {
 		data: unknown;
 
 		/**
-		 * The namespace of the connector to use for the attestation, defaults to service configured namespace.
+		 * The namespace of the connector to use for the attestation, defaults to component configured namespace.
 		 */
 		namespace?: string;
 	};

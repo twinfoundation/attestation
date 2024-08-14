@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import {
 	AttestationConnectorFactory,
-	type IAttestation,
+	type IAttestationComponent,
 	type IAttestationConnector,
 	type IAttestationInformation
 } from "@gtsc/attestation-models";
@@ -13,7 +13,7 @@ import type { IAttestationServiceConfig } from "./models/IAttestationServiceConf
 /**
  * Service for performing attestation operations to a connector.
  */
-export class AttestationService implements IAttestation {
+export class AttestationService implements IAttestationComponent {
 	/**
 	 * The namespace supported by the attestation service.
 	 */
@@ -114,10 +114,10 @@ export class AttestationService implements IAttestation {
 		holderAddress: string,
 		identity: string
 	): Promise<IAttestationInformation<T>> {
-		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
 		Guards.stringValue(this.CLASS_NAME, nameof(holderAddress), holderAddress);
+		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
 
 		try {
 			const attestationConnector = this.getConnector(attestationId);
@@ -125,6 +125,25 @@ export class AttestationService implements IAttestation {
 			return attestationConnector.transfer(identity, attestationId, holderIdentity, holderAddress);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "transferFailed", undefined, error);
+		}
+	}
+
+	/**
+	 * Destroy the attestation.
+	 * @param attestationId The attestation to transfer.
+	 * @param identity The identity to perform the attestation operation with.
+	 * @returns The updated attestation details.
+	 */
+	public async destroy(attestationId: string, identity?: string): Promise<void> {
+		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
+		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
+
+		try {
+			const attestationConnector = this.getConnector(attestationId);
+
+			return attestationConnector.destroy(identity, attestationId);
+		} catch (error) {
+			throw new GeneralError(this.CLASS_NAME, "destroyFailed", undefined, error);
 		}
 	}
 

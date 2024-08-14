@@ -1,12 +1,12 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IService } from "@gtsc/services";
+import type { IComponent } from "@gtsc/core";
 import type { IAttestationInformation } from "./IAttestationInformation";
 
 /**
  * Interface describing an attestation connector.
  */
-export interface IAttestationConnector extends IService {
+export interface IAttestationConnector extends IComponent {
 	/**
 	 * Attest the data and return the collated information.
 	 * @param controller The controller identity of the user to access the vault keys.
@@ -49,4 +49,12 @@ export interface IAttestationConnector extends IService {
 		holderIdentity: string,
 		holderAddress: string
 	): Promise<IAttestationInformation<T>>;
+
+	/**
+	 * Destroy the attestation.
+	 * @param controller The controller identity of the user to access the vault keys.
+	 * @param attestationId The attestation to destroy.
+	 * @returns Nothing.
+	 */
+	destroy(controller: string, attestationId: string): Promise<void>;
 }

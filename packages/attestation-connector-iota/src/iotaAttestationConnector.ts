@@ -277,4 +277,32 @@ export class IotaAttestationConnector implements IAttestationConnector {
 			throw new GeneralError(this.CLASS_NAME, "transferFailed", undefined, error);
 		}
 	}
+
+	/**
+	 * Destroy the attestation.
+	 * @param controller The controller identity of the user to access the vault keys.
+	 * @param attestationId The attestation to destroy.
+	 * @returns Nothing.
+	 */
+	public async destroy(controller: string, attestationId: string): Promise<void> {
+		Guards.stringValue(this.CLASS_NAME, nameof(controller), controller);
+		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
+
+		const urnParsed = Urn.fromValidString(attestationId);
+
+		if (urnParsed.namespaceMethod() !== IotaAttestationConnector.NAMESPACE) {
+			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
+				namespace: IotaAttestationConnector.NAMESPACE,
+				attestationId
+			});
+		}
+
+		try {
+			const nftId = IotaAttestationUtils.attestationIdToNftId(attestationId);
+
+			await this._nftConnector.burn(controller, nftId);
+		} catch (error) {
+			throw new GeneralError(this.CLASS_NAME, "destroyFailed", undefined, error);
+		}
+	}
 }

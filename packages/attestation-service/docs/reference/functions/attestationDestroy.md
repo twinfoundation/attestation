@@ -1,8 +1,8 @@
-# Function: attestationVerify()
+# Function: attestationDestroy()
 
-> **attestationVerify**(`httpRequestContext`, `componentName`, `request`): `Promise`\<`IAttestationVerifyResponse`\>
+> **attestationDestroy**(`httpRequestContext`, `componentName`, `request`): `Promise`\<`INoContentResponse`\>
 
-Resolve and verify the attestation id.
+Destroy the attestation.
 
 ## Parameters
 
@@ -14,12 +14,12 @@ The request context for the API.
 
 The name of the component to use in the routes.
 
-• **request**: `IAttestationVerifyRequest`
+• **request**: `IAttestationDestroyRequest`
 
 The request.
 
 ## Returns
 
-`Promise`\<`IAttestationVerifyResponse`\>
+`Promise`\<`INoContentResponse`\>
 
 The response object with additional http response properties.

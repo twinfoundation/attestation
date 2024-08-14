@@ -1,18 +1,19 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IHttpRequestContext, IRestRoute, ITag } from "@gtsc/api-models";
+import type { IHttpRequestContext, INoContentResponse, IRestRoute, ITag } from "@gtsc/api-models";
 import type {
-	IAttestation,
 	IAttestationAttestRequest,
 	IAttestationAttestResponse,
+	IAttestationComponent,
+	IAttestationDestroyRequest,
 	IAttestationTransferRequest,
 	IAttestationTransferResponse,
 	IAttestationVerifyRequest,
 	IAttestationVerifyResponse
 } from "@gtsc/attestation-models";
-import { Guards } from "@gtsc/core";
+import { ComponentFactory, Guards } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
-import { ServiceFactory } from "@gtsc/services";
+import { HttpStatusCode } from "@gtsc/web";
 
 /**
  * The source used when communicating about these routes.
@@ -32,12 +33,12 @@ export const tagsAttestation: ITag[] = [
 /**
  * The REST routes for attestation.
  * @param baseRouteName Prefix to prepend to the paths.
- * @param factoryServiceName The name of the service to use in the routes store in the ServiceFactory.
+ * @param componentName The name of the component to use in the routes stored in the ComponentFactory.
  * @returns The generated routes.
  */
 export function generateRestRoutesAttestation(
 	baseRouteName: string,
-	factoryServiceName: string
+	componentName: string
 ): IRestRoute[] {
 	const attestRoute: IRestRoute<IAttestationAttestRequest, IAttestationAttestResponse> = {
 		operationId: "attestationAttest",
@@ -46,7 +47,7 @@ export function generateRestRoutesAttestation(
 		method: "POST",
 		path: `${baseRouteName}/`,
 		handler: async (httpRequestContext, request) =>
-			attestationAttest(httpRequestContext, factoryServiceName, request),
+			attestationAttest(httpRequestContext, componentName, request),
 		requestType: {
 			type: nameof<IAttestationAttestRequest>(),
 			examples: [
@@ -109,12 +110,12 @@ export function generateRestRoutesAttestation(
 		method: "GET",
 		path: `${baseRouteName}/:id`,
 		handler: async (httpRequestContext, request) =>
-			attestationVerify(httpRequestContext, factoryServiceName, request),
+			attestationVerify(httpRequestContext, componentName, request),
 		requestType: {
 			type: nameof<IAttestationVerifyRequest>(),
 			examples: [
 				{
-					id: "attestationVerifyExample",
+					id: "attestationVerifyRequestExample",
 					request: {
 						pathParams: {
 							id: "attestation:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
@@ -185,7 +186,8 @@ export function generateRestRoutesAttestation(
 					}
 				]
 			}
-		]
+		],
+		skipAuth: true
 	};
 
 	const transferRoute: IRestRoute<IAttestationTransferRequest, IAttestationTransferResponse> = {
@@ -195,12 +197,12 @@ export function generateRestRoutesAttestation(
 		method: "PUT",
 		path: `${baseRouteName}/:id/transfer`,
 		handler: async (httpRequestContext, request) =>
-			attestationTransfer(httpRequestContext, factoryServiceName, request),
+			attestationTransfer(httpRequestContext, componentName, request),
 		requestType: {
 			type: nameof<IAttestationTransferRequest>(),
 			examples: [
 				{
-					id: "attestationVerifyExample",
+					id: "attestationTransferRequestExample",
 					request: {
 						pathParams: {
 							id: "attestation:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
@@ -219,7 +221,7 @@ export function generateRestRoutesAttestation(
 				type: nameof<IAttestationTransferResponse>(),
 				examples: [
 					{
-						id: "attestationVerifyResponseExample",
+						id: "attestationTransferResponseExample",
 						response: {
 							body: {
 								information: {
@@ -250,19 +252,47 @@ export function generateRestRoutesAttestation(
 		]
 	};
 
-	return [attestRoute, verifyRoute, transferRoute];
+	const destroyRoute: IRestRoute<IAttestationDestroyRequest, INoContentResponse> = {
+		operationId: "attestationDestroy",
+		summary: "Destroy an attestation",
+		tag: tagsAttestation[0].name,
+		method: "DELETE",
+		path: `${baseRouteName}/:id`,
+		handler: async (httpRequestContext, request) =>
+			attestationDestroy(httpRequestContext, componentName, request),
+		requestType: {
+			type: nameof<IAttestationDestroyRequest>(),
+			examples: [
+				{
+					id: "attestationDestroyExample",
+					request: {
+						pathParams: {
+							id: "attestation:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
+						}
+					}
+				}
+			]
+		},
+		responseType: [
+			{
+				type: nameof<INoContentResponse>()
+			}
+		]
+	};
+
+	return [attestRoute, verifyRoute, transferRoute, destroyRoute];
 }
 
 /**
  * Sign the data and return the proof.
  * @param httpRequestContext The request context for the API.
- * @param factoryServiceName The name of the service to use in the routes.
+ * @param componentName The name of the component to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function attestationAttest(
 	httpRequestContext: IHttpRequestContext,
-	factoryServiceName: string,
+	componentName: string,
 	request: IAttestationAttestRequest
 ): Promise<IAttestationAttestResponse> {
 	Guards.object<IAttestationAttestRequest>(ROUTES_SOURCE, nameof(request), request);
@@ -278,8 +308,8 @@ export async function attestationAttest(
 		request.body.verificationMethodId
 	);
 	Guards.object(ROUTES_SOURCE, nameof(request.body.data), request.body.data);
-	const service = ServiceFactory.get<IAttestation>(factoryServiceName);
-	const information = await service.attest(
+	const component = ComponentFactory.get<IAttestationComponent>(componentName);
+	const information = await component.attest(
 		request.body.address,
 		request.body.verificationMethodId,
 		request.body.data,
@@ -298,13 +328,13 @@ export async function attestationAttest(
 /**
  * Resolve and verify the attestation id.
  * @param httpRequestContext The request context for the API.
- * @param factoryServiceName The name of the service to use in the routes.
+ * @param componentName The name of the component to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function attestationVerify(
 	httpRequestContext: IHttpRequestContext,
-	factoryServiceName: string,
+	componentName: string,
 	request: IAttestationVerifyRequest
 ): Promise<IAttestationVerifyResponse> {
 	Guards.object<IAttestationVerifyRequest>(ROUTES_SOURCE, nameof(request), request);
@@ -315,8 +345,8 @@ export async function attestationVerify(
 	);
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
-	const service = ServiceFactory.get<IAttestation>(factoryServiceName);
-	const verificationResult = await service.verify(request.pathParams.id);
+	const component = ComponentFactory.get<IAttestationComponent>(componentName);
+	const verificationResult = await component.verify(request.pathParams.id);
 
 	return {
 		body: verificationResult
@@ -326,13 +356,13 @@ export async function attestationVerify(
 /**
  * Transfer the attestation to a new holder.
  * @param httpRequestContext The request context for the API.
- * @param factoryServiceName The name of the service to use in the routes.
+ * @param componentName The name of the component to use in the routes.
  * @param request The request.
  * @returns The response object with additional http response properties.
  */
 export async function attestationTransfer(
 	httpRequestContext: IHttpRequestContext,
-	factoryServiceName: string,
+	componentName: string,
 	request: IAttestationTransferRequest
 ): Promise<IAttestationTransferResponse> {
 	Guards.object<IAttestationTransferRequest>(ROUTES_SOURCE, nameof(request), request);
@@ -354,8 +384,8 @@ export async function attestationTransfer(
 		request.body.holderIdentity
 	);
 
-	const service = ServiceFactory.get<IAttestation>(factoryServiceName);
-	const information = await service.transfer(
+	const component = ComponentFactory.get<IAttestationComponent>(componentName);
+	const information = await component.transfer(
 		request.pathParams.id,
 		request.body.holderIdentity,
 		request.body.holderAddress,
@@ -366,5 +396,33 @@ export async function attestationTransfer(
 		body: {
 			information
 		}
+	};
+}
+
+/**
+ * Destroy the attestation.
+ * @param httpRequestContext The request context for the API.
+ * @param componentName The name of the component to use in the routes.
+ * @param request The request.
+ * @returns The response object with additional http response properties.
+ */
+export async function attestationDestroy(
+	httpRequestContext: IHttpRequestContext,
+	componentName: string,
+	request: IAttestationDestroyRequest
+): Promise<INoContentResponse> {
+	Guards.object<IAttestationDestroyRequest>(ROUTES_SOURCE, nameof(request), request);
+	Guards.object<IAttestationDestroyRequest["pathParams"]>(
+		ROUTES_SOURCE,
+		nameof(request.pathParams),
+		request.pathParams
+	);
+	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
+
+	const component = ComponentFactory.get<IAttestationComponent>(componentName);
+	await component.destroy(request.pathParams.id, httpRequestContext.userIdentity);
+
+	return {
+		statusCode: HttpStatusCode.noContent
 	};
 }
