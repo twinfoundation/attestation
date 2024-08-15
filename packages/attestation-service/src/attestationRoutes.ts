@@ -313,9 +313,7 @@ export async function attestationAttest(
 		request.body.address,
 		request.body.verificationMethodId,
 		request.body.data,
-		{
-			namespace: request.body.namespace
-		},
+		request.body.namespace,
 		httpRequestContext.userIdentity
 	);
 	return {

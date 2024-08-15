@@ -38,17 +38,14 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 	 * @param address The controller address for the attestation.
 	 * @param verificationMethodId The identity verification method to use for attesting the data.
 	 * @param data The data to attest.
-	 * @param options Additional options for the attestation component.
-	 * @param options.namespace The namespace of the connector to use for the attestation, defaults to component configured namespace.
+	 * @param namespace The namespace of the connector to use for the attestation, defaults to component configured namespace.
 	 * @returns The collated attestation data.
 	 */
 	public async attest<T = unknown>(
 		address: string,
 		verificationMethodId: string,
 		data: T,
-		options?: {
-			namespace?: string;
-		}
+		namespace?: string
 	): Promise<IAttestationInformation<T>> {
 		Guards.stringValue(this.CLASS_NAME, nameof(address), address);
 		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
@@ -62,7 +59,7 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 					verificationMethodId,
 					address,
 					data,
-					namespace: options?.namespace
+					namespace
 				}
 			}
 		);

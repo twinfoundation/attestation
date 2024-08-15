@@ -104,7 +104,7 @@ The response.
 
 ### attest()
 
-> **attest**\<`T`\>(`address`, `verificationMethodId`, `data`, `options`?): `Promise`\<`IAttestationInformation`\<`T`\>\>
+> **attest**\<`T`\>(`address`, `verificationMethodId`, `data`, `namespace`?): `Promise`\<`IAttestationInformation`\<`T`\>\>
 
 Attest the data and return the collated information.
 
@@ -126,11 +126,7 @@ The identity verification method to use for attesting the data.
 
 The data to attest.
 
-• **options?**
-
-Additional options for the attestation component.
-
-• **options.namespace?**: `string`
+• **namespace?**: `string`
 
 The namespace of the connector to use for the attestation, defaults to component configured namespace.
 

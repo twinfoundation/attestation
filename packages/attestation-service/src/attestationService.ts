@@ -48,8 +48,7 @@ export class AttestationService implements IAttestationComponent {
 	 * @param address The controller address for the attestation.
 	 * @param verificationMethodId The identity verification method to use for attesting the data.
 	 * @param data The data to attest.
-	 * @param options Additional options for the attestation service.
-	 * @param options.namespace The namespace of the connector to use for the attestation, defaults to service configured namespace.
+	 * @param namespace The namespace of the connector to use for the attestation, defaults to service configured namespace.
 	 * @param identity The identity to perform the attestation operation with.
 	 * @returns The collated attestation data.
 	 */
@@ -57,9 +56,7 @@ export class AttestationService implements IAttestationComponent {
 		address: string,
 		verificationMethodId: string,
 		data: T,
-		options?: {
-			namespace?: string;
-		},
+		namespace?: string,
 		identity?: string
 	): Promise<IAttestationInformation<T>> {
 		Guards.stringValue(this.CLASS_NAME, nameof(address), address);
@@ -68,7 +65,7 @@ export class AttestationService implements IAttestationComponent {
 		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
 
 		try {
-			const connectorNamespace = options?.namespace ?? this._defaultNamespace;
+			const connectorNamespace = namespace ?? this._defaultNamespace;
 
 			const attestationConnector =
 				AttestationConnectorFactory.get<IAttestationConnector>(connectorNamespace);

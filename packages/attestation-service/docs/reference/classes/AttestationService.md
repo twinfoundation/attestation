@@ -48,7 +48,7 @@ Runtime name for the class.
 
 ### attest()
 
-> **attest**\<`T`\>(`address`, `verificationMethodId`, `data`, `options`?, `identity`?): `Promise`\<`IAttestationInformation`\<`T`\>\>
+> **attest**\<`T`\>(`address`, `verificationMethodId`, `data`, `namespace`?, `identity`?): `Promise`\<`IAttestationInformation`\<`T`\>\>
 
 Attest the data and return the collated information.
 
@@ -70,11 +70,7 @@ The identity verification method to use for attesting the data.
 
 The data to attest.
 
-• **options?**
-
-Additional options for the attestation service.
-
-• **options.namespace?**: `string`
+• **namespace?**: `string`
 
 The namespace of the connector to use for the attestation, defaults to service configured namespace.
 
