@@ -23,3 +23,17 @@ The wallet address index to use for funding and controlling the attestations.
 ```ts
 0
 ```
+
+***
+
+### excludeNodeIdentity?
+
+> `optional` **excludeNodeIdentity**: `boolean`
+
+The node identity automatically gets added to the data payload being attested. This can be excluded if required.
+
+#### Default
+
+```ts
+false
+```

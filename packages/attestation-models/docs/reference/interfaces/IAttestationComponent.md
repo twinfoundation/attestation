@@ -102,7 +102,7 @@ Nothing.
 
 ### attest()
 
-> **attest**\<`T`\>(`verificationMethodId`, `data`, `namespace`?, `identity`?): `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
+> **attest**\<`T`\>(`verificationMethodId`, `data`, `namespace`?, `identity`?, `nodeIdentity`?): `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
 
 Attest the data and return the collated information.
 
@@ -127,6 +127,10 @@ The namespace of the connector to use for the attestation, defaults to component
 • **identity?**: `string`
 
 The identity to perform the attestation operation with.
+
+• **nodeIdentity?**: `string`
+
+The node identity to include in the attestation.
 
 #### Returns
 

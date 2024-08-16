@@ -15,4 +15,10 @@ export interface IAttestationServiceConfig {
 	 * @default 0
 	 */
 	walletAddressIndex?: number;
+
+	/**
+	 * The node identity automatically gets added to the data payload being attested. This can be excluded if required.
+	 * @default false
+	 */
+	excludeNodeIdentity?: boolean;
 }

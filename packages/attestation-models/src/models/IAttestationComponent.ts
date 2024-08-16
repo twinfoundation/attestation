@@ -13,13 +13,15 @@ export interface IAttestationComponent extends IComponent {
 	 * @param data The data to attest.
 	 * @param namespace The namespace of the connector to use for the attestation, defaults to component configured namespace.
 	 * @param identity The identity to perform the attestation operation with.
+	 * @param nodeIdentity The node identity to include in the attestation.
 	 * @returns The collated attestation data.
 	 */
 	attest<T = unknown>(
 		verificationMethodId: string,
 		data: T,
 		namespace?: string,
-		identity?: string
+		identity?: string,
+		nodeIdentity?: string
 	): Promise<IAttestationInformation<T>>;
 
 	/**

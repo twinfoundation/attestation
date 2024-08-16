@@ -6,7 +6,7 @@ import {
 	type IAttestationConnector,
 	type IAttestationInformation
 } from "@gtsc/attestation-models";
-import { GeneralError, Guards, Urn } from "@gtsc/core";
+import { GeneralError, Guards, Is, Urn } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import { WalletConnectorFactory, type IWalletConnector } from "@gtsc/wallet-models";
 import type { IAttestationServiceConfig } from "./models/IAttestationServiceConfig";
@@ -44,6 +44,12 @@ export class AttestationService implements IAttestationComponent {
 	private readonly _defaultNamespace: string;
 
 	/**
+	 * The node identity automatically gets added to the data payload being attested. This can be excluded if required.
+	 * @internal
+	 */
+	private readonly _excludeNodeIdentity: boolean;
+
+	/**
 	 * Create a new instance of AttestationService.
 	 * @param options The options for the service.
 	 * @param options.config The configuration for the service.
@@ -66,6 +72,7 @@ export class AttestationService implements IAttestationComponent {
 
 		this._defaultNamespace = options?.config?.defaultNamespace ?? names[0];
 		this._walletAddressIndex = options?.config?.walletAddressIndex ?? 0;
+		this._excludeNodeIdentity = options?.config?.excludeNodeIdentity ?? false;
 	}
 
 	/**
@@ -74,13 +81,15 @@ export class AttestationService implements IAttestationComponent {
 	 * @param data The data to attest.
 	 * @param namespace The namespace of the connector to use for the attestation, defaults to service configured namespace.
 	 * @param identity The identity to perform the attestation operation with.
+	 * @param nodeIdentity The node identity to include in the attestation.
 	 * @returns The collated attestation data.
 	 */
 	public async attest<T = unknown>(
 		verificationMethodId: string,
 		data: T,
 		namespace?: string,
-		identity?: string
+		identity?: string,
+		nodeIdentity?: string
 	): Promise<IAttestationInformation<T>> {
 		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
 		Guards.object<T>(this.CLASS_NAME, nameof(data), data);
@@ -91,6 +100,10 @@ export class AttestationService implements IAttestationComponent {
 
 			const attestationConnector =
 				AttestationConnectorFactory.get<IAttestationConnector>(connectorNamespace);
+
+			if (Is.object<{ nodeIdentity?: string }>(data) && !this._excludeNodeIdentity) {
+				data.nodeIdentity = nodeIdentity;
+			}
 
 			const addresses = await this._walletConnector.getAddresses(
 				identity,
