@@ -102,7 +102,7 @@ Nothing.
 
 ### attest()
 
-> **attest**\<`T`\>(`address`, `verificationMethodId`, `data`, `namespace`?, `identity`?): `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
+> **attest**\<`T`\>(`verificationMethodId`, `data`, `namespace`?, `identity`?): `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
 
 Attest the data and return the collated information.
 
@@ -111,10 +111,6 @@ Attest the data and return the collated information.
 • **T** = `unknown`
 
 #### Parameters
-
-• **address**: `string`
-
-The controller address for the attestation.
 
 • **verificationMethodId**: `string`
 
@@ -178,7 +174,7 @@ The verified attestation details.
 
 ### transfer()
 
-> **transfer**\<`T`\>(`attestationId`, `holderIdentity`, `holderAddress`, `identity`?): `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
+> **transfer**\<`T`\>(`attestationId`, `holderIdentity`, `identity`?): `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
 
 Transfer the attestation to a new holder.
 
@@ -194,11 +190,7 @@ The attestation to transfer.
 
 • **holderIdentity**: `string`
 
-The holder identity of the attestation.
-
-• **holderAddress**: `string`
-
-The new controller address of the attestation belonging to the holder.
+The identity to transfer the attestation to.
 
 • **identity?**: `string`
 

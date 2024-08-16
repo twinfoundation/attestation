@@ -9,7 +9,6 @@ import type { IAttestationInformation } from "./IAttestationInformation";
 export interface IAttestationComponent extends IComponent {
 	/**
 	 * Attest the data and return the collated information.
-	 * @param address The controller address for the attestation.
 	 * @param verificationMethodId The identity verification method to use for attesting the data.
 	 * @param data The data to attest.
 	 * @param namespace The namespace of the connector to use for the attestation, defaults to component configured namespace.
@@ -17,7 +16,6 @@ export interface IAttestationComponent extends IComponent {
 	 * @returns The collated attestation data.
 	 */
 	attest<T = unknown>(
-		address: string,
 		verificationMethodId: string,
 		data: T,
 		namespace?: string,
@@ -40,15 +38,13 @@ export interface IAttestationComponent extends IComponent {
 	/**
 	 * Transfer the attestation to a new holder.
 	 * @param attestationId The attestation to transfer.
-	 * @param holderIdentity The holder identity of the attestation.
-	 * @param holderAddress The new controller address of the attestation belonging to the holder.
+	 * @param holderIdentity The identity to transfer the attestation to.
 	 * @param identity The identity to perform the attestation operation with.
 	 * @returns The updated attestation details.
 	 */
 	transfer<T = unknown>(
 		attestationId: string,
 		holderIdentity: string,
-		holderAddress: string,
 		identity?: string
 	): Promise<IAttestationInformation<T>>;
 

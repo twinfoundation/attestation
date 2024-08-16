@@ -35,19 +35,16 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 
 	/**
 	 * Attest the data and return the collated information.
-	 * @param address The controller address for the attestation.
 	 * @param verificationMethodId The identity verification method to use for attesting the data.
 	 * @param data The data to attest.
 	 * @param namespace The namespace of the connector to use for the attestation, defaults to component configured namespace.
 	 * @returns The collated attestation data.
 	 */
 	public async attest<T = unknown>(
-		address: string,
 		verificationMethodId: string,
 		data: T,
 		namespace?: string
 	): Promise<IAttestationInformation<T>> {
-		Guards.stringValue(this.CLASS_NAME, nameof(address), address);
 		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
 		Guards.object<T>(this.CLASS_NAME, nameof(data), data);
 
@@ -57,7 +54,6 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 			{
 				body: {
 					verificationMethodId,
-					address,
 					data,
 					namespace
 				}
@@ -99,18 +95,15 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 	/**
 	 * Transfer the attestation to a new holder.
 	 * @param attestationId The attestation to transfer.
-	 * @param holderIdentity The holder identity of the attestation.
-	 * @param holderAddress The new controller address of the attestation belonging to the holder.
+	 * @param holderIdentity The identity to transfer the attestation to.
 	 * @returns The updated attestation details.
 	 */
 	public async transfer<T = unknown>(
 		attestationId: string,
-		holderIdentity: string,
-		holderAddress: string
+		holderIdentity: string
 	): Promise<IAttestationInformation<T>> {
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
-		Guards.stringValue(this.CLASS_NAME, nameof(holderAddress), holderAddress);
 
 		const response = await this.fetch<IAttestationTransferRequest, IAttestationTransferResponse>(
 			"/:id/transfer",
@@ -120,7 +113,6 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 					id: attestationId
 				},
 				body: {
-					holderAddress,
 					holderIdentity
 				}
 			}

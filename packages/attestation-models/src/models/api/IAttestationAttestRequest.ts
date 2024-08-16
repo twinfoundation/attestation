@@ -10,11 +10,6 @@ export interface IAttestationAttestRequest {
 	 */
 	body: {
 		/**
-		 * The controller address for the attestation.
-		 */
-		address: string;
-
-		/**
 		 * The identity verification method to use for attesting the data.
 		 */
 		verificationMethodId: string;

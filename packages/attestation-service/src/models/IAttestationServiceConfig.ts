@@ -9,4 +9,10 @@ export interface IAttestationServiceConfig {
 	 * What is the default connector to use for attestation. If not provided the first connector from the factory will be used.
 	 */
 	defaultNamespace?: string;
+
+	/**
+	 * The wallet address index to use for funding and controlling the attestations.
+	 * @default 0
+	 */
+	walletAddressIndex?: number;
 }

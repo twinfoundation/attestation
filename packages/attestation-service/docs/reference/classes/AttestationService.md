@@ -10,13 +10,21 @@ Service for performing attestation operations to a connector.
 
 ### new AttestationService()
 
-> **new AttestationService**(`config`?): [`AttestationService`](AttestationService.md)
+> **new AttestationService**(`options`): [`AttestationService`](AttestationService.md)
 
 Create a new instance of AttestationService.
 
 #### Parameters
 
-• **config?**: [`IAttestationServiceConfig`](../interfaces/IAttestationServiceConfig.md)
+• **options**
+
+The options for the service.
+
+• **options.walletConnectorType**: `string`
+
+The wallet connector type for generating addresses, defaults to "wallet".
+
+• **options.config?**: [`IAttestationServiceConfig`](../interfaces/IAttestationServiceConfig.md)
 
 The configuration for the service.
 
@@ -48,7 +56,7 @@ Runtime name for the class.
 
 ### attest()
 
-> **attest**\<`T`\>(`address`, `verificationMethodId`, `data`, `namespace`?, `identity`?): `Promise`\<`IAttestationInformation`\<`T`\>\>
+> **attest**\<`T`\>(`verificationMethodId`, `data`, `namespace`?, `identity`?): `Promise`\<`IAttestationInformation`\<`T`\>\>
 
 Attest the data and return the collated information.
 
@@ -57,10 +65,6 @@ Attest the data and return the collated information.
 • **T** = `unknown`
 
 #### Parameters
-
-• **address**: `string`
-
-The controller address for the attestation.
 
 • **verificationMethodId**: `string`
 
@@ -132,7 +136,7 @@ The verified attestation details.
 
 ### transfer()
 
-> **transfer**\<`T`\>(`attestationId`, `holderIdentity`, `holderAddress`, `identity`): `Promise`\<`IAttestationInformation`\<`T`\>\>
+> **transfer**\<`T`\>(`attestationId`, `holderIdentity`, `identity`): `Promise`\<`IAttestationInformation`\<`T`\>\>
 
 Transfer the attestation to a new holder.
 
@@ -148,11 +152,7 @@ The attestation to transfer.
 
 • **holderIdentity**: `string`
 
-The holder identity of the attestation.
-
-• **holderAddress**: `string`
-
-The new controller address of the attestation belonging to the holder.
+The identity to transfer the attestation to.
 
 • **identity**: `string`
 

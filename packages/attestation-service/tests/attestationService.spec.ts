@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { EntityStorageAttestationConnector } from "@gtsc/attestation-connector-entity-storage";
 import { AttestationConnectorFactory } from "@gtsc/attestation-models";
+import { type IWalletConnector, WalletConnectorFactory } from "@gtsc/wallet-models";
 import { AttestationService } from "../src/attestationService";
 
 describe("AttestationService", () => {
@@ -10,7 +11,8 @@ describe("AttestationService", () => {
 			EntityStorageAttestationConnector.NAMESPACE,
 			() => new EntityStorageAttestationConnector()
 		);
-		const service = new AttestationService();
+		WalletConnectorFactory.register("wallet", () => ({}) as IWalletConnector);
+		const service = new AttestationService({ walletConnectorType: "wallet" });
 		expect(service).toBeDefined();
 	});
 });

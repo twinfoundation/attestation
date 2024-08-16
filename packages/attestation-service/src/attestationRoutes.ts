@@ -55,7 +55,6 @@ export function generateRestRoutesAttestation(
 					id: "attestationAttestExample",
 					request: {
 						body: {
-							address: "tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv",
 							verificationMethodId:
 								"did:iota:tst:0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f#attestation",
 							data: {
@@ -208,7 +207,6 @@ export function generateRestRoutesAttestation(
 							id: "attestation:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
 						},
 						body: {
-							holderAddress: "tst1pqr2uyp5l8627x6q3g94f6rhhdrkyktxdg20yg2qp5m5dtkwlfcs2h5djap",
 							holderIdentity:
 								"did:iota:tst:0x06ae1034f9f4af1b408a0b54e877bb476259666a14f221400d3746aecefa7105"
 						}
@@ -301,7 +299,6 @@ export async function attestationAttest(
 		nameof(request.body),
 		request.body
 	);
-	Guards.stringValue(ROUTES_SOURCE, nameof(request.body.address), request.body.address);
 	Guards.stringValue(
 		ROUTES_SOURCE,
 		nameof(request.body.verificationMethodId),
@@ -310,7 +307,6 @@ export async function attestationAttest(
 	Guards.object(ROUTES_SOURCE, nameof(request.body.data), request.body.data);
 	const component = ComponentFactory.get<IAttestationComponent>(componentName);
 	const information = await component.attest(
-		request.body.address,
 		request.body.verificationMethodId,
 		request.body.data,
 		request.body.namespace,
@@ -375,7 +371,6 @@ export async function attestationTransfer(
 		nameof(request.body),
 		request.body
 	);
-	Guards.stringValue(ROUTES_SOURCE, nameof(request.body.holderAddress), request.body.holderAddress);
 	Guards.stringValue(
 		ROUTES_SOURCE,
 		nameof(request.body.holderIdentity),
@@ -386,7 +381,6 @@ export async function attestationTransfer(
 	const information = await component.transfer(
 		request.pathParams.id,
 		request.body.holderIdentity,
-		request.body.holderAddress,
 		httpRequestContext.userIdentity
 	);
 

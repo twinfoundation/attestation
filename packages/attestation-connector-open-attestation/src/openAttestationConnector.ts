@@ -21,10 +21,11 @@ export class OpenAttestationConnector implements IAttestationConnector {
 
 	/**
 	 * Create a new instance of OpenAttestationConnector.
-	 * @param config The configuration for the attestation connector.
+	 * @param options The options for the attestation connector.
+	 * @param options.config The configuration for the attestation connector.
 	 */
 	// eslint-disable-next-line @typescript-eslint/no-useless-constructor
-	constructor(config?: IOpenAttestationConnectorConfig) {}
+	constructor(options: { config?: IOpenAttestationConnectorConfig }) {}
 
 	/**
 	 * Attest the data and return the collated information.

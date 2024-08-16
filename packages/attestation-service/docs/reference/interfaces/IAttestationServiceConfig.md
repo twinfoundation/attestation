@@ -9,3 +9,17 @@ Configuration for the Attestation Service.
 > `optional` **defaultNamespace**: `string`
 
 What is the default connector to use for attestation. If not provided the first connector from the factory will be used.
+
+***
+
+### walletAddressIndex?
+
+> `optional` **walletAddressIndex**: `number`
+
+The wallet address index to use for funding and controlling the attestations.
+
+#### Default
+
+```ts
+0
+```

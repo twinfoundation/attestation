@@ -8,6 +8,7 @@ import {
 } from "@gtsc/attestation-models";
 import { GeneralError, Guards, Urn } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
+import { WalletConnectorFactory, type IWalletConnector } from "@gtsc/wallet-models";
 import type { IAttestationServiceConfig } from "./models/IAttestationServiceConfig";
 
 /**
@@ -25,6 +26,18 @@ export class AttestationService implements IAttestationComponent {
 	public readonly CLASS_NAME: string = nameof<AttestationService>();
 
 	/**
+	 * The wallet for generating addresses.
+	 * @internal
+	 */
+	private readonly _walletConnector: IWalletConnector;
+
+	/**
+	 * The wallet address index to use for funding and controlling the attestations.
+	 * @internal
+	 */
+	private readonly _walletAddressIndex: number;
+
+	/**
 	 * The default namespace for the connector to use.
 	 * @internal
 	 */
@@ -32,20 +45,31 @@ export class AttestationService implements IAttestationComponent {
 
 	/**
 	 * Create a new instance of AttestationService.
-	 * @param config The configuration for the service.
+	 * @param options The options for the service.
+	 * @param options.config The configuration for the service.
+	 * @param options.walletConnectorType The wallet connector type for generating addresses, defaults to "wallet".
 	 */
-	constructor(config?: IAttestationServiceConfig) {
+	constructor(options: { walletConnectorType: string; config?: IAttestationServiceConfig }) {
+		Guards.object(this.CLASS_NAME, nameof(options), options);
+		Guards.stringValue(
+			this.CLASS_NAME,
+			nameof(options.walletConnectorType),
+			options.walletConnectorType
+		);
+
+		this._walletConnector = WalletConnectorFactory.get(options.walletConnectorType ?? "wallet");
+
 		const names = AttestationConnectorFactory.names();
 		if (names.length === 0) {
 			throw new GeneralError(this.CLASS_NAME, "noConnectors");
 		}
 
-		this._defaultNamespace = config?.defaultNamespace ?? names[0];
+		this._defaultNamespace = options?.config?.defaultNamespace ?? names[0];
+		this._walletAddressIndex = options?.config?.walletAddressIndex ?? 0;
 	}
 
 	/**
 	 * Attest the data and return the collated information.
-	 * @param address The controller address for the attestation.
 	 * @param verificationMethodId The identity verification method to use for attesting the data.
 	 * @param data The data to attest.
 	 * @param namespace The namespace of the connector to use for the attestation, defaults to service configured namespace.
@@ -53,13 +77,11 @@ export class AttestationService implements IAttestationComponent {
 	 * @returns The collated attestation data.
 	 */
 	public async attest<T = unknown>(
-		address: string,
 		verificationMethodId: string,
 		data: T,
 		namespace?: string,
 		identity?: string
 	): Promise<IAttestationInformation<T>> {
-		Guards.stringValue(this.CLASS_NAME, nameof(address), address);
 		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
 		Guards.object<T>(this.CLASS_NAME, nameof(data), data);
 		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
@@ -70,7 +92,13 @@ export class AttestationService implements IAttestationComponent {
 			const attestationConnector =
 				AttestationConnectorFactory.get<IAttestationConnector>(connectorNamespace);
 
-			return attestationConnector.attest(identity, address, verificationMethodId, data);
+			const addresses = await this._walletConnector.getAddresses(
+				identity,
+				this._walletAddressIndex,
+				1
+			);
+
+			return attestationConnector.attest(identity, addresses[0], verificationMethodId, data);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "attestFailed", undefined, error);
 		}
@@ -100,26 +128,29 @@ export class AttestationService implements IAttestationComponent {
 	/**
 	 * Transfer the attestation to a new holder.
 	 * @param attestationId The attestation to transfer.
-	 * @param holderIdentity The holder identity of the attestation.
-	 * @param holderAddress The new controller address of the attestation belonging to the holder.
+	 * @param holderIdentity The identity to transfer the attestation to.
 	 * @param identity The identity to perform the attestation operation with.
 	 * @returns The updated attestation details.
 	 */
 	public async transfer<T = unknown>(
 		attestationId: string,
 		holderIdentity: string,
-		holderAddress: string,
 		identity: string
 	): Promise<IAttestationInformation<T>> {
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
-		Guards.stringValue(this.CLASS_NAME, nameof(holderAddress), holderAddress);
 		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
 
 		try {
 			const attestationConnector = this.getConnector(attestationId);
 
-			return attestationConnector.transfer(identity, attestationId, holderIdentity, holderAddress);
+			const addresses = await this._walletConnector.getAddresses(
+				holderIdentity,
+				this._walletAddressIndex,
+				1
+			);
+
+			return attestationConnector.transfer(identity, attestationId, holderIdentity, addresses[0]);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "transferFailed", undefined, error);
 		}
