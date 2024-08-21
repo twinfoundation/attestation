@@ -107,6 +107,7 @@ export class AttestationService implements IAttestationComponent {
 
 			const addresses = await this._walletConnector.getAddresses(
 				identity,
+				0,
 				this._walletAddressIndex,
 				1
 			);
@@ -159,6 +160,7 @@ export class AttestationService implements IAttestationComponent {
 
 			const addresses = await this._walletConnector.getAddresses(
 				holderIdentity,
+				0,
 				this._walletAddressIndex,
 				1
 			);
