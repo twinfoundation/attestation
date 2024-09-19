@@ -1,1 +1,1 @@
-# @gtsc/attestation-connector-iota - Examples
+# @twin.org/attestation-connector-iota - Examples

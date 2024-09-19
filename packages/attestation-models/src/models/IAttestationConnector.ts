@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IComponent } from "@gtsc/core";
+import type { IComponent } from "@twin.org/core";
 import type { IAttestationInformation } from "./IAttestationInformation";
 
 /**
@@ -39,8 +39,8 @@ export interface IAttestationConnector extends IComponent {
 	 * Transfer the attestation to a new holder.
 	 * @param controller The controller identity of the user to access the vault keys.
 	 * @param attestationId The attestation to transfer.
-	 * @param holderAddress The new controller address of the attestation belonging to the holder.
 	 * @param holderIdentity The holder identity of the attestation.
+	 * @param holderAddress The new controller address of the attestation belonging to the holder.
 	 * @returns The updated attestation details.
 	 */
 	transfer<T = unknown>(

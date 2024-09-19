@@ -1,8 +1,8 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Converter, Is, Urn } from "@gtsc/core";
-import { IotaIdentityUtils } from "@gtsc/identity-connector-iota";
-import { IotaNftUtils } from "@gtsc/nft-connector-iota";
+import { Converter, Is, Urn } from "@twin.org/core";
+import { IotaIdentityUtils } from "@twin.org/identity-connector-iota";
+import { IotaNftUtils } from "@twin.org/nft-connector-iota";
 import {
 	TEST_IDENTITY_ADDRESS_BECH32,
 	TEST_IDENTITY_ADDRESS_BECH32_2,

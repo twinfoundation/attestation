@@ -36,7 +36,7 @@ The configuration for the service.
 
 ### NAMESPACE
 
-> `static` `readonly` **NAMESPACE**: `string` = `"attestation"`
+> `readonly` `static` **NAMESPACE**: `string` = `"attestation"`
 
 The namespace supported by the attestation service.
 
@@ -60,7 +60,7 @@ Runtime name for the class.
 
 Attest the data and return the collated information.
 
-#### Type parameters
+#### Type Parameters
 
 • **T** = `unknown`
 
@@ -104,7 +104,7 @@ The collated attestation data.
 
 Resolve and verify the attestation id.
 
-#### Type parameters
+#### Type Parameters
 
 • **T**
 
@@ -144,7 +144,7 @@ The verified attestation details.
 
 Transfer the attestation to a new holder.
 
-#### Type parameters
+#### Type Parameters
 
 • **T** = `unknown`
 

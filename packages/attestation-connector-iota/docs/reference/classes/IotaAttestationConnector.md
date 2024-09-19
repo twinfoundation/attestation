@@ -40,7 +40,7 @@ The configuration for the connector.
 
 ### NAMESPACE
 
-> `static` `readonly` **NAMESPACE**: `string` = `"iota"`
+> `readonly` `static` **NAMESPACE**: `string` = `"iota"`
 
 The namespace for the entities.
 
@@ -64,7 +64,7 @@ Runtime name for the class.
 
 Attest the data and return the collated information.
 
-#### Type parameters
+#### Type Parameters
 
 • **T**
 
@@ -104,7 +104,7 @@ The collated attestation data.
 
 Resolve and verify the attestation id.
 
-#### Type parameters
+#### Type Parameters
 
 • **T**
 
@@ -144,7 +144,7 @@ The resolved attestation details.
 
 Transfer the attestation to a new holder.
 
-#### Type parameters
+#### Type Parameters
 
 • **T**
 

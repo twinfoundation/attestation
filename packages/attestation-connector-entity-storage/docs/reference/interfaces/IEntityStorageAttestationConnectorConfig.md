@@ -13,5 +13,5 @@ The tag to use for the attestation NFTs.
 #### Default
 
 ```ts
-GTSC-ATTESTATION
+TWIN-ATTESTATION
 ```

@@ -1,4 +1,4 @@
-# @gtsc/attestation-cli
+# @twin.org/attestation-cli
 
 ## Classes
 

@@ -1,14 +1,23 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import path from "node:path";
-import { IotaAttestationConnector, IotaAttestationUtils } from "@gtsc/attestation-connector-iota";
-import { CLIDisplay, CLIOptions, CLIParam, CLIUtils, type CliOutputOptions } from "@gtsc/cli-core";
-import { Converter, I18n, Is, StringHelper } from "@gtsc/core";
-import { IotaIdentityConnector } from "@gtsc/identity-connector-iota";
-import { IdentityConnectorFactory } from "@gtsc/identity-models";
-import { IotaNftConnector, IotaNftUtils } from "@gtsc/nft-connector-iota";
-import { NftConnectorFactory } from "@gtsc/nft-models";
-import { VaultConnectorFactory, VaultKeyType } from "@gtsc/vault-models";
+import {
+	IotaAttestationConnector,
+	IotaAttestationUtils
+} from "@twin.org/attestation-connector-iota";
+import {
+	CLIDisplay,
+	CLIOptions,
+	CLIParam,
+	CLIUtils,
+	type CliOutputOptions
+} from "@twin.org/cli-core";
+import { Converter, I18n, Is, StringHelper } from "@twin.org/core";
+import { IotaIdentityConnector } from "@twin.org/identity-connector-iota";
+import { IdentityConnectorFactory } from "@twin.org/identity-models";
+import { IotaNftConnector, IotaNftUtils } from "@twin.org/nft-connector-iota";
+import { NftConnectorFactory } from "@twin.org/nft-models";
+import { VaultConnectorFactory, VaultKeyType } from "@twin.org/vault-models";
 import { Command } from "commander";
 import { setupVault } from "./setupCommands";
 

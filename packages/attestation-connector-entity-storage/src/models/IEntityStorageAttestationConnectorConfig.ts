@@ -7,7 +7,7 @@
 export interface IEntityStorageAttestationConnectorConfig {
 	/**
 	 * The tag to use for the attestation NFTs.
-	 * @default GTSC-ATTESTATION
+	 * @default TWIN-ATTESTATION
 	 */
 	tag?: string;
 }

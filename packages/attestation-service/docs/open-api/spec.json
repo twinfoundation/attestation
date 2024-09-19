@@ -1,8 +1,8 @@
 {
     "openapi": "3.1.0",
     "info": {
-        "title": "Global Trade and Supply Chain - Test Endpoints",
-        "description": "REST API for Global Trade and Supply Chain - Test Endpoints.",
+        "title": "TWIN - Test Endpoints",
+        "description": "REST API for TWIN - Test Endpoints.",
         "version": "1.0.0",
         "license": {
             "name": "Apache 2.0 License",
@@ -89,7 +89,7 @@
                         }
                     },
                     "400": {
-                        "description": "The server cannot process the request, see the error field for more details.",
+                        "description": "The server cannot process the request, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -110,7 +110,7 @@
                         }
                     },
                     "401": {
-                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -128,7 +128,7 @@
                         }
                     },
                     "500": {
-                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -223,7 +223,7 @@
                         }
                     },
                     "400": {
-                        "description": "The server cannot process the request, see the error field for more details.",
+                        "description": "The server cannot process the request, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -244,7 +244,7 @@
                         }
                     },
                     "500": {
-                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -292,7 +292,7 @@
                         "description": "The rest request ended in success with no data."
                     },
                     "400": {
-                        "description": "The server cannot process the request, see the error field for more details.",
+                        "description": "The server cannot process the request, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -313,7 +313,7 @@
                         }
                     },
                     "401": {
-                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -331,7 +331,7 @@
                         }
                     },
                     "500": {
-                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -428,7 +428,7 @@
                         }
                     },
                     "400": {
-                        "description": "The server cannot process the request, see the error field for more details.",
+                        "description": "The server cannot process the request, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -449,7 +449,7 @@
                         }
                     },
                     "401": {
-                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -467,7 +467,7 @@
                         }
                     },
                     "500": {
-                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "description": "The server has encountered a situation it does not know how to handle, see the content for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -490,41 +490,6 @@
     },
     "components": {
         "schemas": {
-            "Error": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "description": "The name for the error."
-                    },
-                    "message": {
-                        "type": "string",
-                        "description": "The message for the error."
-                    },
-                    "source": {
-                        "type": "string",
-                        "description": "The source of the error."
-                    },
-                    "properties": {
-                        "type": "object",
-                        "additionalProperties": {},
-                        "description": "Any additional information for the error."
-                    },
-                    "stack": {
-                        "type": "string",
-                        "description": "The stack trace for the error."
-                    },
-                    "inner": {
-                        "$ref": "#/components/schemas/Error"
-                    }
-                },
-                "required": [
-                    "name",
-                    "message"
-                ],
-                "additionalProperties": false,
-                "description": "Model to describe serialized error."
-            },
             "AttestationAttestRequest": {
                 "type": "object",
                 "properties": {
@@ -619,27 +584,6 @@
                 "additionalProperties": false,
                 "description": "Interface describing an attestation proof."
             },
-            "AttestationVerifyResponse": {
-                "type": "object",
-                "properties": {
-                    "verified": {
-                        "type": "boolean",
-                        "description": "Whether the attestation is verified."
-                    },
-                    "failure": {
-                        "type": "string",
-                        "description": "The failure message if the attestation is not verified."
-                    },
-                    "information": {
-                        "$ref": "#/components/schemas/AttestationInformation"
-                    }
-                },
-                "required": [
-                    "verified"
-                ],
-                "additionalProperties": false,
-                "description": "The data returned from the verification response."
-            },
             "AttestationTransferRequest": {
                 "type": "object",
                 "properties": {
@@ -666,6 +610,62 @@
                 ],
                 "additionalProperties": false,
                 "description": "The data returned from the transfer response."
+            },
+            "AttestationVerifyResponse": {
+                "type": "object",
+                "properties": {
+                    "verified": {
+                        "type": "boolean",
+                        "description": "Whether the attestation is verified."
+                    },
+                    "failure": {
+                        "type": "string",
+                        "description": "The failure message if the attestation is not verified."
+                    },
+                    "information": {
+                        "$ref": "#/components/schemas/AttestationInformation"
+                    }
+                },
+                "required": [
+                    "verified"
+                ],
+                "additionalProperties": false,
+                "description": "The data returned from the verification response."
+            },
+            "Error": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "The name for the error."
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "The message for the error."
+                    },
+                    "source": {
+                        "type": "string",
+                        "description": "The source of the error."
+                    },
+                    "properties": {
+                        "type": "object",
+                        "additionalProperties": {},
+                        "description": "Any additional information for the error."
+                    },
+                    "stack": {
+                        "type": "string",
+                        "description": "The stack trace for the error."
+                    },
+                    "inner": {
+                        "$ref": "#/components/schemas/Error"
+                    }
+                },
+                "required": [
+                    "name",
+                    "message"
+                ],
+                "additionalProperties": false,
+                "description": "Model to describe serialized error."
             }
         },
         "securitySchemes": {

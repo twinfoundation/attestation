@@ -14,7 +14,7 @@ Interface describing an attestation connector.
 
 Attest the data and return the collated information.
 
-#### Type parameters
+#### Type Parameters
 
 • **T** = `unknown`
 
@@ -50,7 +50,7 @@ The collated attestation data.
 
 Resolve and verify the attestation id.
 
-#### Type parameters
+#### Type Parameters
 
 • **T** = `unknown`
 
@@ -86,7 +86,7 @@ The verified attestation details.
 
 Transfer the attestation to a new holder.
 
-#### Type parameters
+#### Type Parameters
 
 • **T** = `unknown`
 

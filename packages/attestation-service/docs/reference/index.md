@@ -1,4 +1,4 @@
-# @gtsc/attestation-service
+# @twin.org/attestation-service
 
 ## Classes
 

@@ -1,5 +1,5 @@
-# @gtsc/attestation-connector-open-attestation - Changelog
+# @twin.org/attestation-connector-open-attestation - Changelog
 
-## v0.0.3
+## v0.0.1-next.3
 
 - Initial Release

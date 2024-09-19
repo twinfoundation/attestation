@@ -1,4 +1,4 @@
-# @gtsc/attestation-models
+# @twin.org/attestation-models
 
 ## Interfaces
 

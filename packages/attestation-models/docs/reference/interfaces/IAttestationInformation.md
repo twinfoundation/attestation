@@ -2,7 +2,7 @@
 
 Interface describing the collated attestation information.
 
-## Type parameters
+## Type Parameters
 
 • **T** = `unknown`
 

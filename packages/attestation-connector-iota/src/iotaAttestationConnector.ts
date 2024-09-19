@@ -1,11 +1,11 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IAttestationConnector, IAttestationInformation } from "@gtsc/attestation-models";
-import { Coerce, GeneralError, Guards, Is, Urn } from "@gtsc/core";
-import { IdentityConnectorFactory, type IIdentityConnector } from "@gtsc/identity-models";
-import { nameof } from "@gtsc/nameof";
-import { NftConnectorFactory, type INftConnector } from "@gtsc/nft-models";
-import type { IDidVerifiableCredential } from "@gtsc/standards-w3c-did";
+import type { IAttestationConnector, IAttestationInformation } from "@twin.org/attestation-models";
+import { Coerce, GeneralError, Guards, Is, Urn } from "@twin.org/core";
+import { IdentityConnectorFactory, type IIdentityConnector } from "@twin.org/identity-models";
+import { nameof } from "@twin.org/nameof";
+import { NftConnectorFactory, type INftConnector } from "@twin.org/nft-models";
+import type { IDidVerifiableCredential } from "@twin.org/standards-w3c-did";
 import { IotaAttestationUtils } from "./iotaAttestationUtils";
 import type { IIotaAttestationConnectorConfig } from "./models/IIotaAttestationConnectorConfig";
 import type { IIotaAttestationHolder } from "./models/IIotaAttestationHolder";
@@ -24,7 +24,7 @@ export class IotaAttestationConnector implements IAttestationConnector {
 	 * Default tag.
 	 * @internal
 	 */
-	private static readonly _DEFAULT_TAG: string = "GTSC-ATTESTATION";
+	private static readonly _DEFAULT_TAG: string = "TWIN-ATTESTATION";
 
 	/**
 	 * Runtime name for the class.

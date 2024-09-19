@@ -1,25 +1,25 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import path from "node:path";
-import { Guards, Is } from "@gtsc/core";
-import { Bip39 } from "@gtsc/crypto";
-import { MemoryEntityStorageConnector } from "@gtsc/entity-storage-connector-memory";
-import { EntityStorageConnectorFactory } from "@gtsc/entity-storage-models";
-import { IotaIdentityConnector } from "@gtsc/identity-connector-iota";
-import { IdentityConnectorFactory } from "@gtsc/identity-models";
-import { nameof } from "@gtsc/nameof";
-import { IotaNftConnector } from "@gtsc/nft-connector-iota";
-import { NftConnectorFactory } from "@gtsc/nft-models";
+import type { IClientOptions } from "@iota/sdk-wasm/node/lib/index.js";
+import { Guards, Is } from "@twin.org/core";
+import { Bip39 } from "@twin.org/crypto";
+import { MemoryEntityStorageConnector } from "@twin.org/entity-storage-connector-memory";
+import { EntityStorageConnectorFactory } from "@twin.org/entity-storage-models";
+import { IotaIdentityConnector } from "@twin.org/identity-connector-iota";
+import { IdentityConnectorFactory } from "@twin.org/identity-models";
+import { nameof } from "@twin.org/nameof";
+import { IotaNftConnector } from "@twin.org/nft-connector-iota";
+import { NftConnectorFactory } from "@twin.org/nft-models";
 import {
 	EntityStorageVaultConnector,
 	type VaultKey,
 	type VaultSecret,
 	initSchema
-} from "@gtsc/vault-connector-entity-storage";
-import { VaultConnectorFactory } from "@gtsc/vault-models";
-import { IotaFaucetConnector, IotaWalletConnector } from "@gtsc/wallet-connector-iota";
-import { FaucetConnectorFactory, WalletConnectorFactory } from "@gtsc/wallet-models";
-import type { IClientOptions } from "@iota/sdk-wasm/node/lib/index.js";
+} from "@twin.org/vault-connector-entity-storage";
+import { VaultConnectorFactory } from "@twin.org/vault-models";
+import { IotaFaucetConnector, IotaWalletConnector } from "@twin.org/wallet-connector-iota";
+import { FaucetConnectorFactory, WalletConnectorFactory } from "@twin.org/wallet-models";
 import * as dotenv from "dotenv";
 
 console.debug("Setting up test environment from .env and .env.dev files");

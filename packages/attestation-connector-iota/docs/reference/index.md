@@ -1,4 +1,4 @@
-# @gtsc/attestation-connector-iota
+# @twin.org/attestation-connector-iota
 
 ## Classes
 
