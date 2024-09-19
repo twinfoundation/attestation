@@ -1,4 +1,4 @@
-# @gtsc/attestation-connector-open-attestation
+# @twin.org/attestation-connector-open-attestation
 
 ## Classes
 

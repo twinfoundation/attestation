@@ -1,25 +1,25 @@
-# @gtsc/attestation-cli - Examples
+# @twin.org/attestation-cli - Examples
 
 ## Command Line Tool
 
 First install the tool with the following script.
 
 ```shell
-npm install @gtsc/attestation-cli
+npm install @twin.org/attestation-cli
 ```
 
 Running the tool with no commands will provide help for all the commands. By issuing the following command you should see the result.
 
 ```shell
-gtsc-attestation
+twin-attestation
 ```
 
 Output
 
 ```shell
-🌍 GTSC Attestation v1.0.0
+🌍 TWIN Attestation v1.0.0
 
-Usage: gtsc-attestation [command]
+Usage: twin-attestation [command]
 
 Options:
   -V, --version                             output the version number
@@ -47,15 +47,15 @@ Commands:
 You can get further details on the sub commands by using the help option for the individual commands.
 
 ```shell
-gtsc-attestation attestation-attest --help
+twin-attestation attestation-attest --help
 ```
 
 Output
 
 ```shell
-🌍 GTSC Attestation v1.0.0
+🌍 TWIN Attestation v1.0.0
 
-Usage: gtsc-attestation attestation-attest [options]
+Usage: twin-attestation attestation-attest [options]
 
 Create an attestation.
 
@@ -84,19 +84,19 @@ Use this command to attest some data, the owner address must have sufficient fun
 
 ```shell
 # Generate a seed and mnemonic and store it in the env file
-gtsc-attestation mnemonic --env wallet.env
+twin-attestation mnemonic --env wallet.env
 
 # Generate an address and store it in the env file
-gtsc-attestation address --load-env wallet.env --hrp tst --seed !SEED --count 4 --env wallet.env --merge-env
+twin-attestation address --load-env wallet.env --hrp tst --seed !SEED --count 4 --env wallet.env --merge-env
 
 # Add some funds to the address generated in the previous step
-gtsc-attestation faucet --load-env config.env --address !ADDRESS_0_BECH32
+twin-attestation faucet --load-env config.env --address !ADDRESS_0_BECH32
 
 # Create an identity to own the attestation
-gtsc-attestation identity-create --load-env config.env wallet.env --seed !SEED --controller !ADDRESS_0_BECH32 --env identity.env
+twin-attestation identity-create --load-env config.env wallet.env --seed !SEED --controller !ADDRESS_0_BECH32 --env identity.env
 
 # Add a verification method to the identity
-gtsc-attestation verification-method-add --load-env config.env wallet.env identity.env --seed !SEED --did !DID --type verificationMethod --id attestation --env verification-method.env
+twin-attestation verification-method-add --load-env config.env wallet.env identity.env --seed !SEED --did !DID --type verificationMethod --id attestation --env verification-method.env
 
 ```
 
@@ -122,7 +122,7 @@ To attest the data issue the following command:
 
 ```shell
 # Attest the data and store the id in the attestation.env file
-gtsc-attestation attestation-attest --load-env config.env wallet.env verification-method.env --seed !SEED --owner !ADDRESS_0_BECH32 --verification-method-id !DID_VERIFICATION_METHOD_ID --private-key !DID_VERIFICATION_METHOD_PRIVATE_KEY --data-json data.json --env attestation.env
+twin-attestation attestation-attest --load-env config.env wallet.env verification-method.env --seed !SEED --owner !ADDRESS_0_BECH32 --verification-method-id !DID_VERIFICATION_METHOD_ID --private-key !DID_VERIFICATION_METHOD_PRIVATE_KEY --data-json data.json --env attestation.env
 ```
 
 ### attestation-verify
@@ -130,7 +130,7 @@ gtsc-attestation attestation-attest --load-env config.env wallet.env verificatio
 To verify the attestation and retrieve its details issue the following command.
 
 ```shell
-gtsc-attestation attestation-verify --load-env config.env attestation.env --id !ATTESTATION_ID
+twin-attestation attestation-verify --load-env config.env attestation.env --id !ATTESTATION_ID
 ```
 
 You should see output to the following.
@@ -158,13 +158,13 @@ You can transfer the attestation to another holder using the following command. 
 
 ```shell
 # Add some funds to the second address generated earlier
-gtsc-attestation faucet --load-env config.env --address !ADDRESS_1_BECH32
+twin-attestation faucet --load-env config.env --address !ADDRESS_1_BECH32
 
 # Create new identity on the second address
-gtsc-attestation identity-create --load-env config.env wallet.env --seed !SEED --controller !ADDRESS_1_BECH32 --env identity2.env
+twin-attestation identity-create --load-env config.env wallet.env --seed !SEED --controller !ADDRESS_1_BECH32 --env identity2.env
 
 # Transfer the attestation to the new holder (the original issuer is kept intact)
-gtsc-attestation attestation-transfer --load-env config.env wallet.env attestation.env identity2.env --seed !SEED --id !ATTESTATION_ID --holder-address !ADDRESS_1_BECH32 --holder-identity !DID
+twin-attestation attestation-transfer --load-env config.env wallet.env attestation.env identity2.env --seed !SEED --id !ATTESTATION_ID --holder-address !ADDRESS_1_BECH32 --holder-identity !DID
 ```
 
 If you repeat the attestation-verify command you should see the following updated details, with `holderIdentity` and `transferred` set.

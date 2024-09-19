@@ -1,1 +1,1 @@
-# @gtsc/attestation-connector-open-attestation - Examples
+# @twin.org/attestation-connector-open-attestation - Examples

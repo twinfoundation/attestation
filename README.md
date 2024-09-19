@@ -1,6 +1,6 @@
-# GTSC Attestation
+# TWIN Attestation
 
-This mono-repository contains the packages to use with attestation in GTSC applications.
+This mono-repository contains the packages to use with attestation in TWIN applications.
 
 ## Packages
 

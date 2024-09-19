@@ -5,10 +5,10 @@ import {
 	type IAttestationComponent,
 	type IAttestationConnector,
 	type IAttestationInformation
-} from "@gtsc/attestation-models";
-import { GeneralError, Guards, Is, Urn } from "@gtsc/core";
-import { nameof } from "@gtsc/nameof";
-import { WalletConnectorFactory, type IWalletConnector } from "@gtsc/wallet-models";
+} from "@twin.org/attestation-models";
+import { GeneralError, Guards, Is, Urn } from "@twin.org/core";
+import { nameof } from "@twin.org/nameof";
+import { WalletConnectorFactory, type IWalletConnector } from "@twin.org/wallet-models";
 import type { IAttestationServiceConfig } from "./models/IAttestationServiceConfig";
 
 /**

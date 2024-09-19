@@ -1,1 +1,1 @@
-# @gtsc/attestation-rest-client - Examples
+# @twin.org/attestation-rest-client - Examples

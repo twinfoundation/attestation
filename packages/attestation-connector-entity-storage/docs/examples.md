@@ -1,1 +1,1 @@
-# @gtsc/attestation-connector-entity-storage - Examples
+# @twin.org/attestation-connector-entity-storage - Examples

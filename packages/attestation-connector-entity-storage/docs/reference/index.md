@@ -1,4 +1,4 @@
-# @gtsc/attestation-connector-entity-storage
+# @twin.org/attestation-connector-entity-storage
 
 ## Classes
 

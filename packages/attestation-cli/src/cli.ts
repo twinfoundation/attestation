@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0.
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { CLIBase } from "@gtsc/cli-core";
-import { buildCommandAddress, buildCommandMnemonic } from "@gtsc/crypto-cli";
+import { CLIBase } from "@twin.org/cli-core";
+import { buildCommandAddress, buildCommandMnemonic } from "@twin.org/crypto-cli";
 import {
 	buildCommandIdentityCreate,
 	buildCommandIdentityResolve,
@@ -13,8 +13,8 @@ import {
 	buildCommandVerifiableCredentialVerify,
 	buildCommandVerificationMethodAdd,
 	buildCommandVerificationMethodRemove
-} from "@gtsc/identity-cli";
-import { buildCommandFaucet } from "@gtsc/wallet-cli";
+} from "@twin.org/identity-cli";
+import { buildCommandFaucet } from "@twin.org/wallet-cli";
 import type { Command } from "commander";
 import { buildCommandAttestationAttest } from "./commands/attestationAttest";
 import { buildCommandAttestationTransfer } from "./commands/attestationTransfer";
@@ -33,8 +33,8 @@ export class CLI extends CLIBase {
 	public async run(argv: string[], localesDirectory?: string): Promise<number> {
 		return this.execute(
 			{
-				title: "GTSC Attestation",
-				appName: "gtsc-attestation",
+				title: "TWIN Attestation",
+				appName: "twin-attestation",
 				version: "0.0.3-next.8",
 				icon: "🌍",
 				supportsEnvFiles: true

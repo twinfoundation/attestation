@@ -1,1 +1,1 @@
-# @gtsc/attestation-service - Examples
+# @twin.org/attestation-service - Examples

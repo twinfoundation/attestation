@@ -1,8 +1,8 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { EntityStorageAttestationConnector } from "@gtsc/attestation-connector-entity-storage";
-import { AttestationConnectorFactory } from "@gtsc/attestation-models";
-import { type IWalletConnector, WalletConnectorFactory } from "@gtsc/wallet-models";
+import { EntityStorageAttestationConnector } from "@twin.org/attestation-connector-entity-storage";
+import { AttestationConnectorFactory } from "@twin.org/attestation-models";
+import { type IWalletConnector, WalletConnectorFactory } from "@twin.org/wallet-models";
 import { AttestationService } from "../src/attestationService";
 
 describe("AttestationService", () => {

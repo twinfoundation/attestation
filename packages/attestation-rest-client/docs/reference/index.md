@@ -1,4 +1,4 @@
-# @gtsc/attestation-rest-client
+# @twin.org/attestation-rest-client
 
 ## Classes
 

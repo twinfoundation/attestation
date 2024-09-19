@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Converter, Urn } from "@gtsc/core";
+import { Converter, Urn } from "@twin.org/core";
 import { EntityStorageAttestationConnector } from "./entityStorageAttestationConnector";
 
 /**
