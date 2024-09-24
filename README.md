@@ -9,7 +9,10 @@ This mono-repository contains the packages to use with attestation in TWIN appli
 - [attestation-connector-open-attestation](packages/attestation-connector-open-attestation/README.md) - Attestation connector implementation using [OpenAttestation](https://www.openattestation.com/).
 - [attestation-service](packages/attestation-service/README.md) - Attestation contract implementation and REST endpoint definitions.
 - [attestation-rest-client](packages/attestation-rest-client/README.md) - Attestation contract implementation which can connect to REST endpoints.
-- [attestation-cli](packages/attestation-cli/README.md) - A command line interface for interacting with the attestation APIs.
+
+## Apps
+
+- [attestation-cli](apps/attestation-cli/README.md) - A command line interface for interacting with the attestation APIs.
 
 ## Contributing
 

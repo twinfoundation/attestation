@@ -1,11 +1,12 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type { IAttestationProof } from "./IAttestationProof";
 
 /**
  * Interface describing the collated attestation information.
  */
-export interface IAttestationInformation<T = unknown> {
+export interface IAttestationInformation {
 	/**
 	 * The unique identifier of the attestation.
 	 */
@@ -34,7 +35,7 @@ export interface IAttestationInformation<T = unknown> {
 	/**
 	 * The data that was attested.
 	 */
-	data: T;
+	data: IJsonLdNodeObject;
 
 	/**
 	 * The proof for the attested data.

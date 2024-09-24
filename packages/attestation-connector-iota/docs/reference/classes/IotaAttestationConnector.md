@@ -60,13 +60,9 @@ Runtime name for the class.
 
 ### attest()
 
-> **attest**\<`T`\>(`controller`, `address`, `verificationMethodId`, `data`): `Promise`\<`IAttestationInformation`\<`T`\>\>
+> **attest**(`controller`, `address`, `verificationMethodId`, `data`): `Promise`\<`IAttestationInformation`\>
 
 Attest the data and return the collated information.
-
-#### Type Parameters
-
-• **T**
 
 #### Parameters
 
@@ -82,13 +78,13 @@ The controlling address for the attestation.
 
 The identity verification method to use for attesting the data.
 
-• **data**: `T`
+• **data**: `IJsonLdNodeObject`
 
 The data to attest.
 
 #### Returns
 
-`Promise`\<`IAttestationInformation`\<`T`\>\>
+`Promise`\<`IAttestationInformation`\>
 
 The collated attestation data.
 
@@ -100,13 +96,9 @@ The collated attestation data.
 
 ### verify()
 
-> **verify**\<`T`\>(`attestationId`): `Promise`\<`object`\>
+> **verify**(`attestationId`): `Promise`\<`object`\>
 
 Resolve and verify the attestation id.
-
-#### Type Parameters
-
-• **T**
 
 #### Parameters
 
@@ -130,7 +122,7 @@ The resolved attestation details.
 
 ##### information?
 
-> `optional` **information**: `Partial`\<`IAttestationInformation`\<`T`\>\>
+> `optional` **information**: `Partial`\<`IAttestationInformation`\>
 
 #### Implementation of
 
@@ -140,13 +132,9 @@ The resolved attestation details.
 
 ### transfer()
 
-> **transfer**\<`T`\>(`controller`, `attestationId`, `holderIdentity`, `holderAddress`): `Promise`\<`IAttestationInformation`\<`T`\>\>
+> **transfer**(`controller`, `attestationId`, `holderIdentity`, `holderAddress`): `Promise`\<`IAttestationInformation`\>
 
 Transfer the attestation to a new holder.
-
-#### Type Parameters
-
-• **T**
 
 #### Parameters
 
@@ -168,7 +156,7 @@ The new controller address of the attestation belonging to the holder.
 
 #### Returns
 
-`Promise`\<`IAttestationInformation`\<`T`\>\>
+`Promise`\<`IAttestationInformation`\>
 
 The updated attestation details.
 

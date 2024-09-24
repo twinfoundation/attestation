@@ -12,7 +12,8 @@ import {
 	CLIUtils,
 	type CliOutputOptions
 } from "@twin.org/cli-core";
-import { Converter, I18n, Is, StringHelper } from "@twin.org/core";
+import { Converter, GeneralError, I18n, Is, StringHelper } from "@twin.org/core";
+import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import { IotaIdentityConnector } from "@twin.org/identity-connector-iota";
 import { IdentityConnectorFactory } from "@twin.org/identity-models";
 import { IotaNftConnector, IotaNftUtils } from "@twin.org/nft-connector-iota";
@@ -164,9 +165,11 @@ export async function actionCommandAttestationAttest(
 
 	const iotaAttestationConnector = new IotaAttestationConnector();
 
-	const dataJson = await CLIUtils.readJsonFile(dataJsonFilename);
+	const dataJson = await CLIUtils.readJsonFile<IJsonLdNodeObject>(dataJsonFilename);
 
-	if (Is.object(dataJson)) {
+	if (!Is.object(dataJson)) {
+		throw new GeneralError("attestation-cli", "invalidJson");
+	} else {
 		CLIDisplay.section(I18n.formatMessage("commands.attestation-attest.labels.dataJson"));
 		CLIDisplay.json(dataJson);
 		CLIDisplay.break();

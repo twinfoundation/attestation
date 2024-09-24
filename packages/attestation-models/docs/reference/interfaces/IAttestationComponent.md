@@ -10,13 +10,9 @@ Interface describing an attestation contract.
 
 ### attest()
 
-> **attest**\<`T`\>(`verificationMethodId`, `data`, `namespace`?, `identity`?, `nodeIdentity`?): `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
+> **attest**(`verificationMethodId`, `data`, `namespace`?, `identity`?, `nodeIdentity`?): `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\>
 
 Attest the data and return the collated information.
-
-#### Type Parameters
-
-• **T** = `unknown`
 
 #### Parameters
 
@@ -24,7 +20,7 @@ Attest the data and return the collated information.
 
 The identity verification method to use for attesting the data.
 
-• **data**: `T`
+• **data**: `IJsonLdNodeObject`
 
 The data to attest.
 
@@ -42,7 +38,7 @@ The node identity to include in the attestation.
 
 #### Returns
 
-`Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
+`Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\>
 
 The collated attestation data.
 
@@ -50,13 +46,9 @@ The collated attestation data.
 
 ### verify()
 
-> **verify**\<`T`\>(`attestationId`): `Promise`\<`object`\>
+> **verify**(`attestationId`): `Promise`\<`object`\>
 
 Resolve and verify the attestation id.
-
-#### Type Parameters
-
-• **T** = `unknown`
 
 #### Parameters
 
@@ -80,19 +72,15 @@ The verified attestation details.
 
 ##### information?
 
-> `optional` **information**: `Partial`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
+> `optional` **information**: `Partial`\<[`IAttestationInformation`](IAttestationInformation.md)\>
 
 ***
 
 ### transfer()
 
-> **transfer**\<`T`\>(`attestationId`, `holderIdentity`, `identity`?): `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
+> **transfer**(`attestationId`, `holderIdentity`, `identity`?): `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\>
 
 Transfer the attestation to a new holder.
-
-#### Type Parameters
-
-• **T** = `unknown`
 
 #### Parameters
 
@@ -110,7 +98,7 @@ The identity to perform the attestation operation with.
 
 #### Returns
 
-`Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
+`Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\>
 
 The updated attestation details.
 

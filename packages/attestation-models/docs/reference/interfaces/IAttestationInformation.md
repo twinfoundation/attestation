@@ -1,10 +1,6 @@
-# Interface: IAttestationInformation\<T\>
+# Interface: IAttestationInformation
 
 Interface describing the collated attestation information.
-
-## Type Parameters
-
-• **T** = `unknown`
 
 ## Properties
 
@@ -50,7 +46,7 @@ The identity of the current holder, can be undefined if owner is still the holde
 
 ### data
 
-> **data**: `T`
+> **data**: `IJsonLdNodeObject`
 
 The data that was attested.
 

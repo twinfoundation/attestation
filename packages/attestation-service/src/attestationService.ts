@@ -7,6 +7,7 @@ import {
 	type IAttestationInformation
 } from "@twin.org/attestation-models";
 import { GeneralError, Guards, Is, Urn } from "@twin.org/core";
+import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import { nameof } from "@twin.org/nameof";
 import { WalletConnectorFactory, type IWalletConnector } from "@twin.org/wallet-models";
 import type { IAttestationServiceConfig } from "./models/IAttestationServiceConfig";
@@ -84,15 +85,15 @@ export class AttestationService implements IAttestationComponent {
 	 * @param nodeIdentity The node identity to include in the attestation.
 	 * @returns The collated attestation data.
 	 */
-	public async attest<T = unknown>(
+	public async attest(
 		verificationMethodId: string,
-		data: T,
+		data: IJsonLdNodeObject,
 		namespace?: string,
 		identity?: string,
 		nodeIdentity?: string
-	): Promise<IAttestationInformation<T>> {
+	): Promise<IAttestationInformation> {
 		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
-		Guards.object<T>(this.CLASS_NAME, nameof(data), data);
+		Guards.object<IJsonLdNodeObject>(this.CLASS_NAME, nameof(data), data);
 		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
 
 		try {
@@ -123,10 +124,10 @@ export class AttestationService implements IAttestationComponent {
 	 * @param attestationId The attestation id to verify.
 	 * @returns The verified attestation details.
 	 */
-	public async verify<T>(attestationId: string): Promise<{
+	public async verify(attestationId: string): Promise<{
 		verified: boolean;
 		failure?: string;
-		information?: Partial<IAttestationInformation<T>>;
+		information?: Partial<IAttestationInformation>;
 	}> {
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 
@@ -146,11 +147,11 @@ export class AttestationService implements IAttestationComponent {
 	 * @param identity The identity to perform the attestation operation with.
 	 * @returns The updated attestation details.
 	 */
-	public async transfer<T = unknown>(
+	public async transfer(
 		attestationId: string,
 		holderIdentity: string,
 		identity: string
-	): Promise<IAttestationInformation<T>> {
+	): Promise<IAttestationInformation> {
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
 		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);

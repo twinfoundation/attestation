@@ -1,4 +1,9 @@
 {
+	"errors": {
+		"attestation-cli": {
+			"invalidJson": "The JSON file is invalid."
+		}
+	},
 	"commands": {
 		"attestation-attest": {
 			"summary": "Create an attestation.",

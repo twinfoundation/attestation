@@ -1,6 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { Converter, Is, Urn } from "@twin.org/core";
+import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import { IotaIdentityUtils } from "@twin.org/identity-connector-iota";
 import { IotaNftUtils } from "@twin.org/nft-connector-iota";
 import {
@@ -44,10 +45,11 @@ describe("IotaAttestationConnector", () => {
 	test("can attest some data", async () => {
 		const attestation = new IotaAttestationConnector();
 
-		const dataPayload = {
-			docName: "bill-of-lading",
-			mimeType: "application/pdf",
-			fingerprint: "0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f"
+		const dataPayload: IJsonLdNodeObject = {
+			"@context": "http://schema.org/",
+			type: "DigitalDocument",
+			id: "did:iota:1234567890abcdef",
+			name: "My Document"
 		};
 
 		const attested = await attestation.attest(
@@ -59,7 +61,7 @@ describe("IotaAttestationConnector", () => {
 
 		expect(attested).toBeDefined();
 		expect(attested.id.startsWith("attestation:iota")).toEqual(true);
-		expect(Is.dateTimeString(attested.created)).toEqual(true);
+		expect(Is.dateTimeString(attested?.created)).toEqual(true);
 		expect(attested.ownerIdentity).toEqual(ownerIdentity);
 		expect(attested.holderIdentity).toEqual(ownerIdentity);
 		expect(attested.transferred).toEqual(undefined);
@@ -67,12 +69,12 @@ describe("IotaAttestationConnector", () => {
 		expect(attested.proof?.type).toEqual("jwt");
 		expect(attested.proof?.value.split(".").length).toEqual(3);
 
-		const idUrn = Urn.fromValidString(attested.id);
+		const idUrn = Urn.fromValidString(attested?.id);
 		const nftId = Converter.bytesToUtf8(Converter.base64ToBytes(idUrn.namespaceSpecific(1)));
 		const nftAddress = IotaNftUtils.nftIdToAddress(nftId);
 		console.debug("Attestation NFT", `${process.env.TEST_EXPLORER_URL}addr/${nftAddress}`);
 
-		attestationId = attested.id;
+		attestationId = attested?.id;
 	});
 
 	test("can verify an attestation", async () => {
@@ -89,9 +91,10 @@ describe("IotaAttestationConnector", () => {
 		expect(attested.information?.holderIdentity).toEqual(ownerIdentity);
 		expect(attested.information?.transferred).toEqual(undefined);
 		expect(attested.information?.data).toEqual({
-			docName: "bill-of-lading",
-			mimeType: "application/pdf",
-			fingerprint: "0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f"
+			"@context": "http://schema.org/",
+			type: "DigitalDocument",
+			id: "did:iota:1234567890abcdef",
+			name: "My Document"
 		});
 		expect(attested.information?.proof?.type).toEqual("jwt");
 		expect(attested.information?.proof?.value.split(".").length).toEqual(3);
@@ -116,9 +119,10 @@ describe("IotaAttestationConnector", () => {
 		expect(transfered.holderIdentity).toEqual(testIdentity2.id);
 		expect(Is.dateTimeString(transfered.transferred)).toEqual(true);
 		expect(transfered.data).toEqual({
-			docName: "bill-of-lading",
-			mimeType: "application/pdf",
-			fingerprint: "0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f"
+			"@context": "http://schema.org/",
+			type: "DigitalDocument",
+			id: "did:iota:1234567890abcdef",
+			name: "My Document"
 		});
 		expect(transfered.proof?.type).toEqual("jwt");
 		expect(transfered.proof?.value.split(".").length).toEqual(3);

@@ -1,20 +1,21 @@
 # @twin.org/attestation-cli - Examples
 
-## Command Line Tool
+## Running
 
-First install the tool with the following script.
-
-```shell
-npm install @twin.org/attestation-cli
-```
-
-Running the tool with no commands will provide help for all the commands. By issuing the following command you should see the result.
+To install and run the CLI locally use the following commands:
 
 ```shell
+npm install @twin.org/attestation-cli -g
 twin-attestation
 ```
 
-Output
+or run directly using NPX:
+
+```shell
+npx "@twin.org/attestation-cli"
+```
+
+You should see output similar to the following:
 
 ```shell
 🌍 TWIN Attestation v1.0.0

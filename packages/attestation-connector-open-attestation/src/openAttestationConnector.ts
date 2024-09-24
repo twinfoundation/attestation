@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import type { IAttestationConnector, IAttestationInformation } from "@twin.org/attestation-models";
 import { NotImplementedError } from "@twin.org/core";
+import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import { nameof } from "@twin.org/nameof";
 import type { IOpenAttestationConnectorConfig } from "./models/IOpenAttestationConnectorConfig";
 
@@ -35,12 +36,12 @@ export class OpenAttestationConnector implements IAttestationConnector {
 	 * @param data The data to attest.
 	 * @returns The collated attestation data.
 	 */
-	public async attest<T = unknown>(
+	public async attest(
 		controller: string,
 		address: string,
 		verificationMethodId: string,
-		data: T
-	): Promise<IAttestationInformation<T>> {
+		data: IJsonLdNodeObject
+	): Promise<IAttestationInformation> {
 		throw new NotImplementedError(this.CLASS_NAME, "attest");
 	}
 
@@ -49,12 +50,10 @@ export class OpenAttestationConnector implements IAttestationConnector {
 	 * @param attestationId The attestation id to verify.
 	 * @returns The verified attestation details.
 	 */
-	public async verify<T = unknown>(
-		attestationId: string
-	): Promise<{
+	public async verify(attestationId: string): Promise<{
 		verified: boolean;
 		failure?: string;
-		information?: Partial<IAttestationInformation<T>>;
+		information?: Partial<IAttestationInformation>;
 	}> {
 		throw new NotImplementedError(this.CLASS_NAME, "verify");
 	}
@@ -67,12 +66,12 @@ export class OpenAttestationConnector implements IAttestationConnector {
 	 * @param holderAddress The new controller address of the attestation belonging to the holder.
 	 * @returns The updated attestation details.
 	 */
-	public async transfer<T = unknown>(
+	public async transfer(
 		controller: string,
 		attestationId: string,
 		holderIdentity: string,
 		holderAddress: string
-	): Promise<IAttestationInformation<T>> {
+	): Promise<IAttestationInformation> {
 		throw new NotImplementedError(this.CLASS_NAME, "transfer");
 	}
 

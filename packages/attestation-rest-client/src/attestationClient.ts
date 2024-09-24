@@ -14,6 +14,7 @@ import type {
 	IAttestationVerifyResponse
 } from "@twin.org/attestation-models";
 import { Guards, Urn } from "@twin.org/core";
+import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import { nameof } from "@twin.org/nameof";
 
 /**
@@ -40,13 +41,13 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 	 * @param namespace The namespace of the connector to use for the attestation, defaults to component configured namespace.
 	 * @returns The collated attestation data.
 	 */
-	public async attest<T = unknown>(
+	public async attest(
 		verificationMethodId: string,
-		data: T,
+		data: IJsonLdNodeObject,
 		namespace?: string
-	): Promise<IAttestationInformation<T>> {
+	): Promise<IAttestationInformation> {
 		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
-		Guards.object<T>(this.CLASS_NAME, nameof(data), data);
+		Guards.object<IJsonLdNodeObject>(this.CLASS_NAME, nameof(data), data);
 
 		const response = await this.fetch<IAttestationAttestRequest, IAttestationAttestResponse>(
 			"/",
@@ -60,7 +61,7 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 			}
 		);
 
-		return response.body.information as IAttestationInformation<T>;
+		return response.body.information;
 	}
 
 	/**
@@ -68,10 +69,10 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 	 * @param attestationId The attestation id to verify.
 	 * @returns The verified attestation details.
 	 */
-	public async verify<T>(attestationId: string): Promise<{
+	public async verify(attestationId: string): Promise<{
 		verified: boolean;
 		failure?: string;
-		information?: Partial<IAttestationInformation<T>>;
+		information?: Partial<IAttestationInformation>;
 	}> {
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 
@@ -88,7 +89,7 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 		return {
 			verified: response.body.verified,
 			failure: response.body.failure,
-			information: response.body.information as IAttestationInformation<T>
+			information: response.body.information
 		};
 	}
 
@@ -98,10 +99,10 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 	 * @param holderIdentity The identity to transfer the attestation to.
 	 * @returns The updated attestation details.
 	 */
-	public async transfer<T = unknown>(
+	public async transfer(
 		attestationId: string,
 		holderIdentity: string
-	): Promise<IAttestationInformation<T>> {
+	): Promise<IAttestationInformation> {
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
 
@@ -118,7 +119,7 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 			}
 		);
 
-		return response.body.information as IAttestationInformation<T>;
+		return response.body.information;
 	}
 
 	/**

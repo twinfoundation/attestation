@@ -1,6 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IComponent } from "@twin.org/core";
+import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type { IAttestationInformation } from "./IAttestationInformation";
 
 /**
@@ -16,25 +17,23 @@ export interface IAttestationComponent extends IComponent {
 	 * @param nodeIdentity The node identity to include in the attestation.
 	 * @returns The collated attestation data.
 	 */
-	attest<T = unknown>(
+	attest(
 		verificationMethodId: string,
-		data: T,
+		data: IJsonLdNodeObject,
 		namespace?: string,
 		identity?: string,
 		nodeIdentity?: string
-	): Promise<IAttestationInformation<T>>;
+	): Promise<IAttestationInformation>;
 
 	/**
 	 * Resolve and verify the attestation id.
 	 * @param attestationId The attestation id to verify.
 	 * @returns The verified attestation details.
 	 */
-	verify<T = unknown>(
-		attestationId: string
-	): Promise<{
+	verify(attestationId: string): Promise<{
 		verified: boolean;
 		failure?: string;
-		information?: Partial<IAttestationInformation<T>>;
+		information?: Partial<IAttestationInformation>;
 	}>;
 
 	/**
@@ -44,11 +43,11 @@ export interface IAttestationComponent extends IComponent {
 	 * @param identity The identity to perform the attestation operation with.
 	 * @returns The updated attestation details.
 	 */
-	transfer<T = unknown>(
+	transfer(
 		attestationId: string,
 		holderIdentity: string,
 		identity?: string
-	): Promise<IAttestationInformation<T>>;
+	): Promise<IAttestationInformation>;
 
 	/**
 	 * Destroy the attestation.
