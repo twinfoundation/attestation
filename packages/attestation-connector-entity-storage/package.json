@@ -41,6 +41,7 @@
 	"devDependencies": {
 		"@twin.org/identity-connector-entity-storage": "next",
 		"@twin.org/nft-connector-entity-storage": "next",
+		"@twin.org/vault-connector-entity-storage": "next",
 		"@twin.org/wallet-connector-entity-storage": "next",
 		"@twin.org/nameof-transformer": "next",
 		"@vitest/coverage-v8": "2.1.1",
