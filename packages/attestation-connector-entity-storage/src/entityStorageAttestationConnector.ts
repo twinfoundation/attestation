@@ -86,12 +86,12 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 	 * @param data The data to attest.
 	 * @returns The collated attestation data.
 	 */
-	public async attest(
+	public async attest<T extends IJsonLdNodeObject = IJsonLdNodeObject>(
 		controller: string,
 		address: string,
 		verificationMethodId: string,
-		data: IJsonLdNodeObject
-	): Promise<IAttestationInformation> {
+		data: T
+	): Promise<IAttestationInformation<T>> {
 		Guards.stringValue(this.CLASS_NAME, nameof(controller), controller);
 		Guards.stringValue(this.CLASS_NAME, nameof(address), address);
 		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
@@ -129,7 +129,7 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 			// details of which connector created the NFT
 			const attestationId = EntityStorageAttestationUtils.nftIdToAttestationId(nftId);
 
-			const attestationInformation: IAttestationInformation = {
+			const attestationInformation: IAttestationInformation<T> = {
 				id: attestationId,
 				created: verifiableCredential.verifiableCredential?.issuanceDate ?? "",
 				ownerIdentity: verifiableCredential.verifiableCredential.issuer ?? "",
@@ -152,10 +152,12 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 	 * @param attestationId The attestation id to verify.
 	 * @returns The verified attestation details.
 	 */
-	public async verify(attestationId: string): Promise<{
+	public async verify<T extends IJsonLdNodeObject = IJsonLdNodeObject>(
+		attestationId: string
+	): Promise<{
 		verified: boolean;
 		failure?: string;
-		information?: Partial<IAttestationInformation>;
+		information?: Partial<IAttestationInformation<T>>;
 	}> {
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 
@@ -180,7 +182,7 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 			let checkResult:
 				| {
 						revoked: boolean;
-						verifiableCredential?: IDidVerifiableCredential;
+						verifiableCredential?: IDidVerifiableCredential<T>;
 				  }
 				| undefined;
 
@@ -188,7 +190,7 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 			if (Is.empty(jwtProof) || Is.empty(resolved.metadata)) {
 				failure = `${this.CLASS_NAME}.verificationFailures.noData`;
 			} else {
-				checkResult = await this._identityConnector.checkVerifiableCredential(jwtProof);
+				checkResult = await this._identityConnector.checkVerifiableCredential<T>(jwtProof);
 
 				if (Is.empty(checkResult.verifiableCredential)) {
 					failure = `${this.CLASS_NAME}.verificationFailures.proofFailed`;
@@ -203,12 +205,17 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 			let contextAndType: IJsonLdNodeObject | undefined;
 
 			if (Is.object<IJsonLdNodeObject>(jsonObject)) {
-				contextAndType = {
-					"@context": JsonLdProcessor.removeContexts(
-						checkResult?.verifiableCredential?.["@context"],
-						Object.values(DidContexts)
-					)
-				};
+				contextAndType = {};
+
+				const context = JsonLdProcessor.removeContexts(
+					checkResult?.verifiableCredential?.["@context"],
+					Object.values(DidContexts)
+				);
+
+				if (!Is.empty(context)) {
+					contextAndType["@context"] = context;
+				}
+
 				const remainingTypes = checkResult?.verifiableCredential?.type?.filter(
 					t => t !== DidTypes.VerifiableCredential
 				);
@@ -217,7 +224,7 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 				}
 			}
 
-			const information: Partial<IAttestationInformation> = {
+			const information: Partial<IAttestationInformation<T>> = {
 				id: attestationId,
 				created: checkResult?.verifiableCredential?.issuanceDate,
 				ownerIdentity: checkResult?.verifiableCredential?.issuer,
@@ -225,7 +232,7 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 				data: {
 					...contextAndType,
 					...jsonObject
-				}
+				} as T
 			};
 
 			if (Is.stringValue(jwtProof)) {
@@ -264,12 +271,12 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 	 * @param holderAddress The new controller address of the attestation belonging to the holder.
 	 * @returns The updated attestation details.
 	 */
-	public async transfer(
+	public async transfer<T extends IJsonLdNodeObject = IJsonLdNodeObject>(
 		controller: string,
 		attestationId: string,
 		holderIdentity: string,
 		holderAddress: string
-	): Promise<IAttestationInformation> {
+	): Promise<IAttestationInformation<T>> {
 		Guards.stringValue(this.CLASS_NAME, nameof(controller), controller);
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
@@ -285,7 +292,7 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 		}
 
 		try {
-			const verificationResult = await this.verify(attestationId);
+			const verificationResult = await this.verify<T>(attestationId);
 			if (Is.stringValue(verificationResult.failure)) {
 				throw new GeneralError(
 					this.CLASS_NAME,
@@ -305,7 +312,7 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 			await this._nftConnector.transfer(controller, nftId, holderAddress, holder);
 
 			return {
-				...(verificationResult.information as IAttestationInformation),
+				...(verificationResult.information as IAttestationInformation<T>),
 				...holder
 			};
 		} catch (error) {

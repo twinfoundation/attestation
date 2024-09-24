@@ -17,23 +17,25 @@ export interface IAttestationComponent extends IComponent {
 	 * @param nodeIdentity The node identity to include in the attestation.
 	 * @returns The collated attestation data.
 	 */
-	attest(
+	attest<T extends IJsonLdNodeObject = IJsonLdNodeObject>(
 		verificationMethodId: string,
-		data: IJsonLdNodeObject,
+		data: T,
 		namespace?: string,
 		identity?: string,
 		nodeIdentity?: string
-	): Promise<IAttestationInformation>;
+	): Promise<IAttestationInformation<T>>;
 
 	/**
 	 * Resolve and verify the attestation id.
 	 * @param attestationId The attestation id to verify.
 	 * @returns The verified attestation details.
 	 */
-	verify(attestationId: string): Promise<{
+	verify<T extends IJsonLdNodeObject = IJsonLdNodeObject>(
+		attestationId: string
+	): Promise<{
 		verified: boolean;
 		failure?: string;
-		information?: Partial<IAttestationInformation>;
+		information?: Partial<IAttestationInformation<T>>;
 	}>;
 
 	/**
@@ -43,11 +45,11 @@ export interface IAttestationComponent extends IComponent {
 	 * @param identity The identity to perform the attestation operation with.
 	 * @returns The updated attestation details.
 	 */
-	transfer(
+	transfer<T extends IJsonLdNodeObject = IJsonLdNodeObject>(
 		attestationId: string,
 		holderIdentity: string,
 		identity?: string
-	): Promise<IAttestationInformation>;
+	): Promise<IAttestationInformation<T>>;
 
 	/**
 	 * Destroy the attestation.

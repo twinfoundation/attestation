@@ -56,9 +56,13 @@ Runtime name for the class.
 
 ### attest()
 
-> **attest**(`verificationMethodId`, `data`, `namespace`?, `identity`?, `nodeIdentity`?): `Promise`\<`IAttestationInformation`\>
+> **attest**\<`T`\>(`verificationMethodId`, `data`, `namespace`?, `identity`?, `nodeIdentity`?): `Promise`\<`IAttestationInformation`\<`T`\>\>
 
 Attest the data and return the collated information.
+
+#### Type Parameters
+
+• **T** *extends* `IJsonLdNodeObject` = `IJsonLdNodeObject`
 
 #### Parameters
 
@@ -66,7 +70,7 @@ Attest the data and return the collated information.
 
 The identity verification method to use for attesting the data.
 
-• **data**: `IJsonLdNodeObject`
+• **data**: `T`
 
 The data to attest.
 
@@ -84,7 +88,7 @@ The node identity to include in the attestation.
 
 #### Returns
 
-`Promise`\<`IAttestationInformation`\>
+`Promise`\<`IAttestationInformation`\<`T`\>\>
 
 The collated attestation data.
 
@@ -96,9 +100,13 @@ The collated attestation data.
 
 ### verify()
 
-> **verify**(`attestationId`): `Promise`\<`object`\>
+> **verify**\<`T`\>(`attestationId`): `Promise`\<`object`\>
 
 Resolve and verify the attestation id.
+
+#### Type Parameters
+
+• **T** *extends* `IJsonLdNodeObject` = `IJsonLdNodeObject`
 
 #### Parameters
 
@@ -122,7 +130,7 @@ The verified attestation details.
 
 ##### information?
 
-> `optional` **information**: `Partial`\<`IAttestationInformation`\>
+> `optional` **information**: `Partial`\<`IAttestationInformation`\<`T`\>\>
 
 #### Implementation of
 
@@ -132,9 +140,13 @@ The verified attestation details.
 
 ### transfer()
 
-> **transfer**(`attestationId`, `holderIdentity`, `identity`): `Promise`\<`IAttestationInformation`\>
+> **transfer**\<`T`\>(`attestationId`, `holderIdentity`, `identity`): `Promise`\<`IAttestationInformation`\<`T`\>\>
 
 Transfer the attestation to a new holder.
+
+#### Type Parameters
+
+• **T** *extends* `IJsonLdNodeObject` = `IJsonLdNodeObject`
 
 #### Parameters
 
@@ -152,7 +164,7 @@ The identity to perform the attestation operation with.
 
 #### Returns
 
-`Promise`\<`IAttestationInformation`\>
+`Promise`\<`IAttestationInformation`\<`T`\>\>
 
 The updated attestation details.
 

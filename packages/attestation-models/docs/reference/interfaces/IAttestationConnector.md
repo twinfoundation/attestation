@@ -10,9 +10,13 @@ Interface describing an attestation connector.
 
 ### attest()
 
-> **attest**(`controller`, `address`, `verificationMethodId`, `data`): `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\>
+> **attest**\<`T`\>(`controller`, `address`, `verificationMethodId`, `data`): `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
 
 Attest the data and return the collated information.
+
+#### Type Parameters
+
+• **T** *extends* `IJsonLdNodeObject` = `IJsonLdNodeObject`
 
 #### Parameters
 
@@ -28,13 +32,13 @@ The controller address for the attestation.
 
 The identity verification method to use for attesting the data.
 
-• **data**: `IJsonLdNodeObject`
+• **data**: `T`
 
 The data to attest.
 
 #### Returns
 
-`Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\>
+`Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
 
 The collated attestation data.
 
@@ -42,9 +46,13 @@ The collated attestation data.
 
 ### verify()
 
-> **verify**(`attestationId`): `Promise`\<`object`\>
+> **verify**\<`T`\>(`attestationId`): `Promise`\<`object`\>
 
 Resolve and verify the attestation id.
+
+#### Type Parameters
+
+• **T** *extends* `IJsonLdNodeObject` = `IJsonLdNodeObject`
 
 #### Parameters
 
@@ -68,15 +76,19 @@ The verified attestation details.
 
 ##### information?
 
-> `optional` **information**: `Partial`\<[`IAttestationInformation`](IAttestationInformation.md)\>
+> `optional` **information**: `Partial`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
 
 ***
 
 ### transfer()
 
-> **transfer**(`controller`, `attestationId`, `holderIdentity`, `holderAddress`): `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\>
+> **transfer**\<`T`\>(`controller`, `attestationId`, `holderIdentity`, `holderAddress`): `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
 
 Transfer the attestation to a new holder.
+
+#### Type Parameters
+
+• **T** *extends* `IJsonLdNodeObject` = `IJsonLdNodeObject`
 
 #### Parameters
 
@@ -98,7 +110,7 @@ The new controller address of the attestation belonging to the holder.
 
 #### Returns
 
-`Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\>
+`Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\<`T`\>\>
 
 The updated attestation details.
 

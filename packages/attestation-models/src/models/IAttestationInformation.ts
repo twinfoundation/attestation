@@ -6,7 +6,7 @@ import type { IAttestationProof } from "./IAttestationProof";
 /**
  * Interface describing the collated attestation information.
  */
-export interface IAttestationInformation {
+export interface IAttestationInformation<T extends IJsonLdNodeObject = IJsonLdNodeObject> {
 	/**
 	 * The unique identifier of the attestation.
 	 */
@@ -35,7 +35,7 @@ export interface IAttestationInformation {
 	/**
 	 * The data that was attested.
 	 */
-	data: IJsonLdNodeObject;
+	data: T;
 
 	/**
 	 * The proof for the attested data.

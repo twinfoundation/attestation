@@ -41,11 +41,11 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 	 * @param namespace The namespace of the connector to use for the attestation, defaults to component configured namespace.
 	 * @returns The collated attestation data.
 	 */
-	public async attest(
+	public async attest<T extends IJsonLdNodeObject = IJsonLdNodeObject>(
 		verificationMethodId: string,
-		data: IJsonLdNodeObject,
+		data: T,
 		namespace?: string
-	): Promise<IAttestationInformation> {
+	): Promise<IAttestationInformation<T>> {
 		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
 		Guards.object<IJsonLdNodeObject>(this.CLASS_NAME, nameof(data), data);
 
@@ -61,7 +61,7 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 			}
 		);
 
-		return response.body.information;
+		return response.body.information as IAttestationInformation<T>;
 	}
 
 	/**
@@ -69,10 +69,12 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 	 * @param attestationId The attestation id to verify.
 	 * @returns The verified attestation details.
 	 */
-	public async verify(attestationId: string): Promise<{
+	public async verify<T extends IJsonLdNodeObject = IJsonLdNodeObject>(
+		attestationId: string
+	): Promise<{
 		verified: boolean;
 		failure?: string;
-		information?: Partial<IAttestationInformation>;
+		information?: Partial<IAttestationInformation<T>>;
 	}> {
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 
@@ -89,7 +91,7 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 		return {
 			verified: response.body.verified,
 			failure: response.body.failure,
-			information: response.body.information
+			information: response.body.information as IAttestationInformation<T>
 		};
 	}
 
@@ -99,10 +101,10 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 	 * @param holderIdentity The identity to transfer the attestation to.
 	 * @returns The updated attestation details.
 	 */
-	public async transfer(
+	public async transfer<T extends IJsonLdNodeObject = IJsonLdNodeObject>(
 		attestationId: string,
 		holderIdentity: string
-	): Promise<IAttestationInformation> {
+	): Promise<IAttestationInformation<T>> {
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
 
@@ -119,7 +121,7 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 			}
 		);
 
-		return response.body.information;
+		return response.body.information as IAttestationInformation<T>;
 	}
 
 	/**

@@ -52,9 +52,13 @@ Runtime name for the class.
 
 ### attest()
 
-> **attest**(`controller`, `address`, `verificationMethodId`, `data`): `Promise`\<`IAttestationInformation`\>
+> **attest**\<`T`\>(`controller`, `address`, `verificationMethodId`, `data`): `Promise`\<`IAttestationInformation`\<`T`\>\>
 
 Attest the data and return the collated information.
+
+#### Type Parameters
+
+• **T** *extends* `IJsonLdNodeObject` = `IJsonLdNodeObject`
 
 #### Parameters
 
@@ -70,13 +74,13 @@ The controller address for the attestation.
 
 The identity verification method to use for attesting the data.
 
-• **data**: `IJsonLdNodeObject`
+• **data**: `T`
 
 The data to attest.
 
 #### Returns
 
-`Promise`\<`IAttestationInformation`\>
+`Promise`\<`IAttestationInformation`\<`T`\>\>
 
 The collated attestation data.
 
@@ -88,9 +92,13 @@ The collated attestation data.
 
 ### verify()
 
-> **verify**(`attestationId`): `Promise`\<`object`\>
+> **verify**\<`T`\>(`attestationId`): `Promise`\<`object`\>
 
 Resolve and verify the attestation id.
+
+#### Type Parameters
+
+• **T** *extends* `IJsonLdNodeObject` = `IJsonLdNodeObject`
 
 #### Parameters
 
@@ -114,7 +122,7 @@ The verified attestation details.
 
 ##### information?
 
-> `optional` **information**: `Partial`\<`IAttestationInformation`\>
+> `optional` **information**: `Partial`\<`IAttestationInformation`\<`T`\>\>
 
 #### Implementation of
 
@@ -124,9 +132,13 @@ The verified attestation details.
 
 ### transfer()
 
-> **transfer**(`controller`, `attestationId`, `holderIdentity`, `holderAddress`): `Promise`\<`IAttestationInformation`\>
+> **transfer**\<`T`\>(`controller`, `attestationId`, `holderIdentity`, `holderAddress`): `Promise`\<`IAttestationInformation`\<`T`\>\>
 
 Transfer the attestation to a new holder.
+
+#### Type Parameters
+
+• **T** *extends* `IJsonLdNodeObject` = `IJsonLdNodeObject`
 
 #### Parameters
 
@@ -148,7 +160,7 @@ The new controller address of the attestation belonging to the holder.
 
 #### Returns
 
-`Promise`\<`IAttestationInformation`\>
+`Promise`\<`IAttestationInformation`\<`T`\>\>
 
 The updated attestation details.
 

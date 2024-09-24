@@ -85,13 +85,13 @@ export class AttestationService implements IAttestationComponent {
 	 * @param nodeIdentity The node identity to include in the attestation.
 	 * @returns The collated attestation data.
 	 */
-	public async attest(
+	public async attest<T extends IJsonLdNodeObject = IJsonLdNodeObject>(
 		verificationMethodId: string,
-		data: IJsonLdNodeObject,
+		data: T,
 		namespace?: string,
 		identity?: string,
 		nodeIdentity?: string
-	): Promise<IAttestationInformation> {
+	): Promise<IAttestationInformation<T>> {
 		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
 		Guards.object<IJsonLdNodeObject>(this.CLASS_NAME, nameof(data), data);
 		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
@@ -113,7 +113,7 @@ export class AttestationService implements IAttestationComponent {
 				1
 			);
 
-			return attestationConnector.attest(identity, addresses[0], verificationMethodId, data);
+			return attestationConnector.attest<T>(identity, addresses[0], verificationMethodId, data);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "attestFailed", undefined, error);
 		}
@@ -124,17 +124,19 @@ export class AttestationService implements IAttestationComponent {
 	 * @param attestationId The attestation id to verify.
 	 * @returns The verified attestation details.
 	 */
-	public async verify(attestationId: string): Promise<{
+	public async verify<T extends IJsonLdNodeObject = IJsonLdNodeObject>(
+		attestationId: string
+	): Promise<{
 		verified: boolean;
 		failure?: string;
-		information?: Partial<IAttestationInformation>;
+		information?: Partial<IAttestationInformation<T>>;
 	}> {
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 
 		try {
 			const attestationConnector = this.getConnector(attestationId);
 
-			return attestationConnector.verify(attestationId);
+			return attestationConnector.verify<T>(attestationId);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "verifyFailed", undefined, error);
 		}
@@ -147,11 +149,11 @@ export class AttestationService implements IAttestationComponent {
 	 * @param identity The identity to perform the attestation operation with.
 	 * @returns The updated attestation details.
 	 */
-	public async transfer(
+	public async transfer<T extends IJsonLdNodeObject = IJsonLdNodeObject>(
 		attestationId: string,
 		holderIdentity: string,
 		identity: string
-	): Promise<IAttestationInformation> {
+	): Promise<IAttestationInformation<T>> {
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
 		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
@@ -166,7 +168,12 @@ export class AttestationService implements IAttestationComponent {
 				1
 			);
 
-			return attestationConnector.transfer(identity, attestationId, holderIdentity, addresses[0]);
+			return attestationConnector.transfer<T>(
+				identity,
+				attestationId,
+				holderIdentity,
+				addresses[0]
+			);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "transferFailed", undefined, error);
 		}

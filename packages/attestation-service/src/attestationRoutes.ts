@@ -47,7 +47,7 @@ export function generateRestRoutesAttestation(
 ): IRestRoute[] {
 	const attestRoute: IRestRoute<IAttestationAttestRequest, IAttestationAttestResponse> = {
 		operationId: "attestationAttest",
-		summary: "Attest a data set",
+		summary: "Attest a JSON-LD object",
 		tag: tagsAttestation[0].name,
 		method: "POST",
 		path: `${baseRouteName}/`,
@@ -63,7 +63,9 @@ export function generateRestRoutesAttestation(
 							verificationMethodId:
 								"did:iota:tst:0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f#attestation",
 							data: {
-								docName: "bill-of-lading",
+								"@context": "https://schema.org",
+								type: "DigitalDocument",
+								name: "bill-of-lading",
 								mimeType: "application/pdf",
 								fingerprint: "0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f"
 							}
@@ -88,7 +90,9 @@ export function generateRestRoutesAttestation(
 									holderIdentity:
 										"did:iota:tst:0x8992c426116f21b2a4c7a2854300748d3e94a8ce089d5be62e11f105bd2a0f9e",
 									data: {
-										docName: "bill-of-lading",
+										"@context": "https://schema.org",
+										type: "DigitalDocument",
+										name: "bill-of-lading",
 										mimeType: "application/pdf",
 										fingerprint:
 											"0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f"
@@ -146,7 +150,9 @@ export function generateRestRoutesAttestation(
 									holderIdentity:
 										"did:iota:tst:0x8992c426116f21b2a4c7a2854300748d3e94a8ce089d5be62e11f105bd2a0f9e",
 									data: {
-										docName: "bill-of-lading",
+										"@context": "https://schema.org",
+										type: "DigitalDocument",
+										name: "bill-of-lading",
 										mimeType: "application/pdf",
 										fingerprint:
 											"0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f"
@@ -174,7 +180,9 @@ export function generateRestRoutesAttestation(
 									holderIdentity:
 										"did:iota:tst:0x8992c426116f21b2a4c7a2854300748d3e94a8ce089d5be62e11f105bd2a0f9e",
 									data: {
-										docName: "bill-of-lading",
+										"@context": "https://schema.org",
+										type: "DigitalDocument",
+										name: "bill-of-lading",
 										mimeType: "application/pdf",
 										fingerprint:
 											"0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f"
@@ -236,7 +244,9 @@ export function generateRestRoutesAttestation(
 										"did:iota:tst:0x06ae1034f9f4af1b408a0b54e877bb476259666a14f221400d3746aecefa7105",
 									transferred: "2024-06-18T13:35:45.642Z",
 									data: {
-										docName: "bill-of-lading",
+										"@context": "https://schema.org",
+										type: "DigitalDocument",
+										name: "bill-of-lading",
 										fingerprint:
 											"0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f",
 										mimeType: "application/pdf"
