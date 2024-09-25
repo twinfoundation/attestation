@@ -85,7 +85,7 @@ export class AttestationService implements IAttestationComponent {
 	 * @param nodeIdentity The node identity to include in the attestation.
 	 * @returns The collated attestation data.
 	 */
-	public async attest<T extends IJsonLdNodeObject = IJsonLdNodeObject>(
+	public async attest<T extends IJsonLdNodeObject>(
 		verificationMethodId: string,
 		data: T,
 		namespace?: string,
@@ -124,7 +124,7 @@ export class AttestationService implements IAttestationComponent {
 	 * @param attestationId The attestation id to verify.
 	 * @returns The verified attestation details.
 	 */
-	public async verify<T extends IJsonLdNodeObject = IJsonLdNodeObject>(
+	public async verify<T extends IJsonLdNodeObject>(
 		attestationId: string
 	): Promise<{
 		verified: boolean;
@@ -149,7 +149,7 @@ export class AttestationService implements IAttestationComponent {
 	 * @param identity The identity to perform the attestation operation with.
 	 * @returns The updated attestation details.
 	 */
-	public async transfer<T extends IJsonLdNodeObject = IJsonLdNodeObject>(
+	public async transfer<T extends IJsonLdNodeObject>(
 		attestationId: string,
 		holderIdentity: string,
 		identity: string

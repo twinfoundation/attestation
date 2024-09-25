@@ -10,6 +10,9 @@ export interface IAttestationAttestResponse {
 	 * The result of the attestation process.
 	 */
 	body: {
+		/**
+		 * The attestation information.
+		 */
 		information: IAttestationInformation;
 	};
 }

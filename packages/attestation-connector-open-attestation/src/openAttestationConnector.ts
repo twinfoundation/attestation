@@ -36,7 +36,7 @@ export class OpenAttestationConnector implements IAttestationConnector {
 	 * @param data The data to attest.
 	 * @returns The collated attestation data.
 	 */
-	public async attest<T extends IJsonLdNodeObject = IJsonLdNodeObject>(
+	public async attest<T extends IJsonLdNodeObject>(
 		controller: string,
 		address: string,
 		verificationMethodId: string,
@@ -50,7 +50,7 @@ export class OpenAttestationConnector implements IAttestationConnector {
 	 * @param attestationId The attestation id to verify.
 	 * @returns The verified attestation details.
 	 */
-	public async verify<T extends IJsonLdNodeObject = IJsonLdNodeObject>(
+	public async verify<T extends IJsonLdNodeObject>(
 		attestationId: string
 	): Promise<{
 		verified: boolean;
@@ -68,7 +68,7 @@ export class OpenAttestationConnector implements IAttestationConnector {
 	 * @param holderAddress The new controller address of the attestation belonging to the holder.
 	 * @returns The updated attestation details.
 	 */
-	public async transfer<T extends IJsonLdNodeObject = IJsonLdNodeObject>(
+	public async transfer<T extends IJsonLdNodeObject>(
 		controller: string,
 		attestationId: string,
 		holderIdentity: string,

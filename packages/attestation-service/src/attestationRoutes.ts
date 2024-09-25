@@ -17,6 +17,7 @@ import type {
 	IAttestationVerifyResponse
 } from "@twin.org/attestation-models";
 import { ComponentFactory, Guards } from "@twin.org/core";
+import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import { nameof } from "@twin.org/nameof";
 import { HttpStatusCode } from "@twin.org/web";
 
@@ -68,7 +69,7 @@ export function generateRestRoutesAttestation(
 								name: "bill-of-lading",
 								mimeType: "application/pdf",
 								fingerprint: "0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f"
-							}
+							} as IJsonLdNodeObject
 						}
 					}
 				}
@@ -96,7 +97,7 @@ export function generateRestRoutesAttestation(
 										mimeType: "application/pdf",
 										fingerprint:
 											"0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f"
-									},
+									} as IJsonLdNodeObject,
 									proof: {
 										type: "jwt",
 										value:
@@ -156,7 +157,7 @@ export function generateRestRoutesAttestation(
 										mimeType: "application/pdf",
 										fingerprint:
 											"0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f"
-									},
+									} as IJsonLdNodeObject,
 									proof: {
 										type: "jwt",
 										value:
@@ -186,7 +187,7 @@ export function generateRestRoutesAttestation(
 										mimeType: "application/pdf",
 										fingerprint:
 											"0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f"
-									},
+									} as IJsonLdNodeObject,
 									proof: {
 										type: "jwt",
 										value:
@@ -250,7 +251,7 @@ export function generateRestRoutesAttestation(
 										fingerprint:
 											"0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f",
 										mimeType: "application/pdf"
-									},
+									} as IJsonLdNodeObject,
 									proof: {
 										type: "jwt",
 										value:
@@ -309,7 +310,7 @@ export async function attestationAttest(
 	request: IAttestationAttestRequest
 ): Promise<IAttestationAttestResponse> {
 	Guards.object<IAttestationAttestRequest>(ROUTES_SOURCE, nameof(request), request);
-	Guards.object<IAttestationAttestResponse["body"]>(
+	Guards.object<IAttestationAttestRequest["body"]>(
 		ROUTES_SOURCE,
 		nameof(request.body),
 		request.body
@@ -356,7 +357,7 @@ export async function attestationVerify(
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
 
 	const component = ComponentFactory.get<IAttestationComponent>(componentName);
-	const verificationResult = await component.verify(request.pathParams.id);
+	const verificationResult = await component.verify<IJsonLdNodeObject>(request.pathParams.id);
 
 	return {
 		body: verificationResult
@@ -394,7 +395,7 @@ export async function attestationTransfer(
 	);
 
 	const component = ComponentFactory.get<IAttestationComponent>(componentName);
-	const information = await component.transfer(
+	const information = await component.transfer<IJsonLdNodeObject>(
 		request.pathParams.id,
 		request.body.holderIdentity,
 		httpRequestContext.userIdentity
