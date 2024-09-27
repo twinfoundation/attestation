@@ -13,28 +13,22 @@ export interface IAttestationConnector extends IComponent {
 	 * @param controller The controller identity of the user to access the vault keys.
 	 * @param address The controller address for the attestation.
 	 * @param verificationMethodId The identity verification method to use for attesting the data.
-	 * @param data The data to attest.
+	 * @param attestationObject The data to attest.
 	 * @returns The collated attestation data.
 	 */
-	attest<T extends IJsonLdNodeObject>(
+	create(
 		controller: string,
 		address: string,
 		verificationMethodId: string,
-		data: T
-	): Promise<IAttestationInformation<T>>;
+		attestationObject: IJsonLdNodeObject
+	): Promise<string>;
 
 	/**
 	 * Resolve and verify the attestation id.
-	 * @param attestationId The attestation id to verify.
+	 * @param id The attestation id to verify.
 	 * @returns The verified attestation details.
 	 */
-	verify<T extends IJsonLdNodeObject>(
-		attestationId: string
-	): Promise<{
-		verified: boolean;
-		failure?: string;
-		information?: Partial<IAttestationInformation<T>>;
-	}>;
+	get(id: string): Promise<IAttestationInformation>;
 
 	/**
 	 * Transfer the attestation to a new holder.
@@ -42,14 +36,14 @@ export interface IAttestationConnector extends IComponent {
 	 * @param attestationId The attestation to transfer.
 	 * @param holderIdentity The holder identity of the attestation.
 	 * @param holderAddress The new controller address of the attestation belonging to the holder.
-	 * @returns The updated attestation details.
+	 * @returns Nothing.
 	 */
-	transfer<T extends IJsonLdNodeObject>(
+	transfer(
 		controller: string,
 		attestationId: string,
 		holderIdentity: string,
 		holderAddress: string
-	): Promise<IAttestationInformation<T>>;
+	): Promise<void>;
 
 	/**
 	 * Destroy the attestation.

@@ -1,12 +1,24 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
-import type { IAttestationProof } from "./IAttestationProof";
+import type { AttestationTypes } from "./attestationTypes";
 
 /**
  * Interface describing the collated attestation information.
  */
-export interface IAttestationInformation<T extends IJsonLdNodeObject = IJsonLdNodeObject> {
+export interface IAttestationInformation {
+	/**
+	 * JSON-LD Context.
+	 */
+	"@context":
+		| typeof AttestationTypes.ContextRoot
+		| [typeof AttestationTypes.ContextRoot, ...string[]];
+
+	/**
+	 * JSON-LD Type.
+	 */
+	type: typeof AttestationTypes.Information;
+
 	/**
 	 * The unique identifier of the attestation.
 	 */
@@ -15,17 +27,17 @@ export interface IAttestationInformation<T extends IJsonLdNodeObject = IJsonLdNo
 	/**
 	 * Created date/time of the attestation in ISO format.
 	 */
-	created: string;
+	dateCreated: string;
+
+	/**
+	 * Transferred date/time of the attestation in ISO format, can be blank if holder identity is owner.
+	 */
+	dateTransferred?: string;
 
 	/**
 	 * The identity of the owner.
 	 */
 	ownerIdentity: string;
-
-	/**
-	 * Transferred date/time of the attestation in ISO format, can be blank if holder identity is owner.
-	 */
-	transferred?: string;
 
 	/**
 	 * The identity of the current holder, can be undefined if owner is still the holder.
@@ -35,10 +47,20 @@ export interface IAttestationInformation<T extends IJsonLdNodeObject = IJsonLdNo
 	/**
 	 * The data that was attested.
 	 */
-	data: T;
+	attestationObject: IJsonLdNodeObject;
 
 	/**
 	 * The proof for the attested data.
 	 */
-	proof: IAttestationProof;
+	proof?: IJsonLdNodeObject;
+
+	/**
+	 * Whether the attestation has been verified.
+	 */
+	verified?: boolean;
+
+	/**
+	 * The verification failure message.
+	 */
+	verificationFailure?: string;
 }

@@ -13,5 +13,5 @@ export interface IEntityStorageAttestationHolder {
 	/**
 	 * The ISO date/time when the attestation was transferred, if not provided defaults to issued date.
 	 */
-	transferred?: string;
+	dateTransferred?: string;
 }

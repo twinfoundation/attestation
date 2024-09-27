@@ -5,7 +5,7 @@
 		}
 	},
 	"commands": {
-		"attestation-attest": {
+		"attestation-create": {
 			"summary": "Create an attestation.",
 			"description": "Create an attestation.",
 			"options": {
@@ -42,9 +42,9 @@
 				"nftId": "NFT Id"
 			}
 		},
-		"attestation-verify": {
-			"summary": "Verify an attestation.",
-			"description": "Verify an attestation.",
+		"attestation-get": {
+			"summary": "Getting an attestation.",
+			"description": "Getting an attestation.",
 			"options": {
 				"id": {
 					"param": "--id '<'id'>'",
@@ -52,7 +52,7 @@
 				}
 			},
 			"progress": {
-				"verifyingAttestation": "Verifying Attestation"
+				"gettingAttestation": "Getting Attestation"
 			},
 			"labels": {
 				"attestation": "Attestation",

@@ -1,6 +1,10 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IAttestationConnector, IAttestationInformation } from "@twin.org/attestation-models";
+import {
+	AttestationTypes,
+	type IAttestationConnector,
+	type IAttestationInformation
+} from "@twin.org/attestation-models";
 import {
 	Coerce,
 	GeneralError,
@@ -11,6 +15,7 @@ import {
 	type IValidationFailure
 } from "@twin.org/core";
 import { JsonLdHelper, JsonLdProcessor, type IJsonLdNodeObject } from "@twin.org/data-json-ld";
+import { SchemaOrgDataTypes, SchemaOrgTypes } from "@twin.org/data-schema-org";
 import { IdentityConnectorFactory, type IIdentityConnector } from "@twin.org/identity-models";
 import { nameof } from "@twin.org/nameof";
 import { NftConnectorFactory, type INftConnector } from "@twin.org/nft-models";
@@ -76,6 +81,8 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 		this._nftConnector = NftConnectorFactory.get(options?.nftConnectorType ?? "nft");
 		this._config = options?.config ?? {};
 		this._config.tag ??= EntityStorageAttestationConnector._DEFAULT_TAG;
+
+		SchemaOrgDataTypes.registerRedirects();
 	}
 
 	/**
@@ -83,30 +90,30 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 	 * @param controller The controller identity of the user to access the vault keys.
 	 * @param address The controller address for the attestation.
 	 * @param verificationMethodId The identity verification method to use for attesting the data.
-	 * @param data The data to attest.
-	 * @returns The collated attestation data.
+	 * @param attestationObject The data to attest.
+	 * @returns The id of the attestation.
 	 */
-	public async attest<T extends IJsonLdNodeObject>(
+	public async create(
 		controller: string,
 		address: string,
 		verificationMethodId: string,
-		data: T
-	): Promise<IAttestationInformation<T>> {
+		attestationObject: IJsonLdNodeObject
+	): Promise<string> {
 		Guards.stringValue(this.CLASS_NAME, nameof(controller), controller);
 		Guards.stringValue(this.CLASS_NAME, nameof(address), address);
 		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
-		Guards.object<IJsonLdNodeObject>(this.CLASS_NAME, nameof(data), data);
+		Guards.object<IJsonLdNodeObject>(this.CLASS_NAME, nameof(attestationObject), attestationObject);
 
 		try {
 			const validationFailures: IValidationFailure[] = [];
-			await JsonLdHelper.validate(data, validationFailures);
-			Validation.asValidationError(this.CLASS_NAME, "data", validationFailures);
+			await JsonLdHelper.validate(attestationObject, validationFailures);
+			Validation.asValidationError(this.CLASS_NAME, nameof(attestationObject), validationFailures);
 
 			const verifiableCredential = await this._identityConnector.createVerifiableCredential(
 				controller,
 				verificationMethodId,
 				undefined,
-				data
+				attestationObject
 			);
 
 			const attestationPayload: IEntityStorageAttestationPayload = {
@@ -127,21 +134,7 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 			// Convert the nftId urn to a form we can use as the namespace specific part of the
 			// attestation urn but can be decoded back to the nftId, as we need to maintain the
 			// details of which connector created the NFT
-			const attestationId = EntityStorageAttestationUtils.nftIdToAttestationId(nftId);
-
-			const attestationInformation: IAttestationInformation<T> = {
-				id: attestationId,
-				created: verifiableCredential.verifiableCredential?.issuanceDate ?? "",
-				ownerIdentity: verifiableCredential.verifiableCredential.issuer ?? "",
-				holderIdentity: verifiableCredential.verifiableCredential.issuer ?? "",
-				data,
-				proof: {
-					type: "jwt",
-					value: verifiableCredential.jwt
-				}
-			};
-
-			return attestationInformation;
+			return EntityStorageAttestationUtils.nftIdToAttestationId(nftId);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "attestingFailed", undefined, error);
 		}
@@ -149,29 +142,23 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 
 	/**
 	 * Resolve and verify the attestation id.
-	 * @param attestationId The attestation id to verify.
+	 * @param id The attestation id to verify.
 	 * @returns The verified attestation details.
 	 */
-	public async verify<T extends IJsonLdNodeObject>(
-		attestationId: string
-	): Promise<{
-		verified: boolean;
-		failure?: string;
-		information?: Partial<IAttestationInformation<T>>;
-	}> {
-		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
+	public async get(id: string): Promise<IAttestationInformation> {
+		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
-		const urnParsed = Urn.fromValidString(attestationId);
+		const urnParsed = Urn.fromValidString(id);
 
 		if (urnParsed.namespaceMethod() !== EntityStorageAttestationConnector.NAMESPACE) {
 			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
 				namespace: EntityStorageAttestationConnector.NAMESPACE,
-				attestationId
+				attestationId: id
 			});
 		}
 
 		try {
-			const nftId = EntityStorageAttestationUtils.attestationIdToNftId(attestationId);
+			const nftId = EntityStorageAttestationUtils.attestationIdToNftId(id);
 
 			const resolved = await this._nftConnector.resolve<
 				IEntityStorageAttestationPayload,
@@ -182,7 +169,7 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 			let checkResult:
 				| {
 						revoked: boolean;
-						verifiableCredential?: IDidVerifiableCredential<T>;
+						verifiableCredential?: IDidVerifiableCredential;
 				  }
 				| undefined;
 
@@ -190,7 +177,7 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 			if (Is.empty(jwtProof) || Is.empty(resolved.metadata)) {
 				failure = `${this.CLASS_NAME}.verificationFailures.noData`;
 			} else {
-				checkResult = await this._identityConnector.checkVerifiableCredential<T>(jwtProof);
+				checkResult = await this._identityConnector.checkVerifiableCredential(jwtProof);
 
 				if (Is.empty(checkResult.verifiableCredential)) {
 					failure = `${this.CLASS_NAME}.verificationFailures.proofFailed`;
@@ -224,40 +211,42 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 				}
 			}
 
-			const information: Partial<IAttestationInformation<T>> = {
-				id: attestationId,
-				created: checkResult?.verifiableCredential?.issuanceDate,
-				ownerIdentity: checkResult?.verifiableCredential?.issuer,
+			const information: IAttestationInformation = {
+				"@context": [AttestationTypes.ContextRoot, SchemaOrgTypes.ContextRoot],
+				type: AttestationTypes.Information,
+				id,
+				dateCreated: checkResult?.verifiableCredential?.issuanceDate ?? "",
+				ownerIdentity: checkResult?.verifiableCredential?.issuer ?? "",
 				holderIdentity: checkResult?.verifiableCredential?.issuer,
-				data: {
+				attestationObject: {
 					...contextAndType,
 					...jsonObject
-				} as T
+				}
 			};
 
 			if (Is.stringValue(jwtProof)) {
-				information.proof = Is.stringValue(jwtProof)
-					? {
-							type: "jwt",
-							value: jwtProof
-						}
-					: undefined;
+				information.proof = {
+					"@context": AttestationTypes.ContextRoot,
+					type: AttestationTypes.JwtProof,
+					value: jwtProof
+				};
 			}
 
 			if (
 				Is.object<IEntityStorageAttestationHolder>(resolved.metadata) &&
 				Is.stringValue(resolved.metadata.holderIdentity) &&
-				Is.stringValue(resolved.metadata.transferred)
+				Is.stringValue(resolved.metadata.dateTransferred)
 			) {
 				information.holderIdentity = resolved.metadata.holderIdentity;
-				information.transferred = resolved.metadata.transferred;
+				information.dateTransferred = resolved.metadata.dateTransferred;
 			}
 
-			return {
-				verified: Is.empty(failure),
-				failure,
-				information
-			};
+			information.verified = Is.empty(failure);
+			information.verificationFailure = failure;
+
+			const compacted = await JsonLdProcessor.compact(information, information["@context"]);
+
+			return compacted as IAttestationInformation;
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "verificationFailed", undefined, error);
 		}
@@ -269,14 +258,14 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 	 * @param attestationId The attestation to transfer.
 	 * @param holderIdentity The holder identity of the attestation.
 	 * @param holderAddress The new controller address of the attestation belonging to the holder.
-	 * @returns The updated attestation details.
+	 * @returns Nothing.
 	 */
-	public async transfer<T extends IJsonLdNodeObject>(
+	public async transfer(
 		controller: string,
 		attestationId: string,
 		holderIdentity: string,
 		holderAddress: string
-	): Promise<IAttestationInformation<T>> {
+	): Promise<void> {
 		Guards.stringValue(this.CLASS_NAME, nameof(controller), controller);
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
@@ -292,29 +281,24 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 		}
 
 		try {
-			const verificationResult = await this.verify<T>(attestationId);
-			if (Is.stringValue(verificationResult.failure)) {
+			const verificationResult = await this.get(attestationId);
+			if (Is.stringValue(verificationResult.verificationFailure)) {
 				throw new GeneralError(
 					this.CLASS_NAME,
 					"verificationFailed",
 					undefined,
-					new GeneralError(this.CLASS_NAME, verificationResult.failure)
+					new GeneralError(this.CLASS_NAME, verificationResult.verificationFailure)
 				);
 			}
 
 			const nftId = EntityStorageAttestationUtils.attestationIdToNftId(attestationId);
 
 			const holder: IEntityStorageAttestationHolder = {
-				transferred: new Date().toISOString(),
+				dateTransferred: new Date().toISOString(),
 				holderIdentity
 			};
 
 			await this._nftConnector.transfer(controller, nftId, holderAddress, holder);
-
-			return {
-				...(verificationResult.information as IAttestationInformation<T>),
-				...holder
-			};
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "transferFailed", undefined, error);
 		}

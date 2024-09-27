@@ -3,9 +3,9 @@
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 
 /**
- * Attest the data and return the collated attestation details.
+ * Attest the data and return the id of the attestation.
  */
-export interface IAttestationAttestRequest {
+export interface IAttestationCreateRequest {
 	/**
 	 * The data to be used in the signing.
 	 */
@@ -18,7 +18,7 @@ export interface IAttestationAttestRequest {
 		/**
 		 * The data object to attest.
 		 */
-		data: IJsonLdNodeObject;
+		attestationObject: IJsonLdNodeObject;
 
 		/**
 		 * The namespace of the connector to use for the attestation, defaults to component configured namespace.

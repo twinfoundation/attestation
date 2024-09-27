@@ -46,58 +46,51 @@ describe("IotaAttestationConnector", () => {
 		const attestation = new IotaAttestationConnector();
 
 		const dataPayload: IJsonLdNodeObject = {
-			"@context": "http://schema.org/",
+			"@context": "https://schema.org/",
 			type: "DigitalDocument",
 			id: "did:iota:1234567890abcdef",
 			name: "My Document"
 		};
 
-		const attested = await attestation.attest(
+		const attestedId = await attestation.create(
 			TEST_IDENTITY_ID,
 			TEST_IDENTITY_ADDRESS_BECH32,
 			verificationMethodId,
 			dataPayload
 		);
 
-		expect(attested).toBeDefined();
-		expect(attested.id.startsWith("attestation:iota")).toEqual(true);
-		expect(Is.dateTimeString(attested?.created)).toEqual(true);
-		expect(attested.ownerIdentity).toEqual(ownerIdentity);
-		expect(attested.holderIdentity).toEqual(ownerIdentity);
-		expect(attested.transferred).toEqual(undefined);
-		expect(attested.data).toEqual(dataPayload);
-		expect(attested.proof?.type).toEqual("jwt");
-		expect(attested.proof?.value.split(".").length).toEqual(3);
+		expect(attestedId).toBeDefined();
+		expect(attestedId.startsWith("attestation:iota")).toEqual(true);
 
-		const idUrn = Urn.fromValidString(attested?.id);
+		const idUrn = Urn.fromValidString(attestedId);
 		const nftId = Converter.bytesToUtf8(Converter.base64ToBytes(idUrn.namespaceSpecific(1)));
 		const nftAddress = IotaNftUtils.nftIdToAddress(nftId);
 		console.debug("Attestation NFT", `${process.env.TEST_EXPLORER_URL}addr/${nftAddress}`);
 
-		attestationId = attested?.id;
+		attestationId = attestedId;
 	});
 
-	test("can verify an attestation", async () => {
+	test("can get an attestation", async () => {
 		const attestation = new IotaAttestationConnector();
 
-		const attested = await attestation.verify(attestationId);
+		const attested = await attestation.get(attestationId);
 
 		expect(attested).toBeDefined();
 		expect(attested.verified).toEqual(true);
-		expect(attested.failure).toEqual(undefined);
-		expect(attested.information?.id?.startsWith("attestation:iota")).toEqual(true);
-		expect(Is.dateTimeString(attested.information?.created)).toEqual(true);
-		expect(attested.information?.ownerIdentity).toEqual(ownerIdentity);
-		expect(attested.information?.holderIdentity).toEqual(ownerIdentity);
-		expect(attested.information?.transferred).toEqual(undefined);
-		expect(attested.information?.data).toEqual({
-			"@context": "http://schema.org/",
+		expect(attested.verificationFailure).toEqual(undefined);
+		expect(attested.id?.startsWith("attestation:iota")).toEqual(true);
+		expect(Is.dateTimeString(attested.dateCreated)).toEqual(true);
+		expect(attested.ownerIdentity).toEqual(ownerIdentity);
+		expect(attested.holderIdentity).toEqual(ownerIdentity);
+		expect(attested.dateTransferred).toEqual(undefined);
+		expect(attested.attestationObject).toEqual({
+			"@context": "https://schema.org/",
 			type: "DigitalDocument",
 			id: "did:iota:1234567890abcdef",
 			name: "My Document"
 		});
-		expect(attested.information?.proof?.type).toEqual("jwt");
-		expect(attested.information?.proof?.value.split(".").length).toEqual(3);
+		expect(attested.proof?.type).toEqual("JwtProof");
+		expect((attested.proof?.value as string).split(".").length).toEqual(3);
 	});
 
 	test("can transfer an attestation", async () => {
@@ -105,26 +98,28 @@ describe("IotaAttestationConnector", () => {
 
 		const testIdentity2 = await TEST_IDENTITY_CONNECTOR.createDocument(TEST_IDENTITY_ID);
 
-		const transfered = await attestation.transfer(
+		await attestation.transfer(
 			TEST_IDENTITY_ID,
 			attestationId,
 			testIdentity2.id,
 			TEST_IDENTITY_ADDRESS_BECH32_2
 		);
 
+		const transfered = await attestation.get(attestationId);
+
 		expect(transfered).toBeDefined();
 		expect(transfered.id.startsWith("attestation:iota")).toEqual(true);
-		expect(Is.dateTimeString(transfered.created)).toEqual(true);
+		expect(Is.dateTimeString(transfered.dateCreated)).toEqual(true);
 		expect(transfered.ownerIdentity).toEqual(ownerIdentity);
 		expect(transfered.holderIdentity).toEqual(testIdentity2.id);
-		expect(Is.dateTimeString(transfered.transferred)).toEqual(true);
-		expect(transfered.data).toEqual({
-			"@context": "http://schema.org/",
+		expect(Is.dateTimeString(transfered.dateTransferred)).toEqual(true);
+		expect(transfered.attestationObject).toEqual({
+			"@context": "https://schema.org/",
 			type: "DigitalDocument",
 			id: "did:iota:1234567890abcdef",
 			name: "My Document"
 		});
-		expect(transfered.proof?.type).toEqual("jwt");
-		expect(transfered.proof?.value.split(".").length).toEqual(3);
+		expect(transfered.proof?.type).toEqual("JwtProof");
+		expect((transfered.proof?.value as string).split(".").length).toEqual(3);
 	});
 });

@@ -79,21 +79,21 @@ export class AttestationService implements IAttestationComponent {
 	/**
 	 * Attest the data and return the collated information.
 	 * @param verificationMethodId The identity verification method to use for attesting the data.
-	 * @param data The data to attest.
+	 * @param attestationObject The data to attest.
 	 * @param namespace The namespace of the connector to use for the attestation, defaults to service configured namespace.
 	 * @param identity The identity to perform the attestation operation with.
 	 * @param nodeIdentity The node identity to include in the attestation.
-	 * @returns The collated attestation data.
+	 * @returns The id.
 	 */
-	public async attest<T extends IJsonLdNodeObject>(
+	public async create(
 		verificationMethodId: string,
-		data: T,
+		attestationObject: IJsonLdNodeObject,
 		namespace?: string,
 		identity?: string,
 		nodeIdentity?: string
-	): Promise<IAttestationInformation<T>> {
+	): Promise<string> {
 		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
-		Guards.object<IJsonLdNodeObject>(this.CLASS_NAME, nameof(data), data);
+		Guards.object<IJsonLdNodeObject>(this.CLASS_NAME, nameof(attestationObject), attestationObject);
 		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
 
 		try {
@@ -102,8 +102,8 @@ export class AttestationService implements IAttestationComponent {
 			const attestationConnector =
 				AttestationConnectorFactory.get<IAttestationConnector>(connectorNamespace);
 
-			if (Is.object<{ nodeIdentity?: string }>(data) && !this._excludeNodeIdentity) {
-				data.nodeIdentity = nodeIdentity;
+			if (Is.object<{ nodeIdentity?: string }>(attestationObject) && !this._excludeNodeIdentity) {
+				attestationObject.nodeIdentity = nodeIdentity;
 			}
 
 			const addresses = await this._walletConnector.getAddresses(
@@ -113,7 +113,12 @@ export class AttestationService implements IAttestationComponent {
 				1
 			);
 
-			return attestationConnector.attest<T>(identity, addresses[0], verificationMethodId, data);
+			return attestationConnector.create(
+				identity,
+				addresses[0],
+				verificationMethodId,
+				attestationObject
+			);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "attestFailed", undefined, error);
 		}
@@ -121,22 +126,16 @@ export class AttestationService implements IAttestationComponent {
 
 	/**
 	 * Resolve and verify the attestation id.
-	 * @param attestationId The attestation id to verify.
+	 * @param id The attestation id to verify.
 	 * @returns The verified attestation details.
 	 */
-	public async verify<T extends IJsonLdNodeObject>(
-		attestationId: string
-	): Promise<{
-		verified: boolean;
-		failure?: string;
-		information?: Partial<IAttestationInformation<T>>;
-	}> {
-		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
+	public async get(id: string): Promise<IAttestationInformation> {
+		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
 		try {
-			const attestationConnector = this.getConnector(attestationId);
+			const attestationConnector = this.getConnector(id);
 
-			return attestationConnector.verify<T>(attestationId);
+			return attestationConnector.get(id);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "verifyFailed", undefined, error);
 		}
@@ -149,11 +148,11 @@ export class AttestationService implements IAttestationComponent {
 	 * @param identity The identity to perform the attestation operation with.
 	 * @returns The updated attestation details.
 	 */
-	public async transfer<T extends IJsonLdNodeObject>(
+	public async transfer(
 		attestationId: string,
 		holderIdentity: string,
 		identity: string
-	): Promise<IAttestationInformation<T>> {
+	): Promise<void> {
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
 		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
@@ -168,12 +167,7 @@ export class AttestationService implements IAttestationComponent {
 				1
 			);
 
-			return attestationConnector.transfer<T>(
-				identity,
-				attestationId,
-				holderIdentity,
-				addresses[0]
-			);
+			return attestationConnector.transfer(identity, attestationId, holderIdentity, addresses[0]);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "transferFailed", undefined, error);
 		}

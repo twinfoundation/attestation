@@ -138,7 +138,7 @@ export async function actionCommandAttestationTransfer(opts: {
 
 	CLIDisplay.spinnerStart();
 
-	const attestationInformation = await iotaAttestationConnector.transfer(
+	await iotaAttestationConnector.transfer(
 		localIdentity,
 		id,
 		holderIdentity,
@@ -147,8 +147,7 @@ export async function actionCommandAttestationTransfer(opts: {
 
 	CLIDisplay.spinnerStop();
 
-	const attestationId = attestationInformation.id;
-	const nftId = IotaAttestationUtils.attestationIdToNftId(attestationId);
+	const nftId = IotaAttestationUtils.attestationIdToNftId(id);
 
 	CLIDisplay.value(
 		I18n.formatMessage("commands.common.labels.explore"),

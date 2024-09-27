@@ -26,31 +26,31 @@ import { setupVault } from "./setupCommands";
  * Build the attestation attest command for the CLI.
  * @returns The command.
  */
-export function buildCommandAttestationAttest(): Command {
+export function buildCommandAttestationCreate(): Command {
 	const command = new Command();
 	command
-		.name("attestation-attest")
-		.summary(I18n.formatMessage("commands.attestation-attest.summary"))
-		.description(I18n.formatMessage("commands.attestation-attest.description"))
+		.name("attestation-create")
+		.summary(I18n.formatMessage("commands.attestation-create.summary"))
+		.description(I18n.formatMessage("commands.attestation-create.description"))
 		.requiredOption(
-			I18n.formatMessage("commands.attestation-attest.options.seed.param"),
-			I18n.formatMessage("commands.attestation-attest.options.seed.description")
+			I18n.formatMessage("commands.attestation-create.options.seed.param"),
+			I18n.formatMessage("commands.attestation-create.options.seed.description")
 		)
 		.requiredOption(
-			I18n.formatMessage("commands.attestation-attest.options.owner.param"),
-			I18n.formatMessage("commands.attestation-attest.options.owner.description")
+			I18n.formatMessage("commands.attestation-create.options.owner.param"),
+			I18n.formatMessage("commands.attestation-create.options.owner.description")
 		)
 		.requiredOption(
-			I18n.formatMessage("commands.attestation-attest.options.verification-method-id.param"),
-			I18n.formatMessage("commands.attestation-attest.options.verification-method-id.description")
+			I18n.formatMessage("commands.attestation-create.options.verification-method-id.param"),
+			I18n.formatMessage("commands.attestation-create.options.verification-method-id.description")
 		)
 		.requiredOption(
-			I18n.formatMessage("commands.attestation-attest.options.private-key.param"),
-			I18n.formatMessage("commands.attestation-attest.options.private-key.description")
+			I18n.formatMessage("commands.attestation-create.options.private-key.param"),
+			I18n.formatMessage("commands.attestation-create.options.private-key.description")
 		)
 		.requiredOption(
-			I18n.formatMessage("commands.attestation-attest.options.data-json.param"),
-			I18n.formatMessage("commands.attestation-attest.options.data-json.description")
+			I18n.formatMessage("commands.attestation-create.options.data-json.param"),
+			I18n.formatMessage("commands.attestation-create.options.data-json.description")
 		);
 
 	CLIOptions.output(command, {
@@ -72,7 +72,7 @@ export function buildCommandAttestationAttest(): Command {
 			I18n.formatMessage("commands.common.options.explorer.description"),
 			"!EXPLORER_URL"
 		)
-		.action(actionCommandAttestationAttest);
+		.action(actionCommandAttestationCreate);
 
 	return command;
 }
@@ -88,7 +88,7 @@ export function buildCommandAttestationAttest(): Command {
  * @param opts.node The node URL.
  * @param opts.explorer The explorer URL.
  */
-export async function actionCommandAttestationAttest(
+export async function actionCommandAttestationCreate(
 	opts: {
 		seed: string;
 		owner: string;
@@ -111,12 +111,12 @@ export async function actionCommandAttestationAttest(
 	const explorerEndpoint: string = CLIParam.url("explorer", opts.explorer);
 
 	CLIDisplay.value(
-		I18n.formatMessage("commands.attestation-attest.labels.verificationMethodId"),
+		I18n.formatMessage("commands.attestation-create.labels.verificationMethodId"),
 		verificationMethodId
 	);
-	CLIDisplay.value(I18n.formatMessage("commands.attestation-attest.labels.owner"), owner);
+	CLIDisplay.value(I18n.formatMessage("commands.attestation-create.labels.owner"), owner);
 	CLIDisplay.value(
-		I18n.formatMessage("commands.attestation-attest.labels.dataJsonFilename"),
+		I18n.formatMessage("commands.attestation-create.labels.dataJsonFilename"),
 		dataJsonFilename
 	);
 	CLIDisplay.value(I18n.formatMessage("commands.common.labels.node"), nodeEndpoint);
@@ -170,34 +170,33 @@ export async function actionCommandAttestationAttest(
 	if (!Is.object(dataJson)) {
 		throw new GeneralError("attestation-cli", "invalidJson");
 	} else {
-		CLIDisplay.section(I18n.formatMessage("commands.attestation-attest.labels.dataJson"));
+		CLIDisplay.section(I18n.formatMessage("commands.attestation-create.labels.dataJson"));
 		CLIDisplay.json(dataJson);
 		CLIDisplay.break();
 	}
 
-	CLIDisplay.task(I18n.formatMessage("commands.attestation-attest.progress.attestingData"));
+	CLIDisplay.task(I18n.formatMessage("commands.attestation-create.progress.attestingData"));
 	CLIDisplay.break();
 
 	CLIDisplay.spinnerStart();
 
-	const attestationInformation = await iotaAttestationConnector.attest(
+	const attestationId = await iotaAttestationConnector.create(
 		localIdentity,
 		owner,
 		verificationMethodId,
 		dataJson
 	);
 
-	const attestationId = attestationInformation.id;
 	const nftId = IotaAttestationUtils.attestationIdToNftId(attestationId);
 
 	CLIDisplay.spinnerStop();
 
 	if (opts.console) {
 		CLIDisplay.value(
-			I18n.formatMessage("commands.attestation-attest.labels.attestationId"),
+			I18n.formatMessage("commands.attestation-create.labels.attestationId"),
 			attestationId
 		);
-		CLIDisplay.value(I18n.formatMessage("commands.attestation-attest.labels.nftId"), nftId);
+		CLIDisplay.value(I18n.formatMessage("commands.attestation-create.labels.nftId"), nftId);
 		CLIDisplay.break();
 	}
 

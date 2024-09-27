@@ -1,21 +1,24 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { BaseRestClient } from "@twin.org/api-core";
-import type { IBaseRestClientConfig, INoContentResponse } from "@twin.org/api-models";
 import type {
-	IAttestationAttestRequest,
-	IAttestationAttestResponse,
+	IBaseRestClientConfig,
+	ICreatedResponse,
+	INoContentResponse
+} from "@twin.org/api-models";
+import type {
 	IAttestationComponent,
+	IAttestationCreateRequest,
 	IAttestationDestroyRequest,
+	IAttestationGetRequest,
+	IAttestationGetResponse,
 	IAttestationInformation,
-	IAttestationTransferRequest,
-	IAttestationTransferResponse,
-	IAttestationVerifyRequest,
-	IAttestationVerifyResponse
+	IAttestationTransferRequest
 } from "@twin.org/attestation-models";
 import { Guards, Urn } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import { nameof } from "@twin.org/nameof";
+import { HeaderTypes } from "@twin.org/web";
 
 /**
  * Client for performing attestation through to REST endpoints.
@@ -37,91 +40,68 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 	/**
 	 * Attest the data and return the collated information.
 	 * @param verificationMethodId The identity verification method to use for attesting the data.
-	 * @param data The data to attest.
+	 * @param attestationObject The data to attest.
 	 * @param namespace The namespace of the connector to use for the attestation, defaults to component configured namespace.
-	 * @returns The collated attestation data.
+	 * @returns The id.
 	 */
-	public async attest<T extends IJsonLdNodeObject>(
+	public async create(
 		verificationMethodId: string,
-		data: T,
+		attestationObject: IJsonLdNodeObject,
 		namespace?: string
-	): Promise<IAttestationInformation<T>> {
+	): Promise<string> {
 		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
-		Guards.object<IJsonLdNodeObject>(this.CLASS_NAME, nameof(data), data);
+		Guards.object<IJsonLdNodeObject>(this.CLASS_NAME, nameof(attestationObject), attestationObject);
 
-		const response = await this.fetch<IAttestationAttestRequest, IAttestationAttestResponse>(
-			"/",
-			"POST",
-			{
-				body: {
-					verificationMethodId,
-					data: data as unknown as IJsonLdNodeObject,
-					namespace
-				}
+		const response = await this.fetch<IAttestationCreateRequest, ICreatedResponse>("/", "POST", {
+			body: {
+				verificationMethodId,
+				attestationObject,
+				namespace
 			}
-		);
+		});
 
-		return response.body.information as IAttestationInformation<T>;
+		return response.headers[HeaderTypes.Location];
 	}
 
 	/**
 	 * Resolve and verify the attestation id.
-	 * @param attestationId The attestation id to verify.
+	 * @param id The attestation id to verify.
 	 * @returns The verified attestation details.
 	 */
-	public async verify<T extends IJsonLdNodeObject>(
-		attestationId: string
-	): Promise<{
-		verified: boolean;
-		failure?: string;
-		information?: Partial<IAttestationInformation<T>>;
-	}> {
-		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
+	public async get(id: string): Promise<IAttestationInformation> {
+		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
-		const response = await this.fetch<IAttestationVerifyRequest, IAttestationVerifyResponse>(
+		const response = await this.fetch<IAttestationGetRequest, IAttestationGetResponse>(
 			"/:id",
 			"GET",
 			{
 				pathParams: {
-					id: attestationId
+					id
 				}
 			}
 		);
 
-		return {
-			verified: response.body.verified,
-			failure: response.body.failure,
-			information: response.body.information as Partial<IAttestationInformation<T>>
-		};
+		return response.body;
 	}
 
 	/**
 	 * Transfer the attestation to a new holder.
 	 * @param attestationId The attestation to transfer.
 	 * @param holderIdentity The identity to transfer the attestation to.
-	 * @returns The updated attestation details.
+	 * @returns Nothing.
 	 */
-	public async transfer<T extends IJsonLdNodeObject>(
-		attestationId: string,
-		holderIdentity: string
-	): Promise<IAttestationInformation<T>> {
+	public async transfer(attestationId: string, holderIdentity: string): Promise<void> {
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
 
-		const response = await this.fetch<IAttestationTransferRequest, IAttestationTransferResponse>(
-			"/:id/transfer",
-			"PUT",
-			{
-				pathParams: {
-					id: attestationId
-				},
-				body: {
-					holderIdentity
-				}
+		await this.fetch<IAttestationTransferRequest, INoContentResponse>("/:id/transfer", "PUT", {
+			pathParams: {
+				id: attestationId
+			},
+			body: {
+				holderIdentity
 			}
-		);
-
-		return response.body.information as IAttestationInformation<T>;
+		});
 	}
 
 	/**

@@ -11,7 +11,7 @@ import {
 	CLIUtils,
 	type CliOutputOptions
 } from "@twin.org/cli-core";
-import { I18n, Is, StringHelper } from "@twin.org/core";
+import { I18n, Is, ObjectHelper, StringHelper } from "@twin.org/core";
 import { IotaIdentityConnector } from "@twin.org/identity-connector-iota";
 import { IdentityConnectorFactory } from "@twin.org/identity-models";
 import { IotaNftConnector, IotaNftUtils } from "@twin.org/nft-connector-iota";
@@ -23,15 +23,15 @@ import { setupVault } from "./setupCommands";
  * Build the attestation resolve command for the CLI.
  * @returns The command.
  */
-export function buildCommandAttestationVerify(): Command {
+export function buildCommandAttestationGet(): Command {
 	const command = new Command();
 	command
-		.name("attestation-verify")
-		.summary(I18n.formatMessage("commands.attestation-verify.summary"))
-		.description(I18n.formatMessage("commands.attestation-verify.description"))
+		.name("attestation-get")
+		.summary(I18n.formatMessage("commands.attestation-get.summary"))
+		.description(I18n.formatMessage("commands.attestation-get.description"))
 		.requiredOption(
-			I18n.formatMessage("commands.attestation-verify.options.id.param"),
-			I18n.formatMessage("commands.attestation-verify.options.id.description")
+			I18n.formatMessage("commands.attestation-get.options.id.param"),
+			I18n.formatMessage("commands.attestation-get.options.id.description")
 		);
 
 	CLIOptions.output(command, {
@@ -53,7 +53,7 @@ export function buildCommandAttestationVerify(): Command {
 			I18n.formatMessage("commands.common.options.explorer.description"),
 			"!EXPLORER_URL"
 		)
-		.action(actionCommandAttestationVerify);
+		.action(actionCommandAttestationGet);
 
 	return command;
 }
@@ -65,7 +65,7 @@ export function buildCommandAttestationVerify(): Command {
  * @param opts.node The node URL.
  * @param opts.explorer The explorer URL.
  */
-export async function actionCommandAttestationVerify(
+export async function actionCommandAttestationGet(
 	opts: {
 		id: string;
 		node: string;
@@ -76,7 +76,7 @@ export async function actionCommandAttestationVerify(
 	const nodeEndpoint: string = CLIParam.url("node", opts.node);
 	const explorerEndpoint: string = CLIParam.url("explorer", opts.explorer);
 
-	CLIDisplay.value(I18n.formatMessage("commands.attestation-verify.labels.attestationId"), id);
+	CLIDisplay.value(I18n.formatMessage("commands.attestation-get.labels.attestationId"), id);
 	CLIDisplay.value(I18n.formatMessage("commands.common.labels.node"), nodeEndpoint);
 	CLIDisplay.break();
 
@@ -110,34 +110,33 @@ export async function actionCommandAttestationVerify(
 
 	const iotaAttestationConnector = new IotaAttestationConnector();
 
-	CLIDisplay.task(I18n.formatMessage("commands.attestation-verify.progress.verifyingAttestation"));
+	CLIDisplay.task(I18n.formatMessage("commands.attestation-get.progress.gettingAttestation"));
 	CLIDisplay.break();
 
 	CLIDisplay.spinnerStart();
 
-	const verificationResult = await iotaAttestationConnector.verify(id);
+	const verificationResult = await iotaAttestationConnector.get(id);
 
 	CLIDisplay.spinnerStop();
 
 	if (opts.console) {
 		CLIDisplay.value(
-			I18n.formatMessage("commands.attestation-verify.labels.verified"),
+			I18n.formatMessage("commands.attestation-get.labels.verified"),
 			verificationResult.verified
 		);
 		CLIDisplay.break();
 
-		if (Is.stringValue(verificationResult.failure)) {
+		if (Is.stringValue(verificationResult.verificationFailure)) {
 			CLIDisplay.value(
-				I18n.formatMessage("commands.attestation-verify.labels.failure"),
-				I18n.formatMessage(verificationResult.failure)
+				I18n.formatMessage("commands.attestation-get.labels.failure"),
+				I18n.formatMessage(verificationResult.verificationFailure)
 			);
+			ObjectHelper.propertyDelete(verificationResult, "verificationFailure");
 		}
 
-		CLIDisplay.section(I18n.formatMessage("commands.attestation-verify.labels.attestation"));
+		CLIDisplay.section(I18n.formatMessage("commands.attestation-get.labels.attestation"));
 
-		if (!Is.undefined(verificationResult.information)) {
-			CLIDisplay.json(verificationResult.information);
-		}
+		CLIDisplay.json(verificationResult);
 		CLIDisplay.break();
 	}
 
@@ -145,8 +144,8 @@ export async function actionCommandAttestationVerify(
 		await CLIUtils.writeJsonFile(opts.json, verificationResult, opts.mergeJson);
 	}
 
-	if (Is.stringValue(verificationResult.information?.id)) {
-		const nftId = IotaAttestationUtils.attestationIdToNftId(verificationResult.information.id);
+	if (Is.stringValue(verificationResult.id)) {
+		const nftId = IotaAttestationUtils.attestationIdToNftId(verificationResult.id);
 		CLIDisplay.value(
 			I18n.formatMessage("commands.common.labels.explore"),
 			`${StringHelper.trimTrailingSlashes(explorerEndpoint)}/addr/${IotaNftUtils.nftIdToAddress(nftId)}`

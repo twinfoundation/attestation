@@ -16,9 +16,9 @@ import {
 } from "@twin.org/identity-cli";
 import { buildCommandFaucet } from "@twin.org/wallet-cli";
 import type { Command } from "commander";
-import { buildCommandAttestationAttest } from "./commands/attestationAttest";
+import { buildCommandAttestationCreate } from "./commands/attestationCreate";
 import { buildCommandAttestationTransfer } from "./commands/attestationTransfer";
-import { buildCommandAttestationVerify } from "./commands/attestationVerify";
+import { buildCommandAttestationGet } from "./commands/attestationGet";
 
 /**
  * The main entry point for the CLI.
@@ -69,8 +69,8 @@ export class CLI extends CLIBase {
 			buildCommandVerifiableCredentialVerify(),
 			buildCommandVerifiableCredentialRevoke(),
 			buildCommandVerifiableCredentialUnrevoke(),
-			buildCommandAttestationAttest(),
-			buildCommandAttestationVerify(),
+			buildCommandAttestationCreate(),
+			buildCommandAttestationGet(),
 			buildCommandAttestationTransfer()
 		];
 	}
