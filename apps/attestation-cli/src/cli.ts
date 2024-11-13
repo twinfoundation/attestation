@@ -17,8 +17,8 @@ import {
 import { buildCommandFaucet } from "@twin.org/wallet-cli";
 import type { Command } from "commander";
 import { buildCommandAttestationCreate } from "./commands/attestationCreate";
-import { buildCommandAttestationTransfer } from "./commands/attestationTransfer";
 import { buildCommandAttestationGet } from "./commands/attestationGet";
+import { buildCommandAttestationTransfer } from "./commands/attestationTransfer";
 
 /**
  * The main entry point for the CLI.

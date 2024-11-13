@@ -138,12 +138,7 @@ export async function actionCommandAttestationTransfer(opts: {
 
 	CLIDisplay.spinnerStart();
 
-	await iotaAttestationConnector.transfer(
-		localIdentity,
-		id,
-		holderIdentity,
-		holderAddress
-	);
+	await iotaAttestationConnector.transfer(localIdentity, id, holderIdentity, holderAddress);
 
 	CLIDisplay.spinnerStop();
 

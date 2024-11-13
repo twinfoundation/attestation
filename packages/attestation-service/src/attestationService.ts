@@ -56,13 +56,8 @@ export class AttestationService implements IAttestationComponent {
 	 * @param options.config The configuration for the service.
 	 * @param options.walletConnectorType The wallet connector type for generating addresses, defaults to "wallet".
 	 */
-	constructor(options: { walletConnectorType: string; config?: IAttestationServiceConfig }) {
+	constructor(options?: { walletConnectorType?: string; config?: IAttestationServiceConfig }) {
 		Guards.object(this.CLASS_NAME, nameof(options), options);
-		Guards.stringValue(
-			this.CLASS_NAME,
-			nameof(options.walletConnectorType),
-			options.walletConnectorType
-		);
 
 		this._walletConnector = WalletConnectorFactory.get(options.walletConnectorType ?? "wallet");
 
