@@ -16,21 +16,11 @@ Create a new instance of EntityStorageAttestationConnector.
 
 #### Parameters
 
-• **options?**
+##### options?
 
-The dependencies for the attestation connector.
+[`IEntityStorageAttestationConnectorConstructorOptions`](../interfaces/IEntityStorageAttestationConnectorConstructorOptions.md)
 
-• **options.identityConnectorType?**: `string`
-
-The type of the identity connector, defaults to "identity".
-
-• **options.nftConnectorType?**: `string`
-
-The type of the nft connector, defaults to "nft".
-
-• **options.config?**: [`IEntityStorageAttestationConnectorConfig`](../interfaces/IEntityStorageAttestationConnectorConfig.md)
-
-The configuration for the connector.
+The options for the attestation connector.
 
 #### Returns
 
@@ -66,19 +56,27 @@ Attest the data and return the collated information.
 
 #### Parameters
 
-• **controller**: `string`
+##### controller
+
+`string`
 
 The controller identity of the user to access the vault keys.
 
-• **address**: `string`
+##### address
+
+`string`
 
 The controller address for the attestation.
 
-• **verificationMethodId**: `string`
+##### verificationMethodId
+
+`string`
 
 The identity verification method to use for attesting the data.
 
-• **attestationObject**: `IJsonLdNodeObject`
+##### attestationObject
+
+`IJsonLdNodeObject`
 
 The data to attest.
 
@@ -102,7 +100,9 @@ Resolve and verify the attestation id.
 
 #### Parameters
 
-• **id**: `string`
+##### id
+
+`string`
 
 The attestation id to verify.
 
@@ -126,19 +126,27 @@ Transfer the attestation to a new holder.
 
 #### Parameters
 
-• **controller**: `string`
+##### controller
+
+`string`
 
 The controller identity of the user to access the vault keys.
 
-• **attestationId**: `string`
+##### attestationId
+
+`string`
 
 The attestation to transfer.
 
-• **holderIdentity**: `string`
+##### holderIdentity
+
+`string`
 
 The holder identity of the attestation.
 
-• **holderAddress**: `string`
+##### holderAddress
+
+`string`
 
 The new controller address of the attestation belonging to the holder.
 
@@ -162,11 +170,15 @@ Destroy the attestation.
 
 #### Parameters
 
-• **controller**: `string`
+##### controller
+
+`string`
 
 The controller identity of the user to access the vault keys.
 
-• **attestationId**: `string`
+##### attestationId
+
+`string`
 
 The attestation to destroy.
 

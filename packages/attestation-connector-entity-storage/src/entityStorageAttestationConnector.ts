@@ -22,6 +22,7 @@ import { NftConnectorFactory, type INftConnector } from "@twin.org/nft-models";
 import { DidContexts, DidTypes, type IDidVerifiableCredential } from "@twin.org/standards-w3c-did";
 import { EntityStorageAttestationUtils } from "./entityStorageAttestationUtils";
 import type { IEntityStorageAttestationConnectorConfig } from "./models/IEntityStorageAttestationConnectorConfig";
+import type { IEntityStorageAttestationConnectorConstructorOptions } from "./models/IEntityStorageAttestationConnectorConstructorOptions";
 import type { IEntityStorageAttestationHolder } from "./models/IEntityStorageAttestationHolder";
 import type { IEntityStorageAttestationPayload } from "./models/IEntityStorageAttestationPayload";
 
@@ -65,16 +66,9 @@ export class EntityStorageAttestationConnector implements IAttestationConnector 
 
 	/**
 	 * Create a new instance of EntityStorageAttestationConnector.
-	 * @param options The dependencies for the attestation connector.
-	 * @param options.identityConnectorType The type of the identity connector, defaults to "identity".
-	 * @param options.nftConnectorType The type of the nft connector, defaults to "nft".
-	 * @param options.config The configuration for the connector.
+	 * @param options The options for the attestation connector.
 	 */
-	constructor(options?: {
-		identityConnectorType?: string;
-		nftConnectorType?: string;
-		config?: IEntityStorageAttestationConnectorConfig;
-	}) {
+	constructor(options?: IEntityStorageAttestationConnectorConstructorOptions) {
 		this._identityConnector = IdentityConnectorFactory.get(
 			options?.identityConnectorType ?? "identity"
 		);

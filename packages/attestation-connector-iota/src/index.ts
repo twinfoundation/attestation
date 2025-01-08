@@ -3,5 +3,6 @@
 export * from "./iotaAttestationConnector";
 export * from "./iotaAttestationUtils";
 export * from "./models/IIotaAttestationConnectorConfig";
+export * from "./models/IIotaAttestationConnectorConstructorOptions";
 export * from "./models/IIotaAttestationHolder";
 export * from "./models/IIotaAttestationPayload";

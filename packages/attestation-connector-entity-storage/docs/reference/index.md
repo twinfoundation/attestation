@@ -7,5 +7,6 @@
 ## Interfaces
 
 - [IEntityStorageAttestationConnectorConfig](interfaces/IEntityStorageAttestationConnectorConfig.md)
+- [IEntityStorageAttestationConnectorConstructorOptions](interfaces/IEntityStorageAttestationConnectorConstructorOptions.md)
 - [IEntityStorageAttestationHolder](interfaces/IEntityStorageAttestationHolder.md)
 - [IEntityStorageAttestationPayload](interfaces/IEntityStorageAttestationPayload.md)

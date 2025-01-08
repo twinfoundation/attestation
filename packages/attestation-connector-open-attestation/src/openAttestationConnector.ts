@@ -4,7 +4,7 @@ import type { IAttestationConnector, IAttestationInformation } from "@twin.org/a
 import { NotImplementedError } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import { nameof } from "@twin.org/nameof";
-import type { IOpenAttestationConnectorConfig } from "./models/IOpenAttestationConnectorConfig";
+import type { IOpenAttestationConnectorConstructorOptions } from "./models/IOpenAttestationConnectorConstructorOptions";
 
 /**
  * Class for performing attestation operations in entity storage.
@@ -23,10 +23,9 @@ export class OpenAttestationConnector implements IAttestationConnector {
 	/**
 	 * Create a new instance of OpenAttestationConnector.
 	 * @param options The options for the attestation connector.
-	 * @param options.config The configuration for the attestation connector.
 	 */
 	// eslint-disable-next-line @typescript-eslint/no-useless-constructor
-	constructor(options: { config?: IOpenAttestationConnectorConfig }) {}
+	constructor(options: IOpenAttestationConnectorConstructorOptions) {}
 
 	/**
 	 * Attest the data and return the collated information.

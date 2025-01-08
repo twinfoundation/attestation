@@ -3,4 +3,5 @@
 export * from "./attestationRoutes";
 export * from "./attestationService";
 export * from "./models/IAttestationServiceConfig";
+export * from "./models/IAttestationServiceConstructorOptions";
 export * from "./restEntryPoints";

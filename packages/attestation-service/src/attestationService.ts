@@ -10,7 +10,7 @@ import { GeneralError, Guards, Is, Urn } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import { nameof } from "@twin.org/nameof";
 import { WalletConnectorFactory, type IWalletConnector } from "@twin.org/wallet-models";
-import type { IAttestationServiceConfig } from "./models/IAttestationServiceConfig";
+import type { IAttestationServiceConstructorOptions } from "./models/IAttestationServiceConstructorOptions";
 
 /**
  * Service for performing attestation operations to a connector.
@@ -56,10 +56,8 @@ export class AttestationService implements IAttestationComponent {
 	 * @param options.config The configuration for the service.
 	 * @param options.walletConnectorType The wallet connector type for generating addresses, defaults to "wallet".
 	 */
-	constructor(options?: { walletConnectorType?: string; config?: IAttestationServiceConfig }) {
-		Guards.object(this.CLASS_NAME, nameof(options), options);
-
-		this._walletConnector = WalletConnectorFactory.get(options.walletConnectorType ?? "wallet");
+	constructor(options?: IAttestationServiceConstructorOptions) {
+		this._walletConnector = WalletConnectorFactory.get(options?.walletConnectorType ?? "wallet");
 
 		const names = AttestationConnectorFactory.names();
 		if (names.length === 0) {

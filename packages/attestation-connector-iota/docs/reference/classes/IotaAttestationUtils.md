@@ -22,7 +22,9 @@ Convert an attestation id to an nft id.
 
 #### Parameters
 
-• **attestationId**: `string`
+##### attestationId
+
+`string`
 
 The attestation id to convert.
 
@@ -42,7 +44,9 @@ Convert an nft id to an attestation id.
 
 #### Parameters
 
-• **nftId**: `string`
+##### nftId
+
+`string`
 
 The nft id to convert.
 

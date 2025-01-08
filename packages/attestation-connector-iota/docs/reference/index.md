@@ -8,5 +8,6 @@
 ## Interfaces
 
 - [IIotaAttestationConnectorConfig](interfaces/IIotaAttestationConnectorConfig.md)
+- [IIotaAttestationConnectorConstructorOptions](interfaces/IIotaAttestationConnectorConstructorOptions.md)
 - [IIotaAttestationHolder](interfaces/IIotaAttestationHolder.md)
 - [IIotaAttestationPayload](interfaces/IIotaAttestationPayload.md)

@@ -4,3 +4,4 @@ export * from "./entityStorageAttestationConnector";
 export * from "./models/IEntityStorageAttestationConnectorConfig";
 export * from "./models/IEntityStorageAttestationHolder";
 export * from "./models/IEntityStorageAttestationPayload";
+export * from "./models/IEntityStorageAttestationConnectorConstructorOptions";

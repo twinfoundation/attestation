@@ -22,6 +22,7 @@ import { NftConnectorFactory, type INftConnector } from "@twin.org/nft-models";
 import { DidContexts, DidTypes, type IDidVerifiableCredential } from "@twin.org/standards-w3c-did";
 import { IotaAttestationUtils } from "./iotaAttestationUtils";
 import type { IIotaAttestationConnectorConfig } from "./models/IIotaAttestationConnectorConfig";
+import type { IIotaAttestationConnectorConstructorOptions } from "./models/IIotaAttestationConnectorConstructorOptions";
 import type { IIotaAttestationHolder } from "./models/IIotaAttestationHolder";
 import type { IIotaAttestationPayload } from "./models/IIotaAttestationPayload";
 
@@ -70,11 +71,7 @@ export class IotaAttestationConnector implements IAttestationConnector {
 	 * @param options.nftConnectorType The nft connector type, defaults to "nft".
 	 * @param options.config The configuration for the connector.
 	 */
-	constructor(options?: {
-		identityConnectorType?: string;
-		nftConnectorType?: string;
-		config?: IIotaAttestationConnectorConfig;
-	}) {
+	constructor(options?: IIotaAttestationConnectorConstructorOptions) {
 		this._identityConnector = IdentityConnectorFactory.get(
 			options?.identityConnectorType ?? "identity"
 		);
