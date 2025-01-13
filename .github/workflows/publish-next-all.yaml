@@ -19,8 +19,7 @@ jobs:
         package:
           [
             'packages/attestation-models',
-            'packages/attestation-connector-entity-storage',
-            'packages/attestation-connector-iota',
+            'packages/attestation-connector-nft',
             'packages/attestation-connector-open-attestation',
             'packages/attestation-service',
             'packages/attestation-rest-client',

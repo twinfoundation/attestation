@@ -1,9 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import {
-	IotaAttestationConnector,
-	IotaAttestationUtils
-} from "@twin.org/attestation-connector-iota";
+import { NftAttestationConnector, NftAttestationUtils } from "@twin.org/attestation-connector-nft";
 import { CLIDisplay, CLIParam } from "@twin.org/cli-core";
 import { Converter, I18n, StringHelper } from "@twin.org/core";
 import { IotaIdentityConnector } from "@twin.org/identity-connector-iota";
@@ -129,7 +126,7 @@ export async function actionCommandAttestationTransfer(opts: {
 			})
 	);
 
-	const iotaAttestationConnector = new IotaAttestationConnector();
+	const iotaAttestationConnector = new NftAttestationConnector();
 
 	CLIDisplay.task(
 		I18n.formatMessage("commands.attestation-transfer.progress.transferringAttestation")
@@ -142,7 +139,7 @@ export async function actionCommandAttestationTransfer(opts: {
 
 	CLIDisplay.spinnerStop();
 
-	const nftId = IotaAttestationUtils.attestationIdToNftId(id);
+	const nftId = NftAttestationUtils.attestationIdToNftId(id);
 
 	CLIDisplay.value(
 		I18n.formatMessage("commands.common.labels.explore"),

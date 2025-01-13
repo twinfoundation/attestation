@@ -1,11 +1,11 @@
 {
-	"name": "@twin.org/attestation-models",
+	"name": "@twin.org/attestation-connector-nft",
 	"version": "0.0.1-next.12",
-	"description": "Models which define the structure of the attestation connectors and services",
+	"description": "Attestation connector implementation using NFTs",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/twinfoundation/attestation.git",
-		"directory": "packages/attestation-models"
+		"directory": "packages/attestation-connector-nft"
 	},
 	"author": "martyn.janes@iota.org",
 	"license": "Apache-2.0",
@@ -15,9 +15,7 @@
 	},
 	"scripts": {
 		"clean": "rimraf dist coverage docs/reference",
-		"build:schema": "ts-to-schema ./ts-to-schema.json ./src/schemas",
-		"build:compile": "tsc",
-		"build": "npm run build:schema && npm run build:compile",
+		"build": "tsc",
 		"build:watch": "tsc-watch --onSuccess \"npm run bundle:esm\"",
 		"test": "vitest --run --config ./vitest.config.ts --no-cache",
 		"coverage": "vitest --run --coverage --config ./vitest.config.ts --no-cache",
@@ -31,23 +29,31 @@
 		"prepare": "ts-patch install -s"
 	},
 	"dependencies": {
+		"@twin.org/attestation-models": "0.0.1-next.12",
 		"@twin.org/core": "next",
-		"@twin.org/data-core": "next",
 		"@twin.org/data-json-ld": "next",
+		"@twin.org/data-schema-org": "next",
 		"@twin.org/entity": "next",
+		"@twin.org/entity-storage-models": "next",
+		"@twin.org/entity-storage-connector-memory": "next",
+		"@twin.org/identity-models": "next",
 		"@twin.org/nameof": "next",
-		"@twin.org/standards-w3c-did": "next",
-		"@twin.org/web": "next"
+		"@twin.org/nft-models": "next",
+		"@twin.org/standards-w3c-did": "next"
 	},
 	"devDependencies": {
+		"@twin.org/identity-connector-entity-storage": "next",
+		"@twin.org/nft-connector-entity-storage": "next",
+		"@twin.org/vault-connector-entity-storage": "next",
+		"@twin.org/wallet-connector-entity-storage": "next",
 		"@twin.org/nameof-transformer": "next",
 		"@twin.org/nameof-vitest-plugin": "next",
-		"@twin.org/ts-to-schema": "next",
-		"@rollup/plugin-json": "6.1.0",
 		"@vitest/coverage-v8": "2.1.8",
 		"copyfiles": "2.4.1",
+		"dotenv": "16.4.7",
 		"rimraf": "6.0.1",
 		"rollup": "4.30.1",
+		"rollup-plugin-copy": "3.5.0",
 		"ts-patch": "3.3.0",
 		"tsc-watch": "6.2.1",
 		"typedoc": "0.27.6",
