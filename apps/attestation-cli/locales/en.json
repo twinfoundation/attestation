@@ -95,6 +95,14 @@
 		},
 		"common": {
 			"options": {
+				"connector": {
+					"param": "--connector '<'connector'>'",
+					"description": "The connector to use for the attestation operation."
+				},
+				"network": {
+					"param": "--network '<'network'>'",
+					"description": "The network to use for the attestation operation."
+				},
 				"node": {
 					"param": "--node '<'url'>'",
 					"description": "The url for the node endpoint, or an environment variable name containing the url."
@@ -104,7 +112,9 @@
 				"did": "DID",
 				"node": "Node",
 				"explorer": "Explorer",
-				"explore": "Explore"
+				"explore": "Explore",
+				"connector": "Connector",
+				"network": "Network"
 			}
 		}
 	}

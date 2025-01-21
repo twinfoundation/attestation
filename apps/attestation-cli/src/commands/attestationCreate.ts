@@ -11,13 +11,14 @@ import {
 } from "@twin.org/cli-core";
 import { Converter, GeneralError, I18n, Is, StringHelper } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
-import { IotaIdentityConnector } from "@twin.org/identity-connector-iota";
-import { IdentityConnectorFactory } from "@twin.org/identity-models";
-import { IotaNftConnector, IotaNftUtils } from "@twin.org/nft-connector-iota";
-import { NftConnectorFactory } from "@twin.org/nft-models";
+import { setupIdentityConnector } from "@twin.org/identity-cli";
+import { setupNftConnector } from "@twin.org/nft-cli";
+import { IotaNftUtils } from "@twin.org/nft-connector-iota";
+import { IotaRebasedNftUtils } from "@twin.org/nft-connector-iota-rebased";
 import { VaultConnectorFactory, VaultKeyType } from "@twin.org/vault-models";
-import { Command } from "commander";
+import { Command, Option } from "commander";
 import { setupVault } from "./setupCommands";
+import { AttestationConnectorTypes } from "../models/attestatationConnectorTypes";
 
 /**
  * Build the attestation attest command for the CLI.
@@ -59,10 +60,23 @@ export function buildCommandAttestationCreate(): Command {
 	});
 
 	command
+		.addOption(
+			new Option(
+				I18n.formatMessage("commands.common.options.connector.param"),
+				I18n.formatMessage("commands.common.options.connector.description")
+			)
+				.choices(Object.values(AttestationConnectorTypes))
+				.default(AttestationConnectorTypes.Iota)
+		)
 		.option(
 			I18n.formatMessage("commands.common.options.node.param"),
 			I18n.formatMessage("commands.common.options.node.description"),
 			"!NODE_URL"
+		)
+		.option(
+			I18n.formatMessage("commands.common.options.network.param"),
+			I18n.formatMessage("commands.common.options.network.description"),
+			"!NETWORK"
 		)
 		.option(
 			I18n.formatMessage("commands.common.options.explorer.param"),
@@ -82,7 +96,9 @@ export function buildCommandAttestationCreate(): Command {
  * @param opts.verificationMethodId The id of the verification method to use for the credential.
  * @param opts.privateKey The private key for the verification method.
  * @param opts.dataJson Filename of the JSON data.
+ * @param opts.connector The connector to perform the operations with.
  * @param opts.node The node URL.
+ * @param opts.network The network to use for rebased connector.
  * @param opts.explorer The explorer URL.
  */
 export async function actionCommandAttestationCreate(
@@ -92,18 +108,27 @@ export async function actionCommandAttestationCreate(
 		verificationMethodId: string;
 		privateKey: string;
 		dataJson: string;
+		connector?: AttestationConnectorTypes;
 		node: string;
+		network?: string;
 		explorer: string;
 	} & CliOutputOptions
 ): Promise<void> {
 	const seed: Uint8Array = CLIParam.hexBase64("seed", opts.seed);
-	const owner: string = CLIParam.bech32("owner", opts.owner);
+	const owner: string =
+		opts.connector === AttestationConnectorTypes.IotaRebased
+			? Converter.bytesToHex(CLIParam.hex("owner", opts.owner), true)
+			: CLIParam.bech32("owner", opts.owner);
 	const verificationMethodId: string = CLIParam.stringValue(
 		"verificationMethodId",
 		opts.verificationMethodId
 	);
 	const privateKey: Uint8Array = CLIParam.hexBase64("private-key", opts.privateKey);
 	const dataJsonFilename: string = path.resolve(opts.dataJson);
+	const network: string | undefined =
+		opts.connector === AttestationConnectorTypes.IotaRebased
+			? CLIParam.stringValue("network", opts.network)
+			: undefined;
 	const nodeEndpoint: string = CLIParam.url("node", opts.node);
 	const explorerEndpoint: string = CLIParam.url("explorer", opts.explorer);
 
@@ -117,6 +142,9 @@ export async function actionCommandAttestationCreate(
 		dataJsonFilename
 	);
 	CLIDisplay.value(I18n.formatMessage("commands.common.labels.node"), nodeEndpoint);
+	if (Is.stringValue(network)) {
+		CLIDisplay.value(I18n.formatMessage("commands.common.labels.network"), network);
+	}
 	CLIDisplay.break();
 
 	setupVault();
@@ -133,32 +161,8 @@ export async function actionCommandAttestationCreate(
 		new Uint8Array()
 	);
 
-	IdentityConnectorFactory.register(
-		"identity",
-		() =>
-			new IotaIdentityConnector({
-				config: {
-					clientOptions: {
-						nodes: [nodeEndpoint],
-						localPow: true
-					}
-				}
-			})
-	);
-
-	NftConnectorFactory.register(
-		"nft",
-		() =>
-			new IotaNftConnector({
-				config: {
-					clientOptions: {
-						nodes: [nodeEndpoint],
-						localPow: true
-					},
-					vaultSeedId
-				}
-			})
-	);
+	await setupIdentityConnector({ nodeEndpoint, network, vaultSeedId }, opts.connector);
+	await setupNftConnector({ nodeEndpoint, network, vaultSeedId }, opts.connector);
 
 	const nftAttestationConnector = new NftAttestationConnector();
 
@@ -206,7 +210,9 @@ export async function actionCommandAttestationCreate(
 
 	CLIDisplay.value(
 		I18n.formatMessage("commands.common.labels.explore"),
-		`${StringHelper.trimTrailingSlashes(explorerEndpoint)}/addr/${IotaNftUtils.nftIdToAddress(nftId)}`
+		opts.connector === AttestationConnectorTypes.IotaRebased
+			? `${StringHelper.trimTrailingSlashes(explorerEndpoint)}/object/${IotaRebasedNftUtils.nftIdToObjectId(nftId)}?network=${network}`
+			: `${StringHelper.trimTrailingSlashes(explorerEndpoint)}/addr/${IotaNftUtils.nftIdToAddress(nftId)}`
 	);
 	CLIDisplay.break();
 
