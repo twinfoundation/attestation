@@ -15,10 +15,10 @@ import {
 	type IValidationFailure
 } from "@twin.org/core";
 import { JsonLdHelper, JsonLdProcessor, type IJsonLdNodeObject } from "@twin.org/data-json-ld";
-import { SchemaOrgDataTypes, SchemaOrgTypes } from "@twin.org/data-schema-org";
 import { IdentityConnectorFactory, type IIdentityConnector } from "@twin.org/identity-models";
 import { nameof } from "@twin.org/nameof";
 import { NftConnectorFactory, type INftConnector } from "@twin.org/nft-models";
+import { SchemaOrgDataTypes, SchemaOrgTypes } from "@twin.org/standards-schema-org";
 import { DidContexts, DidTypes, type IDidVerifiableCredential } from "@twin.org/standards-w3c-did";
 import type { INftAttestationConnectorConfig } from "./models/INftAttestationConnectorConfig";
 import type { INftAttestationConnectorConstructorOptions } from "./models/INftAttestationConnectorConstructorOptions";
@@ -82,19 +82,16 @@ export class NftAttestationConnector implements IAttestationConnector {
 	/**
 	 * Attest the data and return the collated information.
 	 * @param controller The controller identity of the user to access the vault keys.
-	 * @param address The controller address for the attestation.
 	 * @param verificationMethodId The identity verification method to use for attesting the data.
 	 * @param attestationObject The data to attest.
 	 * @returns The id of the attestation.
 	 */
 	public async create(
 		controller: string,
-		address: string,
 		verificationMethodId: string,
 		attestationObject: IJsonLdNodeObject
 	): Promise<string> {
 		Guards.stringValue(this.CLASS_NAME, nameof(controller), controller);
-		Guards.stringValue(this.CLASS_NAME, nameof(address), address);
 		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
 		Guards.object<IJsonLdNodeObject>(this.CLASS_NAME, nameof(attestationObject), attestationObject);
 
@@ -119,7 +116,6 @@ export class NftAttestationConnector implements IAttestationConnector {
 
 			const nftId = await this._nftConnector.mint(
 				controller,
-				address,
 				this._config.tag ?? NftAttestationConnector._DEFAULT_TAG,
 				attestationPayload,
 				holder
@@ -228,10 +224,9 @@ export class NftAttestationConnector implements IAttestationConnector {
 
 			if (
 				Is.object<INftAttestationHolder>(resolved.metadata) &&
-				Is.stringValue(resolved.metadata.holderIdentity) &&
 				Is.stringValue(resolved.metadata.dateTransferred)
 			) {
-				information.holderIdentity = resolved.metadata.holderIdentity;
+				information.holderIdentity = resolved.owner;
 				information.dateTransferred = resolved.metadata.dateTransferred;
 			}
 
@@ -288,11 +283,10 @@ export class NftAttestationConnector implements IAttestationConnector {
 			const nftId = NftAttestationUtils.attestationIdToNftId(attestationId);
 
 			const holder: INftAttestationHolder = {
-				dateTransferred: new Date().toISOString(),
-				holderIdentity
+				dateTransferred: new Date().toISOString()
 			};
 
-			await this._nftConnector.transfer(controller, nftId, holderAddress, holder);
+			await this._nftConnector.transfer(controller, nftId, holderIdentity, holderAddress, holder);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "transferFailed", undefined, error);
 		}

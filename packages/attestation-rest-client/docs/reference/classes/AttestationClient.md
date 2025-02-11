@@ -114,7 +114,7 @@ The verified attestation details.
 
 ### transfer()
 
-> **transfer**(`attestationId`, `holderIdentity`): `Promise`\<`void`\>
+> **transfer**(`attestationId`, `holderIdentity`, `holderAddress`): `Promise`\<`void`\>
 
 Transfer the attestation to a new holder.
 
@@ -131,6 +131,12 @@ The attestation to transfer.
 `string`
 
 The identity to transfer the attestation to.
+
+##### holderAddress
+
+`string`
+
+The address to transfer the attestation to.
 
 #### Returns
 

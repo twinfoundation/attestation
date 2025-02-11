@@ -10,9 +10,13 @@ import {
 } from "@twin.org/cli-core";
 import { I18n, Is, ObjectHelper, StringHelper } from "@twin.org/core";
 import { setupIdentityConnector } from "@twin.org/identity-cli";
+import { IdentityConnectorFactory } from "@twin.org/identity-models";
 import { setupNftConnector } from "@twin.org/nft-cli";
 import { IotaNftUtils } from "@twin.org/nft-connector-iota";
-import { IotaRebasedNftUtils } from "@twin.org/nft-connector-iota-rebased";
+import { IotaStardustNftUtils } from "@twin.org/nft-connector-iota-stardust";
+import { NftConnectorFactory } from "@twin.org/nft-models";
+import { setupWalletConnector } from "@twin.org/wallet-cli";
+import { WalletConnectorFactory } from "@twin.org/wallet-models";
 import { Command, Option } from "commander";
 import { setupVault } from "./setupCommands";
 import { AttestationConnectorTypes } from "../models/attestatationConnectorTypes";
@@ -75,7 +79,7 @@ export function buildCommandAttestationGet(): Command {
  * @param opts.id The id of the NFT to resolve in urn format.
  * @param opts.connector The connector to perform the operations with.
  * @param opts.node The node URL.
- * @param opts.network The network to use for rebased connector.
+ * @param opts.network The network to use for connector.
  * @param opts.explorer The explorer URL.
  */
 export async function actionCommandAttestationGet(
@@ -90,7 +94,7 @@ export async function actionCommandAttestationGet(
 	const id: string = CLIParam.stringValue("id", opts.id);
 	const nodeEndpoint: string = CLIParam.url("node", opts.node);
 	const network: string | undefined =
-		opts.connector === AttestationConnectorTypes.IotaRebased
+		opts.connector === AttestationConnectorTypes.Iota
 			? CLIParam.stringValue("network", opts.network)
 			: undefined;
 	const explorerEndpoint: string = CLIParam.url("explorer", opts.explorer);
@@ -104,17 +108,32 @@ export async function actionCommandAttestationGet(
 
 	setupVault();
 
-	await setupIdentityConnector({ nodeEndpoint, network }, opts.connector);
-	await setupNftConnector({ nodeEndpoint, network }, opts.connector);
+	const identityConnector = await setupIdentityConnector(
+		{ nodeEndpoint, network },
+		opts.connector
+	);
+	IdentityConnectorFactory.register("identity", () => identityConnector);
 
-	const nftAttestationConnector = new NftAttestationConnector();
+	const walletConnector = await setupWalletConnector(
+		{ nodeEndpoint, network },
+		opts.connector
+	);
+	WalletConnectorFactory.register("wallet", () => walletConnector);
+
+	const nftConnector = await setupNftConnector(
+		{ nodeEndpoint, network },
+		opts.connector
+	);
+	NftConnectorFactory.register("nft", () => nftConnector);
+
+	const attestationConnector = new NftAttestationConnector();
 
 	CLIDisplay.task(I18n.formatMessage("commands.attestation-get.progress.gettingAttestation"));
 	CLIDisplay.break();
 
 	CLIDisplay.spinnerStart();
 
-	const verificationResult = await nftAttestationConnector.get(id);
+	const verificationResult = await attestationConnector.get(id);
 
 	CLIDisplay.spinnerStop();
 
@@ -147,9 +166,9 @@ export async function actionCommandAttestationGet(
 		const nftId = NftAttestationUtils.attestationIdToNftId(verificationResult.id);
 		CLIDisplay.value(
 			I18n.formatMessage("commands.common.labels.explore"),
-			opts.connector === AttestationConnectorTypes.IotaRebased
-				? `${StringHelper.trimTrailingSlashes(explorerEndpoint)}/object/${IotaRebasedNftUtils.nftIdToObjectId(nftId)}?network=${network}`
-				: `${StringHelper.trimTrailingSlashes(explorerEndpoint)}/addr/${IotaNftUtils.nftIdToAddress(nftId)}`
+			opts.connector === AttestationConnectorTypes.Iota
+				? `${StringHelper.trimTrailingSlashes(explorerEndpoint)}/object/${IotaNftUtils.nftIdToObjectId(nftId)}?network=${network}`
+				: `${StringHelper.trimTrailingSlashes(explorerEndpoint)}/addr/${IotaStardustNftUtils.nftIdToAddress(nftId)}`
 		);
 	}
 	CLIDisplay.break();

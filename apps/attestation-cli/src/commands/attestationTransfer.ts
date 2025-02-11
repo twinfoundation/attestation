@@ -4,10 +4,14 @@ import { NftAttestationConnector, NftAttestationUtils } from "@twin.org/attestat
 import { CLIDisplay, CLIParam } from "@twin.org/cli-core";
 import { Converter, I18n, Is, StringHelper } from "@twin.org/core";
 import { setupIdentityConnector } from "@twin.org/identity-cli";
+import { IdentityConnectorFactory } from "@twin.org/identity-models";
 import { setupNftConnector } from "@twin.org/nft-cli";
 import { IotaNftUtils } from "@twin.org/nft-connector-iota";
-import { IotaRebasedNftUtils } from "@twin.org/nft-connector-iota-rebased";
+import { IotaStardustNftUtils } from "@twin.org/nft-connector-iota-stardust";
+import { NftConnectorFactory } from "@twin.org/nft-models";
 import { VaultConnectorFactory } from "@twin.org/vault-models";
+import { setupWalletConnector } from "@twin.org/wallet-cli";
+import { WalletConnectorFactory } from "@twin.org/wallet-models";
 import { Command, Option } from "commander";
 import { setupVault } from "./setupCommands";
 import { AttestationConnectorTypes } from "../models/attestatationConnectorTypes";
@@ -77,7 +81,7 @@ export function buildCommandAttestationTransfer(): Command {
  * @param opts.holderAddress The new holder address of the attestation.
  * @param opts.connector The connector to perform the operations with.
  * @param opts.node The node URL.
- * @param opts.network The network to use for rebased connector.
+ * @param opts.network The network to use for connector.
  * @param opts.explorer The explorer URL.
  */
 export async function actionCommandAttestationTransfer(opts: {
@@ -92,13 +96,13 @@ export async function actionCommandAttestationTransfer(opts: {
 }): Promise<void> {
 	const seed: Uint8Array = CLIParam.hexBase64("seed", opts.seed);
 	const id: string = CLIParam.stringValue("id", opts.id);
-	const holderIdentity: string = CLIParam.stringValue("recipient", opts.holderIdentity);
+	const holderIdentity: string = CLIParam.stringValue("holderIdentity", opts.holderIdentity);
 	const holderAddress: string =
-		opts.connector === AttestationConnectorTypes.IotaRebased
+		opts.connector === AttestationConnectorTypes.Iota
 			? Converter.bytesToHex(CLIParam.hex("holderAddress", opts.holderAddress), true)
 			: CLIParam.bech32("holderAddress", opts.holderAddress);
 	const network: string | undefined =
-		opts.connector === AttestationConnectorTypes.IotaRebased
+		opts.connector === AttestationConnectorTypes.Iota
 			? CLIParam.stringValue("network", opts.network)
 			: undefined;
 	const nodeEndpoint: string = CLIParam.url("node", opts.node);
@@ -127,10 +131,16 @@ export async function actionCommandAttestationTransfer(opts: {
 	const vaultConnector = VaultConnectorFactory.get("vault");
 	await vaultConnector.setSecret(`${localIdentity}/${vaultSeedId}`, Converter.bytesToBase64(seed));
 
-	await setupIdentityConnector({ nodeEndpoint, network, vaultSeedId }, opts.connector);
-	await setupNftConnector({ nodeEndpoint, network, vaultSeedId }, opts.connector);
+	const identityConnector = await setupIdentityConnector({ nodeEndpoint, network, vaultSeedId }, opts.connector);
+	IdentityConnectorFactory.register("identity", () => identityConnector);
 
-	const iotaAttestationConnector = new NftAttestationConnector();
+	const walletConnector = await setupWalletConnector({ nodeEndpoint, network, vaultSeedId }, opts.connector);
+	WalletConnectorFactory.register("wallet", () => walletConnector);
+
+	const nftConnector = await setupNftConnector({ nodeEndpoint, network, vaultSeedId }, opts.connector);
+	NftConnectorFactory.register("nft", () => nftConnector);
+
+	const attestationConnector = new NftAttestationConnector();
 
 	CLIDisplay.task(
 		I18n.formatMessage("commands.attestation-transfer.progress.transferringAttestation")
@@ -139,7 +149,7 @@ export async function actionCommandAttestationTransfer(opts: {
 
 	CLIDisplay.spinnerStart();
 
-	await iotaAttestationConnector.transfer(localIdentity, id, holderIdentity, holderAddress);
+	await attestationConnector.transfer(localIdentity, id, holderIdentity, holderAddress);
 
 	CLIDisplay.spinnerStop();
 
@@ -147,9 +157,9 @@ export async function actionCommandAttestationTransfer(opts: {
 
 	CLIDisplay.value(
 		I18n.formatMessage("commands.common.labels.explore"),
-		opts.connector === AttestationConnectorTypes.IotaRebased
-			? `${StringHelper.trimTrailingSlashes(explorerEndpoint)}/object/${IotaRebasedNftUtils.nftIdToObjectId(nftId)}?network=${network}`
-			: `${StringHelper.trimTrailingSlashes(explorerEndpoint)}/addr/${IotaNftUtils.nftIdToAddress(nftId)}`
+		opts.connector === AttestationConnectorTypes.Iota
+			? `${StringHelper.trimTrailingSlashes(explorerEndpoint)}/object/${IotaNftUtils.nftIdToObjectId(nftId)}?network=${network}`
+			: `${StringHelper.trimTrailingSlashes(explorerEndpoint)}/addr/${IotaStardustNftUtils.nftIdToAddress(nftId)}`
 	);
 	CLIDisplay.break();
 

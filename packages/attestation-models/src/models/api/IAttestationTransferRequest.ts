@@ -10,7 +10,7 @@ export interface IAttestationTransferRequest {
 	 */
 	pathParams: {
 		/**
-		 * The attestation id to verify.
+		 * The attestation id to transfer.
 		 */
 		id: string;
 	};
@@ -23,5 +23,10 @@ export interface IAttestationTransferRequest {
 		 * The new holder identity.
 		 */
 		holderIdentity: string;
+
+		/**
+		 * The new holder address.
+		 */
+		holderAddress: string;
 	};
 }

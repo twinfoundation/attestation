@@ -30,14 +30,12 @@ export class OpenAttestationConnector implements IAttestationConnector {
 	/**
 	 * Attest the data and return the collated information.
 	 * @param controller The controller identity of the user to access the vault keys.
-	 * @param address The controller address for the attestation.
 	 * @param verificationMethodId The identity verification method to use for attesting the data.
 	 * @param attestationObject The data to attest.
 	 * @returns The id.
 	 */
 	public async create(
 		controller: string,
-		address: string,
 		verificationMethodId: string,
 		attestationObject: IJsonLdNodeObject
 	): Promise<string> {

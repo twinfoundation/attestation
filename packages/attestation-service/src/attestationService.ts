@@ -99,19 +99,7 @@ export class AttestationService implements IAttestationComponent {
 				attestationObject.nodeIdentity = nodeIdentity;
 			}
 
-			const addresses = await this._walletConnector.getAddresses(
-				identity,
-				0,
-				this._walletAddressIndex,
-				1
-			);
-
-			return attestationConnector.create(
-				identity,
-				addresses[0],
-				verificationMethodId,
-				attestationObject
-			);
+			return attestationConnector.create(identity, verificationMethodId, attestationObject);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "attestFailed", undefined, error);
 		}

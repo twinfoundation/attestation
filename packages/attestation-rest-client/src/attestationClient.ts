@@ -88,18 +88,25 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 	 * Transfer the attestation to a new holder.
 	 * @param attestationId The attestation to transfer.
 	 * @param holderIdentity The identity to transfer the attestation to.
+	 * @param holderAddress The address to transfer the attestation to.
 	 * @returns Nothing.
 	 */
-	public async transfer(attestationId: string, holderIdentity: string): Promise<void> {
+	public async transfer(
+		attestationId: string,
+		holderIdentity: string,
+		holderAddress: string
+	): Promise<void> {
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
+		Guards.stringValue(this.CLASS_NAME, nameof(holderAddress), holderAddress);
 
 		await this.fetch<IAttestationTransferRequest, INoContentResponse>("/:id/transfer", "PUT", {
 			pathParams: {
 				id: attestationId
 			},
 			body: {
-				holderIdentity
+				holderIdentity,
+				holderAddress
 			}
 		});
 	}

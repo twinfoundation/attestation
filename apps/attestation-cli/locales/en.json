@@ -13,9 +13,9 @@
 					"param": "--seed '<'seed'>'",
 					"description": "The seed for the owner address in hex or base64 used to fund the attested storage, or start with ! to read environment variable."
 				},
-				"owner": {
-					"param": "--owner '<'owner'>'",
-					"description": "The bech32 address of the attestation owner, or start with ! to read environment variable."
+				"wallet-address-index": {
+					"param": "--wallet-address-index '<'wallet-address-index'>'",
+					"description": "The wallet address index to use for storing the attestation NFT."
 				},
 				"verification-method-id": {
 					"param": "--verification-method-id '<'verification-method-id'>'",
@@ -34,7 +34,7 @@
 				"attestingData": "Attesting Data"
 			},
 			"labels": {
-				"owner": "Owner",
+				"walletAddressIndex": "Wallet Address Index",
 				"verificationMethodId": "Verification Method Id",
 				"dataJsonFilename": "Data JSON Filename",
 				"dataJson": "Data JSON",

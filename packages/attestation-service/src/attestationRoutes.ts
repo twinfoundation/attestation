@@ -17,8 +17,8 @@ import {
 	AttestationTypes
 } from "@twin.org/attestation-models";
 import { ComponentFactory, Guards } from "@twin.org/core";
-import { SchemaOrgTypes } from "@twin.org/data-schema-org";
 import { nameof } from "@twin.org/nameof";
+import { SchemaOrgTypes } from "@twin.org/standards-schema-org";
 import { HeaderTypes, HttpStatusCode, MimeTypes } from "@twin.org/web";
 
 /**
@@ -267,7 +267,8 @@ export function generateRestRoutesAttestation(
 						},
 						body: {
 							holderIdentity:
-								"did:iota:tst:0x06ae1034f9f4af1b408a0b54e877bb476259666a14f221400d3746aecefa7105"
+								"did:iota:tst:0x06ae1034f9f4af1b408a0b54e877bb476259666a14f221400d3746aecefa7105",
+							holderAddress: "tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv"
 						}
 					}
 				}
@@ -422,6 +423,7 @@ export async function attestationTransfer(
 	await component.transfer(
 		request.pathParams.id,
 		request.body.holderIdentity,
+		request.body.holderAddress,
 		httpRequestContext.userIdentity
 	);
 
