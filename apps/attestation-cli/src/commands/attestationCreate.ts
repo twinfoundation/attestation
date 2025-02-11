@@ -172,10 +172,16 @@ export async function actionCommandAttestationCreate(
 		new Uint8Array()
 	);
 
-	const identityConnector = await setupIdentityConnector({ nodeEndpoint, network, vaultSeedId }, opts.connector);
+	const identityConnector = await setupIdentityConnector(
+		{ nodeEndpoint, network, vaultSeedId },
+		opts.connector
+	);
 	IdentityConnectorFactory.register("identity", () => identityConnector);
 
-	const walletConnector = await setupWalletConnector({ nodeEndpoint, network, vaultSeedId }, opts.connector);
+	const walletConnector = await setupWalletConnector(
+		{ nodeEndpoint, network, vaultSeedId },
+		opts.connector
+	);
 	WalletConnectorFactory.register("wallet", () => walletConnector);
 
 	const nftConnector = await setupNftConnector(

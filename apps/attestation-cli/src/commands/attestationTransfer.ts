@@ -131,13 +131,22 @@ export async function actionCommandAttestationTransfer(opts: {
 	const vaultConnector = VaultConnectorFactory.get("vault");
 	await vaultConnector.setSecret(`${localIdentity}/${vaultSeedId}`, Converter.bytesToBase64(seed));
 
-	const identityConnector = await setupIdentityConnector({ nodeEndpoint, network, vaultSeedId }, opts.connector);
+	const identityConnector = await setupIdentityConnector(
+		{ nodeEndpoint, network, vaultSeedId },
+		opts.connector
+	);
 	IdentityConnectorFactory.register("identity", () => identityConnector);
 
-	const walletConnector = await setupWalletConnector({ nodeEndpoint, network, vaultSeedId }, opts.connector);
+	const walletConnector = await setupWalletConnector(
+		{ nodeEndpoint, network, vaultSeedId },
+		opts.connector
+	);
 	WalletConnectorFactory.register("wallet", () => walletConnector);
 
-	const nftConnector = await setupNftConnector({ nodeEndpoint, network, vaultSeedId }, opts.connector);
+	const nftConnector = await setupNftConnector(
+		{ nodeEndpoint, network, vaultSeedId },
+		opts.connector
+	);
 	NftConnectorFactory.register("nft", () => nftConnector);
 
 	const attestationConnector = new NftAttestationConnector();

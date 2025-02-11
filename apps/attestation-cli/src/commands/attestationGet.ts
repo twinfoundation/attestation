@@ -108,22 +108,13 @@ export async function actionCommandAttestationGet(
 
 	setupVault();
 
-	const identityConnector = await setupIdentityConnector(
-		{ nodeEndpoint, network },
-		opts.connector
-	);
+	const identityConnector = await setupIdentityConnector({ nodeEndpoint, network }, opts.connector);
 	IdentityConnectorFactory.register("identity", () => identityConnector);
 
-	const walletConnector = await setupWalletConnector(
-		{ nodeEndpoint, network },
-		opts.connector
-	);
+	const walletConnector = await setupWalletConnector({ nodeEndpoint, network }, opts.connector);
 	WalletConnectorFactory.register("wallet", () => walletConnector);
 
-	const nftConnector = await setupNftConnector(
-		{ nodeEndpoint, network },
-		opts.connector
-	);
+	const nftConnector = await setupNftConnector({ nodeEndpoint, network }, opts.connector);
 	NftConnectorFactory.register("nft", () => nftConnector);
 
 	const attestationConnector = new NftAttestationConnector();
