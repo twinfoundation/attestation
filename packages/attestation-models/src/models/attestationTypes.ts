@@ -15,6 +15,7 @@ export const AttestationTypes = {
 	 * Represents attestation information.
 	 */
 	Information: "Information",
+
 	/**
 	 * Represents attestation JWT proof.
 	 */

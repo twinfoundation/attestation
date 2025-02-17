@@ -193,12 +193,21 @@ export class NftAttestationConnector implements IAttestationConnector {
 					contextAndType["@context"] = context;
 				}
 
-				const remainingTypes = checkResult?.verifiableCredential?.type?.filter(
-					t => t !== DidTypes.VerifiableCredential
-				);
+				const types = Is.array(checkResult?.verifiableCredential?.type)
+					? checkResult.verifiableCredential.type
+					: [checkResult?.verifiableCredential?.type];
+				const remainingTypes = types?.filter(t => t !== DidTypes.VerifiableCredential);
 				if (Is.arrayValue(remainingTypes)) {
 					contextAndType.type = remainingTypes[0];
 				}
+			}
+
+			let owner = "";
+			const issuer = checkResult?.verifiableCredential?.issuer;
+			if (Is.string(issuer)) {
+				owner = issuer;
+			} else if (Is.object(issuer)) {
+				owner = issuer.id;
 			}
 
 			const information: IAttestationInformation = {
@@ -206,8 +215,8 @@ export class NftAttestationConnector implements IAttestationConnector {
 				type: AttestationTypes.Information,
 				id,
 				dateCreated: checkResult?.verifiableCredential?.issuanceDate ?? "",
-				ownerIdentity: checkResult?.verifiableCredential?.issuer ?? "",
-				holderIdentity: checkResult?.verifiableCredential?.issuer,
+				ownerIdentity: owner,
+				holderIdentity: owner,
 				attestationObject: {
 					...contextAndType,
 					...jsonObject
