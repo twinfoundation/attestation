@@ -51,10 +51,10 @@ export class AttestationService implements IAttestationComponent {
 	private readonly _excludeNodeIdentity: boolean;
 
 	/**
-	 * The assertion method id to use for the attestation.
+	 * The verification method id to use for the attestation.
 	 * @internal
 	 */
-	private readonly _assertionMethodId: string;
+	private readonly _verificationMethodId: string;
 
 	/**
 	 * Create a new instance of AttestationService.
@@ -73,7 +73,7 @@ export class AttestationService implements IAttestationComponent {
 		this._defaultNamespace = options?.config?.defaultNamespace ?? names[0];
 		this._walletAddressIndex = options?.config?.walletAddressIndex ?? 0;
 		this._excludeNodeIdentity = options?.config?.excludeNodeIdentity ?? false;
-		this._assertionMethodId = options?.config?.assertionMethodId ?? "attestation-assertion";
+		this._verificationMethodId = options?.config?.verificationMethodId ?? "attestation-assertion";
 	}
 
 	/**
@@ -106,7 +106,7 @@ export class AttestationService implements IAttestationComponent {
 
 			return attestationConnector.create(
 				identity,
-				`${nodeIdentity}#${this._assertionMethodId}`,
+				`${nodeIdentity}#${this._verificationMethodId}`,
 				attestationObject
 			);
 		} catch (error) {

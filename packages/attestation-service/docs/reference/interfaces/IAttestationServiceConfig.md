@@ -40,11 +40,11 @@ false
 
 ***
 
-### assertionMethodId?
+### verificationMethodId?
 
-> `optional` **assertionMethodId**: `string`
+> `optional` **verificationMethodId**: `string`
 
-The assertion method id to use for the attestation.
+The verification method id to use for the attestation.
 
 #### Default
 
