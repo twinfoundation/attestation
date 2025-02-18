@@ -44,7 +44,6 @@
 							"examples": {
 								"attestationCreateRequestExample": {
 									"value": {
-										"verificationMethodId": "did:iota:tst:0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f#attestation",
 										"attestationObject": {
 											"@context": "https://schema.org",
 											"type": "DigitalDocument",
@@ -524,10 +523,6 @@
 			"AttestationCreateRequest": {
 				"type": "object",
 				"properties": {
-					"verificationMethodId": {
-						"type": "string",
-						"description": "The identity verification method to use for attesting the data."
-					},
 					"attestationObject": {
 						"$ref": "https://schema.twindev.org/json-ld/JsonLdNodeObject"
 					},
@@ -537,7 +532,6 @@
 					}
 				},
 				"required": [
-					"verificationMethodId",
 					"attestationObject"
 				],
 				"additionalProperties": false,

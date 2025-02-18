@@ -39,22 +39,15 @@ export class AttestationClient extends BaseRestClient implements IAttestationCom
 
 	/**
 	 * Attest the data and return the collated information.
-	 * @param verificationMethodId The identity verification method to use for attesting the data.
 	 * @param attestationObject The data to attest.
 	 * @param namespace The namespace of the connector to use for the attestation, defaults to component configured namespace.
 	 * @returns The id.
 	 */
-	public async create(
-		verificationMethodId: string,
-		attestationObject: IJsonLdNodeObject,
-		namespace?: string
-	): Promise<string> {
-		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
+	public async create(attestationObject: IJsonLdNodeObject, namespace?: string): Promise<string> {
 		Guards.object<IJsonLdNodeObject>(this.CLASS_NAME, nameof(attestationObject), attestationObject);
 
 		const response = await this.fetch<IAttestationCreateRequest, ICreatedResponse>("/", "POST", {
 			body: {
-				verificationMethodId,
 				attestationObject,
 				namespace
 			}

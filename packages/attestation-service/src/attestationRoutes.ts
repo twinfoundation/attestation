@@ -61,8 +61,6 @@ export function generateRestRoutesAttestation(
 					id: "attestationCreateRequestExample",
 					request: {
 						body: {
-							verificationMethodId:
-								"did:iota:tst:0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f#attestation",
 							attestationObject: {
 								"@context": "https://schema.org",
 								type: "DigitalDocument",
@@ -330,11 +328,6 @@ export async function attestationCreate(
 		nameof(request.body),
 		request.body
 	);
-	Guards.stringValue(
-		ROUTES_SOURCE,
-		nameof(request.body.verificationMethodId),
-		request.body.verificationMethodId
-	);
 	Guards.object(
 		ROUTES_SOURCE,
 		nameof(request.body.attestationObject),
@@ -342,7 +335,6 @@ export async function attestationCreate(
 	);
 	const component = ComponentFactory.get<IAttestationComponent>(componentName);
 	const id = await component.create(
-		request.body.verificationMethodId,
 		request.body.attestationObject,
 		request.body.namespace,
 		httpRequestContext.userIdentity,

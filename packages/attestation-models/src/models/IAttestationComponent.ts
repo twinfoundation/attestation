@@ -10,7 +10,6 @@ import type { IAttestationInformation } from "./IAttestationInformation";
 export interface IAttestationComponent extends IComponent {
 	/**
 	 * Attest the data and return the collated information.
-	 * @param verificationMethodId The identity verification method to use for attesting the data.
 	 * @param attestationObject The data to attest.
 	 * @param namespace The namespace of the connector to use for the attestation, defaults to component configured namespace.
 	 * @param identity The identity to perform the attestation operation with.
@@ -18,7 +17,6 @@ export interface IAttestationComponent extends IComponent {
 	 * @returns The id of the attestation.
 	 */
 	create(
-		verificationMethodId: string,
 		attestationObject: IJsonLdNodeObject,
 		namespace?: string,
 		identity?: string,

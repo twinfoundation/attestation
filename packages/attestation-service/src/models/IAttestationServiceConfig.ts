@@ -21,4 +21,10 @@ export interface IAttestationServiceConfig {
 	 * @default false
 	 */
 	excludeNodeIdentity?: boolean;
+
+	/**
+	 * The assertion method id to use for the attestation.
+	 * @default attestation-assertion
+	 */
+	assertionMethodId?: string;
 }

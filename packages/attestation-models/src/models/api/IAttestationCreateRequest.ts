@@ -11,11 +11,6 @@ export interface IAttestationCreateRequest {
 	 */
 	body: {
 		/**
-		 * The identity verification method to use for attesting the data.
-		 */
-		verificationMethodId: string;
-
-		/**
 		 * The data object to attest.
 		 */
 		attestationObject: IJsonLdNodeObject;

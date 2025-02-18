@@ -51,6 +51,12 @@ export class AttestationService implements IAttestationComponent {
 	private readonly _excludeNodeIdentity: boolean;
 
 	/**
+	 * The assertion method id to use for the attestation.
+	 * @internal
+	 */
+	private readonly _assertionMethodId: string;
+
+	/**
 	 * Create a new instance of AttestationService.
 	 * @param options The options for the service.
 	 * @param options.config The configuration for the service.
@@ -67,11 +73,11 @@ export class AttestationService implements IAttestationComponent {
 		this._defaultNamespace = options?.config?.defaultNamespace ?? names[0];
 		this._walletAddressIndex = options?.config?.walletAddressIndex ?? 0;
 		this._excludeNodeIdentity = options?.config?.excludeNodeIdentity ?? false;
+		this._assertionMethodId = options?.config?.assertionMethodId ?? "attestation-assertion";
 	}
 
 	/**
 	 * Attest the data and return the collated information.
-	 * @param verificationMethodId The identity verification method to use for attesting the data.
 	 * @param attestationObject The data to attest.
 	 * @param namespace The namespace of the connector to use for the attestation, defaults to service configured namespace.
 	 * @param identity The identity to perform the attestation operation with.
@@ -79,15 +85,14 @@ export class AttestationService implements IAttestationComponent {
 	 * @returns The id.
 	 */
 	public async create(
-		verificationMethodId: string,
 		attestationObject: IJsonLdNodeObject,
 		namespace?: string,
 		identity?: string,
 		nodeIdentity?: string
 	): Promise<string> {
-		Guards.stringValue(this.CLASS_NAME, nameof(verificationMethodId), verificationMethodId);
 		Guards.object<IJsonLdNodeObject>(this.CLASS_NAME, nameof(attestationObject), attestationObject);
 		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
+		Guards.stringValue(this.CLASS_NAME, nameof(nodeIdentity), nodeIdentity);
 
 		try {
 			const connectorNamespace = namespace ?? this._defaultNamespace;
@@ -99,7 +104,11 @@ export class AttestationService implements IAttestationComponent {
 				attestationObject.nodeIdentity = nodeIdentity;
 			}
 
-			return attestationConnector.create(identity, verificationMethodId, attestationObject);
+			return attestationConnector.create(
+				identity,
+				`${nodeIdentity}#${this._assertionMethodId}`,
+				attestationObject
+			);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "attestFailed", undefined, error);
 		}

@@ -37,3 +37,17 @@ The node identity automatically gets added to the data payload being attested. T
 ```ts
 false
 ```
+
+***
+
+### assertionMethodId?
+
+> `optional` **assertionMethodId**: `string`
+
+The assertion method id to use for the attestation.
+
+#### Default
+
+```ts
+attestation-assertion
+```
