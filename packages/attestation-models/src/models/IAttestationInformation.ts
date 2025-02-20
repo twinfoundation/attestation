@@ -10,9 +10,11 @@ export interface IAttestationInformation {
 	/**
 	 * JSON-LD Context.
 	 */
-	"@context":
-		| typeof AttestationTypes.ContextRoot
-		| [typeof AttestationTypes.ContextRoot, ...IJsonLdContextDefinitionElement[]];
+	"@context": [
+		typeof AttestationTypes.ContextRoot,
+		typeof AttestationTypes.ContextRootCommon,
+		...IJsonLdContextDefinitionElement[]
+	];
 
 	/**
 	 * JSON-LD Type.

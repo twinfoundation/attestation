@@ -122,7 +122,11 @@ export function generateRestRoutesAttestation(
 						id: "attestationGetResponseExample",
 						response: {
 							body: {
-								"@context": [AttestationTypes.ContextRoot, SchemaOrgTypes.ContextRoot],
+								"@context": [
+									AttestationTypes.ContextRoot,
+									AttestationTypes.ContextRootCommon,
+									SchemaOrgTypes.ContextRoot
+								],
 								type: AttestationTypes.Information,
 								id: "attestation:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg==",
 								dateCreated: "2024-06-18T13:34:51Z",
@@ -151,7 +155,11 @@ export function generateRestRoutesAttestation(
 						id: "attestationVerifyResponseFailExample",
 						response: {
 							body: {
-								"@context": [AttestationTypes.ContextRoot, SchemaOrgTypes.ContextRoot],
+								"@context": [
+									AttestationTypes.ContextRoot,
+									AttestationTypes.ContextRootCommon,
+									SchemaOrgTypes.ContextRoot
+								],
 								type: AttestationTypes.Information,
 								id: "attestation:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg==",
 								dateCreated: "2024-06-18T13:34:51Z",
@@ -186,7 +194,11 @@ export function generateRestRoutesAttestation(
 						id: "attestationGetResponseExample",
 						response: {
 							body: {
-								"@context": [AttestationTypes.ContextRoot, SchemaOrgTypes.ContextRoot],
+								"@context": [
+									AttestationTypes.ContextRoot,
+									AttestationTypes.ContextRootCommon,
+									SchemaOrgTypes.ContextRoot
+								],
 								type: AttestationTypes.Information,
 								id: "attestation:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg==",
 								dateCreated: "2024-06-18T13:34:51Z",
@@ -215,7 +227,11 @@ export function generateRestRoutesAttestation(
 						id: "attestationVerifyResponseFailExample",
 						response: {
 							body: {
-								"@context": [AttestationTypes.ContextRoot, SchemaOrgTypes.ContextRoot],
+								"@context": [
+									AttestationTypes.ContextRoot,
+									AttestationTypes.ContextRootCommon,
+									SchemaOrgTypes.ContextRoot
+								],
 								type: AttestationTypes.Information,
 								id: "attestation:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg==",
 								dateCreated: "2024-06-18T13:34:51Z",

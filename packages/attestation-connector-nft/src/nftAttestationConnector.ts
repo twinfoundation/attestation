@@ -211,7 +211,11 @@ export class NftAttestationConnector implements IAttestationConnector {
 			}
 
 			const information: IAttestationInformation = {
-				"@context": [AttestationTypes.ContextRoot, SchemaOrgTypes.ContextRoot],
+				"@context": [
+					AttestationTypes.ContextRoot,
+					AttestationTypes.ContextRootCommon,
+					SchemaOrgTypes.ContextRoot
+				],
 				type: AttestationTypes.Information,
 				id,
 				dateCreated: checkResult?.verifiableCredential?.issuanceDate ?? "",
@@ -242,9 +246,7 @@ export class NftAttestationConnector implements IAttestationConnector {
 			information.verified = Is.empty(failure);
 			information.verificationFailure = failure;
 
-			const compacted = await JsonLdProcessor.compact(information, information["@context"]);
-
-			return compacted as IAttestationInformation;
+			return JsonLdProcessor.compact(information);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "verificationFailed", undefined, error);
 		}
