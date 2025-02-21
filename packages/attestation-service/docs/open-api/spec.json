@@ -546,7 +546,7 @@
 				"properties": {
 					"@context": {
 						"type": "array",
-						"minItems": 2,
+						"minItems": 3,
 						"items": [
 							{
 								"type": "string",
@@ -555,6 +555,10 @@
 							{
 								"type": "string",
 								"const": "https://schema.twindev.org/common/"
+							},
+							{
+								"type": "string",
+								"const": "https://schema.org"
 							}
 						],
 						"additionalItems": {

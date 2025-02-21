@@ -71,7 +71,6 @@ describe("NftAttestationConnector", () => {
 		expect(attested.holderIdentity).toEqual(ownerIdentity);
 		expect(attested.dateTransferred).toEqual(undefined);
 		expect(attested.attestationObject).toEqual({
-			"@context": "https://schema.org",
 			type: "DigitalDocument",
 			id: "did:test:1234567890abcdef",
 			name: "My Document"
@@ -101,7 +100,6 @@ describe("NftAttestationConnector", () => {
 		expect(transfered.holderIdentity).toEqual(testIdentity2.id);
 		expect(Is.dateTimeString(transfered.dateTransferred)).toEqual(true);
 		expect(transfered.attestationObject).toEqual({
-			"@context": "https://schema.org",
 			type: "DigitalDocument",
 			id: "did:test:1234567890abcdef",
 			name: "My Document"
