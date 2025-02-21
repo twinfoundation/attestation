@@ -246,7 +246,7 @@ export class NftAttestationConnector implements IAttestationConnector {
 			information.verified = Is.empty(failure);
 			information.verificationFailure = failure;
 
-			return JsonLdProcessor.compact(information);
+			return JsonLdProcessor.compact(information, information["@context"]);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "verificationFailed", undefined, error);
 		}
