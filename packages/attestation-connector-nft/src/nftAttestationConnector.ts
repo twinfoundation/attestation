@@ -227,12 +227,23 @@ export class NftAttestationConnector implements IAttestationConnector {
 				}
 			};
 
+			if (Is.object(contextAndType)) {
+				information["@context"] = JsonLdProcessor.combineContexts(
+					information["@context"],
+					contextAndType["@context"]
+				) as IAttestationInformation["@context"];
+			}
+
 			if (Is.stringValue(jwtProof)) {
 				information.proof = {
 					"@context": AttestationTypes.ContextRoot,
 					type: AttestationTypes.JwtProof,
 					value: jwtProof
 				};
+				information["@context"] = JsonLdProcessor.combineContexts(
+					information["@context"],
+					information.proof["@context"]
+				) as IAttestationInformation["@context"];
 			}
 
 			if (

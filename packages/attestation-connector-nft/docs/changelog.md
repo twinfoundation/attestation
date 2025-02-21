@@ -1,5 +1,5 @@
 # @twin.org/attestation-connector-nft - Changelog
 
-## v0.0.1-next.20
+## v0.0.1-next.21
 
 - Initial Release

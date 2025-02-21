@@ -39,10 +39,18 @@ describe("NftAttestationConnector", () => {
 		const attestation = new NftAttestationConnector();
 
 		const dataPayload: IJsonLdNodeObject = {
-			"@context": "https://schema.org",
-			type: "DigitalDocument",
-			id: "did:test:1234567890abcdef",
-			name: "My Document"
+			"@context": "https://www.w3.org/ns/activitystreams",
+			type: "Create",
+			actor: {
+				type: "Person",
+				id: "acct:person@example.org",
+				name: "Person"
+			},
+			object: {
+				type: "Note",
+				content: "This is a simple note"
+			},
+			published: "2015-01-25T12:34:56Z"
 		};
 
 		const attestedId = await attestation.create(
@@ -63,6 +71,12 @@ describe("NftAttestationConnector", () => {
 		const attested = await attestation.get(attestationId);
 
 		expect(attested).toBeDefined();
+		expect(attested["@context"]).toEqual([
+			"https://schema.twindev.org/attestation/",
+			"https://schema.twindev.org/common/",
+			"https://schema.org",
+			"https://www.w3.org/ns/activitystreams"
+		]);
 		expect(attested.verified).toEqual(true);
 		expect(attested.verificationFailure).toEqual(undefined);
 		expect(attested.id?.startsWith("attestation:nft")).toEqual(true);
@@ -71,9 +85,17 @@ describe("NftAttestationConnector", () => {
 		expect(attested.holderIdentity).toEqual(ownerIdentity);
 		expect(attested.dateTransferred).toEqual(undefined);
 		expect(attested.attestationObject).toEqual({
-			type: "DigitalDocument",
-			id: "did:test:1234567890abcdef",
-			name: "My Document"
+			type: "Create",
+			actor: {
+				id: "acct:person@example.org",
+				name: "Person",
+				type: "Person"
+			},
+			object: {
+				content: "This is a simple note",
+				type: "Note"
+			},
+			published: "2015-01-25T12:34:56Z"
 		});
 		expect(attested.proof?.type).toEqual("JwtProof");
 		expect((attested.proof?.value as string).split(".").length).toEqual(3);
@@ -100,9 +122,17 @@ describe("NftAttestationConnector", () => {
 		expect(transfered.holderIdentity).toEqual(testIdentity2.id);
 		expect(Is.dateTimeString(transfered.dateTransferred)).toEqual(true);
 		expect(transfered.attestationObject).toEqual({
-			type: "DigitalDocument",
-			id: "did:test:1234567890abcdef",
-			name: "My Document"
+			type: "Create",
+			actor: {
+				id: "acct:person@example.org",
+				name: "Person",
+				type: "Person"
+			},
+			object: {
+				content: "This is a simple note",
+				type: "Note"
+			},
+			published: "2015-01-25T12:34:56Z"
 		});
 		expect(transfered.proof?.type).toEqual("JwtProof");
 		expect((transfered.proof?.value as string).split(".").length).toEqual(3);
