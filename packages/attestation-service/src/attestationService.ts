@@ -6,7 +6,7 @@ import {
 	type IAttestationConnector,
 	type IAttestationInformation
 } from "@twin.org/attestation-models";
-import { GeneralError, Guards, Is, Urn } from "@twin.org/core";
+import { GeneralError, Guards, Urn } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import { nameof } from "@twin.org/nameof";
 import { WalletConnectorFactory, type IWalletConnector } from "@twin.org/wallet-models";
@@ -45,12 +45,6 @@ export class AttestationService implements IAttestationComponent {
 	private readonly _defaultNamespace: string;
 
 	/**
-	 * The node identity automatically gets added to the data payload being attested. This can be excluded if required.
-	 * @internal
-	 */
-	private readonly _excludeNodeIdentity: boolean;
-
-	/**
 	 * The verification method id to use for the attestation.
 	 * @internal
 	 */
@@ -72,7 +66,6 @@ export class AttestationService implements IAttestationComponent {
 
 		this._defaultNamespace = options?.config?.defaultNamespace ?? names[0];
 		this._walletAddressIndex = options?.config?.walletAddressIndex ?? 0;
-		this._excludeNodeIdentity = options?.config?.excludeNodeIdentity ?? false;
 		this._verificationMethodId = options?.config?.verificationMethodId ?? "attestation-assertion";
 	}
 
@@ -99,10 +92,6 @@ export class AttestationService implements IAttestationComponent {
 
 			const attestationConnector =
 				AttestationConnectorFactory.get<IAttestationConnector>(connectorNamespace);
-
-			if (Is.object<{ nodeIdentity?: string }>(attestationObject) && !this._excludeNodeIdentity) {
-				attestationObject.nodeIdentity = nodeIdentity;
-			}
 
 			return attestationConnector.create(
 				identity,

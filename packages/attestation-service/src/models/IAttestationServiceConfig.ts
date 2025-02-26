@@ -17,12 +17,6 @@ export interface IAttestationServiceConfig {
 	walletAddressIndex?: number;
 
 	/**
-	 * The node identity automatically gets added to the data payload being attested. This can be excluded if required.
-	 * @default false
-	 */
-	excludeNodeIdentity?: boolean;
-
-	/**
 	 * The verification method id to use for the attestation.
 	 * @default attestation-assertion
 	 */
