@@ -1,6 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import {
+	AttestationContexts,
 	AttestationTypes,
 	type IAttestationConnector,
 	type IAttestationInformation
@@ -18,7 +19,7 @@ import { JsonLdHelper, JsonLdProcessor, type IJsonLdNodeObject } from "@twin.org
 import { IdentityConnectorFactory, type IIdentityConnector } from "@twin.org/identity-models";
 import { nameof } from "@twin.org/nameof";
 import { NftConnectorFactory, type INftConnector } from "@twin.org/nft-models";
-import { SchemaOrgDataTypes, SchemaOrgTypes } from "@twin.org/standards-schema-org";
+import { SchemaOrgContexts, SchemaOrgDataTypes } from "@twin.org/standards-schema-org";
 import { DidContexts, DidTypes, type IDidVerifiableCredential } from "@twin.org/standards-w3c-did";
 import type { INftAttestationConnectorConfig } from "./models/INftAttestationConnectorConfig";
 import type { INftAttestationConnectorConstructorOptions } from "./models/INftAttestationConnectorConstructorOptions";
@@ -212,9 +213,9 @@ export class NftAttestationConnector implements IAttestationConnector {
 
 			const information: IAttestationInformation = {
 				"@context": [
-					AttestationTypes.ContextRoot,
-					AttestationTypes.ContextRootCommon,
-					SchemaOrgTypes.ContextRoot
+					AttestationContexts.ContextRoot,
+					AttestationContexts.ContextRootCommon,
+					SchemaOrgContexts.ContextRoot
 				],
 				type: AttestationTypes.Information,
 				id,
@@ -236,7 +237,7 @@ export class NftAttestationConnector implements IAttestationConnector {
 
 			if (Is.stringValue(jwtProof)) {
 				information.proof = {
-					"@context": AttestationTypes.ContextRoot,
+					"@context": AttestationContexts.ContextRoot,
 					type: AttestationTypes.JwtProof,
 					value: jwtProof
 				};

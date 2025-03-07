@@ -1,6 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IJsonLdContextDefinitionElement } from "@twin.org/data-json-ld";
+import type { AttestationContexts } from "./attestationContexts";
 import type { AttestationTypes } from "./attestationTypes";
 
 /**
@@ -11,8 +12,8 @@ export interface IAttestationJwtProof {
 	 * JSON-LD Context.
 	 */
 	"@context":
-		| typeof AttestationTypes.ContextRoot
-		| [typeof AttestationTypes.ContextRoot, ...IJsonLdContextDefinitionElement[]];
+		| typeof AttestationContexts.ContextRoot
+		| [typeof AttestationContexts.ContextRoot, ...IJsonLdContextDefinitionElement[]];
 
 	/**
 	 * The type of the proof.

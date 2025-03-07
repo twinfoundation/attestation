@@ -7,6 +7,7 @@ export * from "./models/api/IAttestationDestroyRequest";
 export * from "./models/api/IAttestationGetRequest";
 export * from "./models/api/IAttestationGetResponse";
 export * from "./models/api/IAttestationTransferRequest";
+export * from "./models/attestationContexts";
 export * from "./models/attestationTypes";
 export * from "./models/IAttestationComponent";
 export * from "./models/IAttestationConnector";
