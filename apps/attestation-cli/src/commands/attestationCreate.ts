@@ -15,7 +15,6 @@ import { setupIdentityConnector } from "@twin.org/identity-cli";
 import { DocumentHelper, IdentityConnectorFactory } from "@twin.org/identity-models";
 import { setupNftConnector } from "@twin.org/nft-cli";
 import { IotaNftUtils } from "@twin.org/nft-connector-iota";
-import { IotaStardustNftUtils } from "@twin.org/nft-connector-iota-stardust";
 import { NftConnectorFactory } from "@twin.org/nft-models";
 import { VaultConnectorFactory, VaultKeyType } from "@twin.org/vault-models";
 import { setupWalletConnector } from "@twin.org/wallet-cli";
@@ -235,9 +234,7 @@ export async function actionCommandAttestationCreate(
 
 	CLIDisplay.value(
 		I18n.formatMessage("commands.common.labels.explore"),
-		opts.connector === AttestationConnectorTypes.Iota
-			? `${StringHelper.trimTrailingSlashes(explorerEndpoint)}/object/${IotaNftUtils.nftIdToObjectId(nftId)}?network=${network}`
-			: `${StringHelper.trimTrailingSlashes(explorerEndpoint)}/addr/${IotaStardustNftUtils.nftIdToAddress(nftId)}`
+		`${StringHelper.trimTrailingSlashes(explorerEndpoint)}/object/${IotaNftUtils.nftIdToObjectId(nftId)}?network=${network}`
 	);
 	CLIDisplay.break();
 

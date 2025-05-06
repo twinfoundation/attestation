@@ -9,12 +9,7 @@ export const AttestationConnectorTypes = {
 	/**
 	 * IOTA.
 	 */
-	Iota: "iota",
-
-	/**
-	 * IOTA Stardust.
-	 */
-	IotaStardust: "iota-stardust"
+	Iota: "iota"
 } as const;
 
 /**
