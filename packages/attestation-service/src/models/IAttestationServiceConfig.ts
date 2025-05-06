@@ -11,12 +11,6 @@ export interface IAttestationServiceConfig {
 	defaultNamespace?: string;
 
 	/**
-	 * The wallet address index to use for funding and controlling the attestations.
-	 * @default 0
-	 */
-	walletAddressIndex?: number;
-
-	/**
 	 * The verification method id to use for the attestation.
 	 * @default attestation-assertion
 	 */

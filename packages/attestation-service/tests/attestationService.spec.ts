@@ -12,7 +12,7 @@ describe("AttestationService", () => {
 			() => new NftAttestationConnector()
 		);
 		WalletConnectorFactory.register("wallet", () => ({}) as IWalletConnector);
-		const service = new AttestationService({ walletConnectorType: "wallet" });
+		const service = new AttestationService();
 		expect(service).toBeDefined();
 	});
 });

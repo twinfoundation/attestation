@@ -119,6 +119,7 @@ export class AttestationService implements IAttestationComponent {
 	): Promise<void> {
 		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
 		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
+		Guards.stringValue(this.CLASS_NAME, nameof(holderAddress), holderAddress);
 		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
 
 		try {
