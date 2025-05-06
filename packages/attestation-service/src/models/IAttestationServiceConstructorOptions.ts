@@ -7,12 +7,6 @@ import type { IAttestationServiceConfig } from "./IAttestationServiceConfig";
  */
 export interface IAttestationServiceConstructorOptions {
 	/**
-	 * The wallet connector type for generating addresses.
-	 * @default wallet
-	 */
-	walletConnectorType?: string;
-
-	/**
 	 * The configuration for the service.
 	 */
 	config?: IAttestationServiceConfig;
