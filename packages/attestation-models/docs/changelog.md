@@ -1,5 +1,12 @@
 # @twin.org/attestation-models - Changelog
 
+## [0.0.1-next.28](https://github.com/twinfoundation/attestation/compare/attestation-models-v0.0.1-next.27...attestation-models-v0.0.1-next.28) (2025-05-28)
+
+
+### Features
+
+* update data type registration with fully qualified names ([5982245](https://github.com/twinfoundation/attestation/commit/59822454a027a9c6dfa72ffa9aabb9622b925929))
+
 ## [0.0.1-next.27](https://github.com/twinfoundation/attestation/compare/attestation-models-v0.0.1-next.26...attestation-models-v0.0.1-next.27) (2025-05-06)
 
 
