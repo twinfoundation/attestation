@@ -1,5 +1,12 @@
 # @twin.org/attestation-models - Changelog
 
+## [0.0.1-next.29](https://github.com/twinfoundation/attestation/compare/attestation-models-v0.0.1-next.28...attestation-models-v0.0.1-next.29) (2025-06-03)
+
+
+### Features
+
+* update ts-to-schema generation ([0f23298](https://github.com/twinfoundation/attestation/commit/0f23298f6e8accb19c0faaf74220cce02155b48a))
+
 ## [0.0.1-next.28](https://github.com/twinfoundation/attestation/compare/attestation-models-v0.0.1-next.27...attestation-models-v0.0.1-next.28) (2025-05-28)
 
 
