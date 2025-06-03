@@ -1,7 +1,6 @@
 {
 	"baseUrl": "https://schema.twindev.org/attestation/",
-	"sources": ["./src/models/**/*.ts"],
-	"types": ["IAttestationInformation", "IAttestationJwtProof"],
+	"types": ["./src/models/IAttestationInformation.ts", "./src/models/IAttestationJwtProof.ts"],
 	"externalReferences": {
 		"IJsonLd(.*)": "https://schema.twindev.org/json-ld/JsonLd$1"
 	}
