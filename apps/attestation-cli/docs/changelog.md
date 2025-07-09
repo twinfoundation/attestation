@@ -1,5 +1,19 @@
 # @twin.org/attestation-cli - Changelog
 
+## 0.0.1 (2025-07-09)
+
+
+### Features
+
+* release to production ([89ca987](https://github.com/twinfoundation/attestation/commit/89ca987963d9090abcfc1b62bc997e2c521944ec))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/attestation-connector-nft bumped from ^0.0.0 to ^0.0.1
+
 ## [0.0.1-next.30](https://github.com/twinfoundation/attestation/compare/attestation-cli-v0.0.1-next.29...attestation-cli-v0.0.1-next.30) (2025-06-12)
 
 
