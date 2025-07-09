@@ -1,26 +1,53 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IRequestContext, IService } from "@gtsc/services";
-import type { IDidProof } from "@gtsc/standards-w3c-did";
+import type { IComponent } from "@twin.org/core";
+import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
+import type { IAttestationInformation } from "./IAttestationInformation";
 
 /**
- * Interface describing a attestation connector.
+ * Interface describing an attestation connector.
  */
-export interface IAttestationConnector extends IService {
+export interface IAttestationConnector extends IComponent {
 	/**
-	 * Sign the data and return the proof.
-	 * @param requestContext The context for the request.
-	 * @param data The data to sign.
-	 * @returns The proof for the data with the id set as a unique identifier for the data.
+	 * Attest the data and return the collated information.
+	 * @param controller The controller identity of the user to access the vault keys.
+	 * @param verificationMethodId The identity verification method to use for attesting the data.
+	 * @param attestationObject The data to attest.
+	 * @returns The collated attestation data.
 	 */
-	sign(requestContext: IRequestContext, data: unknown): Promise<IDidProof>;
+	create(
+		controller: string,
+		verificationMethodId: string,
+		attestationObject: IJsonLdNodeObject
+	): Promise<string>;
 
 	/**
-	 * Verify the data against the proof the proof.
-	 * @param requestContext The context for the request.
-	 * @param data The data to verify.
-	 * @param proof The proof to verify against.
-	 * @returns True if the verification is successful.
+	 * Resolve and verify the attestation id.
+	 * @param id The attestation id to verify.
+	 * @returns The verified attestation details.
 	 */
-	verify(requestContext: IRequestContext, data: unknown, proof: IDidProof): Promise<boolean>;
+	get(id: string): Promise<IAttestationInformation>;
+
+	/**
+	 * Transfer the attestation to a new holder.
+	 * @param controller The controller identity of the user to access the vault keys.
+	 * @param attestationId The attestation to transfer.
+	 * @param holderIdentity The holder identity of the attestation.
+	 * @param holderAddress The new controller address of the attestation belonging to the holder.
+	 * @returns Nothing.
+	 */
+	transfer(
+		controller: string,
+		attestationId: string,
+		holderIdentity: string,
+		holderAddress: string
+	): Promise<void>;
+
+	/**
+	 * Destroy the attestation.
+	 * @param controller The controller identity of the user to access the vault keys.
+	 * @param attestationId The attestation to destroy.
+	 * @returns Nothing.
+	 */
+	destroy(controller: string, attestationId: string): Promise<void>;
 }

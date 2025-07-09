@@ -1,0 +1,121 @@
+{
+	"errors": {
+		"attestation-cli": {
+			"invalidJson": "The JSON file is invalid."
+		}
+	},
+	"commands": {
+		"attestation-create": {
+			"summary": "Create an attestation.",
+			"description": "Create an attestation.",
+			"options": {
+				"seed": {
+					"param": "--seed '<'seed'>'",
+					"description": "The seed for the owner address in hex or base64 used to fund the attested storage, or start with ! to read environment variable."
+				},
+				"wallet-address-index": {
+					"param": "--wallet-address-index '<'wallet-address-index'>'",
+					"description": "The wallet address index to use for storing the attestation NFT."
+				},
+				"verification-method-id": {
+					"param": "--verification-method-id '<'verification-method-id'>'",
+					"description": "The full verification method id including did, or start with ! to read environment variable."
+				},
+				"private-key": {
+					"param": "--private-key '<'private-key'>'",
+					"description": "The private key for the verification method id, in either hex or base64 form, or start with ! to read environment variable."
+				},
+				"data-json": {
+					"param": "--data-json '<'data-json'>'",
+					"description": "A JSON file to read which includes the data for attestation."
+				}
+			},
+			"progress": {
+				"attestingData": "Attesting Data"
+			},
+			"labels": {
+				"walletAddressIndex": "Wallet Address Index",
+				"verificationMethodId": "Verification Method Id",
+				"dataJsonFilename": "Data JSON Filename",
+				"dataJson": "Data JSON",
+				"attestationId": "Attestation Id",
+				"nftId": "NFT Id"
+			}
+		},
+		"attestation-get": {
+			"summary": "Getting an attestation.",
+			"description": "Getting an attestation.",
+			"options": {
+				"id": {
+					"param": "--id '<'id'>'",
+					"description": "The id for the attestation in urn format."
+				}
+			},
+			"progress": {
+				"gettingAttestation": "Getting Attestation"
+			},
+			"labels": {
+				"attestation": "Attestation",
+				"attestationId": "Attestation Id",
+				"verified": "Verified",
+				"failure": "Failure",
+				"nftId": "NFT Id"
+			}
+		},
+		"attestation-transfer": {
+			"summary": "Transfer an attestation to a new holder.",
+			"description": "Transfer an attestation to a new holder.",
+			"options": {
+				"seed": {
+					"param": "--seed '<'seed'>'",
+					"description": "The seed for the owner address in hex or base64 used to fund the transfer, or start with ! to read environment variable."
+				},
+				"id": {
+					"param": "--id '<'id'>'",
+					"description": "The id for the attestation in urn format."
+				},
+				"holder-address": {
+					"param": "--holder-address '<'holder-address'>'",
+					"description": "The bech32 address of the new holder, or start with ! to read environment variable."
+				},
+				"holder-identity": {
+					"param": "--holder-identity '<'holder-identity'>'",
+					"description": "The identity of the new holder, or start with ! to read environment variable."
+				}
+			},
+			"progress": {
+				"transferringAttestation": "Transferring Attestation"
+			},
+			"labels": {
+				"holderAddress": "Holder Address",
+				"holderIdentity": "Holder Identity",
+				"attestationId": "Attestation Id",
+				"nftId": "NFT Id"
+			}
+		},
+		"common": {
+			"options": {
+				"connector": {
+					"param": "--connector '<'connector'>'",
+					"description": "The connector to use for the attestation operation."
+				},
+				"network": {
+					"param": "--network '<'network'>'",
+					"description": "The network to use for the attestation operation."
+				},
+				"node": {
+					"param": "--node '<'url'>'",
+					"description": "The url for the node endpoint, or an environment variable name containing the url."
+				}
+			},
+			"labels": {
+				"did": "DID",
+				"node": "Node",
+				"explorer": "Explorer",
+				"explore": "Explore",
+				"connector": "Connector",
+				"network": "Network"
+			}
+		}
+	}
+}

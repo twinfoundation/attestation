@@ -1,13 +1,18 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IAttestationConnector } from "@gtsc/attestation-models";
+import { NftAttestationConnector } from "@twin.org/attestation-connector-nft";
+import { AttestationConnectorFactory } from "@twin.org/attestation-models";
+import { type IWalletConnector, WalletConnectorFactory } from "@twin.org/wallet-models";
 import { AttestationService } from "../src/attestationService";
 
 describe("AttestationService", () => {
 	test("Can create an instance", async () => {
-		const service = new AttestationService({
-			attestationConnector: {} as unknown as IAttestationConnector
-		});
+		AttestationConnectorFactory.register(
+			NftAttestationConnector.NAMESPACE,
+			() => new NftAttestationConnector()
+		);
+		WalletConnectorFactory.register("wallet", () => ({}) as IWalletConnector);
+		const service = new AttestationService();
 		expect(service).toBeDefined();
 	});
 });

@@ -1,0 +1,18 @@
+{
+	"error": {
+		"nftAttestationConnector": {
+			"attestingFailed": "Attesting the data failed",
+			"verificationFailed": "Verifying the attestation failed",
+			"transferFailed": "Transferring the attestation failed",
+			"destroyFailed": "Destroying the attestation failed",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the NFT Attestation connector \"{namespace}\""
+		}
+	},
+	"nftAttestationConnector": {
+		"verificationFailures": {
+			"noData": "There is no data in the resolved NFT",
+			"proofFailed": "The proof of the attestation could not be verified",
+			"revoked": "The proof of the attestation has been revoked"
+		}
+	}
+}

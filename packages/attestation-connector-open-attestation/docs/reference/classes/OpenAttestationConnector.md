@@ -8,69 +8,180 @@ Class for performing attestation operations in entity storage.
 
 ## Constructors
 
-### constructor
+### Constructor
 
-• **new OpenAttestationConnector**(`config?`): [`OpenAttestationConnector`](OpenAttestationConnector.md)
+> **new OpenAttestationConnector**(`options`): `OpenAttestationConnector`
 
-Create a new instance of EntityStorageAttestationConnector.
+Create a new instance of OpenAttestationConnector.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `config?` | [`IOpenAttestationConnectorConfig`](../interfaces/IOpenAttestationConnectorConfig.md) | The configuration for the attestation connector. |
+##### options
+
+[`IOpenAttestationConnectorConstructorOptions`](../interfaces/IOpenAttestationConnectorConstructorOptions.md)
+
+The options for the attestation connector.
 
 #### Returns
 
-[`OpenAttestationConnector`](OpenAttestationConnector.md)
+`OpenAttestationConnector`
+
+## Properties
+
+### NAMESPACE
+
+> `readonly` `static` **NAMESPACE**: `string` = `"open-attestation"`
+
+The namespace for the entities.
+
+***
+
+### CLASS\_NAME
+
+> `readonly` **CLASS\_NAME**: `string`
+
+Runtime name for the class.
+
+#### Implementation of
+
+`IAttestationConnector.CLASS_NAME`
 
 ## Methods
 
-### sign
+### create()
 
-▸ **sign**(`requestContext`, `data`): `Promise`\<`IDidProof`\>
+> **create**(`controller`, `verificationMethodId`, `attestationObject`): `Promise`\<`string`\>
 
-Sign the data and return the proof.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `data` | `unknown` | The data to sign. |
-
-#### Returns
-
-`Promise`\<`IDidProof`\>
-
-The proof for the data with the id set as a unique identifier for the data.
-
-#### Implementation of
-
-IAttestationConnector.sign
-
-___
-
-### verify
-
-▸ **verify**(`requestContext`, `data`, `proof`): `Promise`\<`boolean`\>
-
-Verify the data against the proof the proof.
+Attest the data and return the collated information.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `data` | `unknown` | The data to verify. |
-| `proof` | `IDidProof` | The proof to verify against. |
+##### controller
+
+`string`
+
+The controller identity of the user to access the vault keys.
+
+##### verificationMethodId
+
+`string`
+
+The identity verification method to use for attesting the data.
+
+##### attestationObject
+
+`IJsonLdNodeObject`
+
+The data to attest.
 
 #### Returns
 
-`Promise`\<`boolean`\>
+`Promise`\<`string`\>
 
-True if the verification is successful.
+The id.
 
 #### Implementation of
 
-IAttestationConnector.verify
+`IAttestationConnector.create`
+
+***
+
+### get()
+
+> **get**(`id`): `Promise`\<`IAttestationInformation`\>
+
+Resolve and verify the attestation id.
+
+#### Parameters
+
+##### id
+
+`string`
+
+The attestation id to verify.
+
+#### Returns
+
+`Promise`\<`IAttestationInformation`\>
+
+The verified attestation details.
+
+#### Implementation of
+
+`IAttestationConnector.get`
+
+***
+
+### transfer()
+
+> **transfer**(`controller`, `attestationId`, `holderIdentity`, `holderAddress`): `Promise`\<`void`\>
+
+Transfer the attestation to a new holder.
+
+#### Parameters
+
+##### controller
+
+`string`
+
+The controller identity of the user to access the vault keys.
+
+##### attestationId
+
+`string`
+
+The attestation to transfer.
+
+##### holderIdentity
+
+`string`
+
+The holder identity of the attestation.
+
+##### holderAddress
+
+`string`
+
+The new controller address of the attestation belonging to the holder.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Nothing.
+
+#### Implementation of
+
+`IAttestationConnector.transfer`
+
+***
+
+### destroy()
+
+> **destroy**(`controller`, `attestationId`): `Promise`\<`void`\>
+
+Destroy the attestation.
+
+#### Parameters
+
+##### controller
+
+`string`
+
+The controller identity of the user to access the vault keys.
+
+##### attestationId
+
+`string`
+
+The attestation to destroy.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Nothing.
+
+#### Implementation of
+
+`IAttestationConnector.destroy`

@@ -1,11 +1,11 @@
-# GTSC Attestation REST Client
+# TWIN Attestation REST Client
 
 Attestation contract implementation which can connect to REST endpoints.
 
 ## Installation
 
 ```shell
-npm install @gtsc/attestation-rest-client
+npm install @twin.org/attestation-rest-client
 ```
 
 ## Examples
@@ -14,7 +14,7 @@ Usage of the APIs is shown in the examples [docs/examples.md](docs/examples.md)
 
 ## Reference
 
-Detailed reference documentation for the API can be found in [docs/reference/modules.md](docs/reference/modules.md)
+Detailed reference documentation for the API can be found in [docs/reference/index.md](docs/reference/index.md)
 
 ## Changelog
 

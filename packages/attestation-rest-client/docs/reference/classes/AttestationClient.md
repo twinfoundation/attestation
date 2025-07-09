@@ -2,137 +2,168 @@
 
 Client for performing attestation through to REST endpoints.
 
-## Hierarchy
+## Extends
 
 - `BaseRestClient`
 
-  ↳ **`AttestationClient`**
-
 ## Implements
 
-- `IAttestation`
+- `IAttestationComponent`
 
 ## Constructors
 
-### constructor
+### Constructor
 
-• **new AttestationClient**(`config`): [`AttestationClient`](AttestationClient.md)
+> **new AttestationClient**(`config`): `AttestationClient`
 
 Create a new instance of AttestationClient.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `config` | `IBaseRestClientConfig` | The configuration for the client. |
+##### config
+
+`IBaseRestClientConfig`
+
+The configuration for the client.
 
 #### Returns
 
-[`AttestationClient`](AttestationClient.md)
+`AttestationClient`
 
 #### Overrides
 
-BaseRestClient.constructor
+`BaseRestClient.constructor`
+
+## Properties
+
+### CLASS\_NAME
+
+> `readonly` **CLASS\_NAME**: `string`
+
+Runtime name for the class.
+
+#### Implementation of
+
+`IAttestationComponent.CLASS_NAME`
 
 ## Methods
 
-### fetch
+### create()
 
-▸ **fetch**\<`T`, `U`\>(`requestContext`, `route`, `method`, `request?`): `Promise`\<`U`\>
+> **create**(`attestationObject`, `namespace?`): `Promise`\<`string`\>
 
-Perform a request in json format.
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `IHttpRequest`\<`unknown`\> |
-| `U` | extends `IHttpResponse`\<`unknown`\> |
+Attest the data and return the collated information.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `route` | `string` | The route of the request. |
-| `method` | `HttpMethods` | The http method. |
-| `request?` | `T` | Request to send to the endpoint. |
+##### attestationObject
 
-#### Returns
+`IJsonLdNodeObject`
 
-`Promise`\<`U`\>
+The data to attest.
 
-The response.
-
-#### Inherited from
-
-BaseRestClient.fetch
-
-___
-
-### getEndpointWithPrefix
-
-▸ **getEndpointWithPrefix**(): `string`
-
-Get the endpoint with the prefix for the namespace.
-
-#### Returns
+##### namespace?
 
 `string`
 
-The endpoint with namespace prefix attached.
-
-#### Inherited from
-
-BaseRestClient.getEndpointWithPrefix
-
-___
-
-### sign
-
-▸ **sign**(`requestContext`, `data`): `Promise`\<`IDidProof`\>
-
-Sign the data and return the proof.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `data` | `unknown` | The data to sign. |
+The namespace of the connector to use for the attestation, defaults to component configured namespace.
 
 #### Returns
 
-`Promise`\<`IDidProof`\>
+`Promise`\<`string`\>
 
-The proof for the data with the id set as a unique identifier for the data.
+The id.
 
 #### Implementation of
 
-IAttestation.sign
+`IAttestationComponent.create`
 
-___
+***
 
-### verify
+### get()
 
-▸ **verify**(`requestContext`, `data`, `proof`): `Promise`\<`boolean`\>
+> **get**(`id`): `Promise`\<`IAttestationInformation`\>
 
-Verify the data against the proof the proof.
+Resolve and verify the attestation id.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `data` | `unknown` | The data to verify. |
-| `proof` | `IDidProof` | The proof to verify against. |
+##### id
+
+`string`
+
+The attestation id to verify.
 
 #### Returns
 
-`Promise`\<`boolean`\>
+`Promise`\<`IAttestationInformation`\>
 
-True if the verification is successful.
+The verified attestation details.
 
 #### Implementation of
 
-IAttestation.verify
+`IAttestationComponent.get`
+
+***
+
+### transfer()
+
+> **transfer**(`attestationId`, `holderIdentity`, `holderAddress`): `Promise`\<`void`\>
+
+Transfer the attestation to a new holder.
+
+#### Parameters
+
+##### attestationId
+
+`string`
+
+The attestation to transfer.
+
+##### holderIdentity
+
+`string`
+
+The identity to transfer the attestation to.
+
+##### holderAddress
+
+`string`
+
+The address to transfer the attestation to.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Nothing.
+
+#### Implementation of
+
+`IAttestationComponent.transfer`
+
+***
+
+### destroy()
+
+> **destroy**(`attestationId`): `Promise`\<`void`\>
+
+Destroy the attestation.
+
+#### Parameters
+
+##### attestationId
+
+`string`
+
+The attestation to transfer.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+The updated attestation details.
+
+#### Implementation of
+
+`IAttestationComponent.destroy`

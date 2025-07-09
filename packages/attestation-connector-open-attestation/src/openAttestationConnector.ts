@@ -1,59 +1,80 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IAttestationConnector } from "@gtsc/attestation-models";
-import { nameof } from "@gtsc/nameof";
-import type { IRequestContext } from "@gtsc/services";
-import type { IDidProof } from "@gtsc/standards-w3c-did";
-import type { IOpenAttestationConnectorConfig } from "./models/IOpenAttestationConnectorConfig";
+import type { IAttestationConnector, IAttestationInformation } from "@twin.org/attestation-models";
+import { NotImplementedError } from "@twin.org/core";
+import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
+import { nameof } from "@twin.org/nameof";
+import type { IOpenAttestationConnectorConstructorOptions } from "./models/IOpenAttestationConnectorConstructorOptions";
 
 /**
  * Class for performing attestation operations in entity storage.
  */
 export class OpenAttestationConnector implements IAttestationConnector {
 	/**
-	 * Runtime name for the class.
-	 * @internal
-	 */
-	private static readonly _CLASS_NAME: string = nameof<OpenAttestationConnector>();
-
-	/**
 	 * The namespace for the entities.
-	 * @internal
 	 */
-	private static readonly _NAMESPACE: string = "open-attestation";
+	public static readonly NAMESPACE: string = "open-attestation";
 
 	/**
-	 * Create a new instance of EntityStorageAttestationConnector.
-	 * @param config The configuration for the attestation connector.
+	 * Runtime name for the class.
+	 */
+	public readonly CLASS_NAME: string = nameof<OpenAttestationConnector>();
+
+	/**
+	 * Create a new instance of OpenAttestationConnector.
+	 * @param options The options for the attestation connector.
 	 */
 	// eslint-disable-next-line @typescript-eslint/no-useless-constructor
-	constructor(config?: IOpenAttestationConnectorConfig) {}
+	constructor(options: IOpenAttestationConnectorConstructorOptions) {}
 
 	/**
-	 * Sign the data and return the proof.
-	 * @param requestContext The context for the request.
-	 * @param data The data to sign.
-	 * @returns The proof for the data with the id set as a unique identifier for the data.
+	 * Attest the data and return the collated information.
+	 * @param controller The controller identity of the user to access the vault keys.
+	 * @param verificationMethodId The identity verification method to use for attesting the data.
+	 * @param attestationObject The data to attest.
+	 * @returns The id.
 	 */
-	public async sign(requestContext: IRequestContext, data: unknown): Promise<IDidProof> {
-		return {
-			type: "foo",
-			proofPurpose: "assertionMethod"
-		};
+	public async create(
+		controller: string,
+		verificationMethodId: string,
+		attestationObject: IJsonLdNodeObject
+	): Promise<string> {
+		throw new NotImplementedError(this.CLASS_NAME, "attest");
 	}
 
 	/**
-	 * Verify the data against the proof the proof.
-	 * @param requestContext The context for the request.
-	 * @param data The data to verify.
-	 * @param proof The proof to verify against.
-	 * @returns True if the verification is successful.
+	 * Resolve and verify the attestation id.
+	 * @param id The attestation id to verify.
+	 * @returns The verified attestation details.
 	 */
-	public async verify(
-		requestContext: IRequestContext,
-		data: unknown,
-		proof: IDidProof
-	): Promise<boolean> {
-		return false;
+	public async get(id: string): Promise<IAttestationInformation> {
+		throw new NotImplementedError(this.CLASS_NAME, "verify");
+	}
+
+	/**
+	 * Transfer the attestation to a new holder.
+	 * @param controller The controller identity of the user to access the vault keys.
+	 * @param attestationId The attestation to transfer.
+	 * @param holderIdentity The holder identity of the attestation.
+	 * @param holderAddress The new controller address of the attestation belonging to the holder.
+	 * @returns Nothing.
+	 */
+	public async transfer(
+		controller: string,
+		attestationId: string,
+		holderIdentity: string,
+		holderAddress: string
+	): Promise<void> {
+		throw new NotImplementedError(this.CLASS_NAME, "transfer");
+	}
+
+	/**
+	 * Destroy the attestation.
+	 * @param controller The controller identity of the user to access the vault keys.
+	 * @param attestationId The attestation to destroy.
+	 * @returns Nothing.
+	 */
+	public async destroy(controller: string, attestationId: string): Promise<void> {
+		throw new NotImplementedError(this.CLASS_NAME, "destroy");
 	}
 }

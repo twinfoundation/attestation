@@ -4,74 +4,190 @@ Service for performing attestation operations to a connector.
 
 ## Implements
 
-- `IAttestation`
+- `IAttestationComponent`
 
 ## Constructors
 
-### constructor
+### Constructor
 
-• **new AttestationService**(`dependencies`): [`AttestationService`](AttestationService.md)
+> **new AttestationService**(`options?`): `AttestationService`
 
 Create a new instance of AttestationService.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `dependencies` | `Object` | The connectors to use. |
-| `dependencies.attestationConnector` | `IAttestationConnector` | The attestation connector. |
+##### options?
+
+[`IAttestationServiceConstructorOptions`](../interfaces/IAttestationServiceConstructorOptions.md)
+
+The options for the service.
 
 #### Returns
 
-[`AttestationService`](AttestationService.md)
+`AttestationService`
+
+## Properties
+
+### NAMESPACE
+
+> `readonly` `static` **NAMESPACE**: `string` = `"attestation"`
+
+The namespace supported by the attestation service.
+
+***
+
+### CLASS\_NAME
+
+> `readonly` **CLASS\_NAME**: `string`
+
+Runtime name for the class.
+
+#### Implementation of
+
+`IAttestationComponent.CLASS_NAME`
 
 ## Methods
 
-### sign
+### create()
 
-▸ **sign**(`requestContext`, `data`): `Promise`\<`IDidProof`\>
+> **create**(`attestationObject`, `namespace?`, `identity?`, `nodeIdentity?`): `Promise`\<`string`\>
 
-Sign the data and return the proof.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `data` | `unknown` | The data to sign. |
-
-#### Returns
-
-`Promise`\<`IDidProof`\>
-
-The proof for the data with the id set as a unique identifier for the data.
-
-#### Implementation of
-
-IAttestation.sign
-
-___
-
-### verify
-
-▸ **verify**(`requestContext`, `data`, `proof`): `Promise`\<`boolean`\>
-
-Verify the data against the proof the proof.
+Attest the data and return the collated information.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `data` | `unknown` | The data to verify. |
-| `proof` | `IDidProof` | The proof to verify against. |
+##### attestationObject
+
+`IJsonLdNodeObject`
+
+The data to attest.
+
+##### namespace?
+
+`string`
+
+The namespace of the connector to use for the attestation, defaults to service configured namespace.
+
+##### identity?
+
+`string`
+
+The identity to perform the attestation operation with.
+
+##### nodeIdentity?
+
+`string`
+
+The node identity to include in the attestation.
 
 #### Returns
 
-`Promise`\<`boolean`\>
+`Promise`\<`string`\>
 
-True if the verification is successful.
+The id.
 
 #### Implementation of
 
-IAttestation.verify
+`IAttestationComponent.create`
+
+***
+
+### get()
+
+> **get**(`id`): `Promise`\<`IAttestationInformation`\>
+
+Resolve and verify the attestation id.
+
+#### Parameters
+
+##### id
+
+`string`
+
+The attestation id to verify.
+
+#### Returns
+
+`Promise`\<`IAttestationInformation`\>
+
+The verified attestation details.
+
+#### Implementation of
+
+`IAttestationComponent.get`
+
+***
+
+### transfer()
+
+> **transfer**(`attestationId`, `holderIdentity`, `holderAddress`, `identity`): `Promise`\<`void`\>
+
+Transfer the attestation to a new holder.
+
+#### Parameters
+
+##### attestationId
+
+`string`
+
+The attestation to transfer.
+
+##### holderIdentity
+
+`string`
+
+The identity to transfer the attestation to.
+
+##### holderAddress
+
+`string`
+
+The address to transfer the attestation to.
+
+##### identity
+
+`string`
+
+The identity to perform the attestation operation with.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+The updated attestation details.
+
+#### Implementation of
+
+`IAttestationComponent.transfer`
+
+***
+
+### destroy()
+
+> **destroy**(`attestationId`, `identity?`): `Promise`\<`void`\>
+
+Destroy the attestation.
+
+#### Parameters
+
+##### attestationId
+
+`string`
+
+The attestation to transfer.
+
+##### identity?
+
+`string`
+
+The identity to perform the attestation operation with.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+The updated attestation details.
+
+#### Implementation of
+
+`IAttestationComponent.destroy`

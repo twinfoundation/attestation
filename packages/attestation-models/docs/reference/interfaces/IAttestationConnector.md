@@ -1,26 +1,100 @@
 # Interface: IAttestationConnector
 
-Interface describing a attestation connector.
+Interface describing an attestation connector.
 
-## Hierarchy
+## Extends
 
-- `IService`
-
-  ↳ **`IAttestationConnector`**
+- `IComponent`
 
 ## Methods
 
-### bootstrap
+### create()
 
-▸ **bootstrap**(`requestContext`): `Promise`\<`void`\>
+> **create**(`controller`, `verificationMethodId`, `attestationObject`): `Promise`\<`string`\>
 
-Bootstrap the service by creating and initializing any resources it needs.
+Attest the data and return the collated information.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The request context for bootstrapping. |
+##### controller
+
+`string`
+
+The controller identity of the user to access the vault keys.
+
+##### verificationMethodId
+
+`string`
+
+The identity verification method to use for attesting the data.
+
+##### attestationObject
+
+`IJsonLdNodeObject`
+
+The data to attest.
+
+#### Returns
+
+`Promise`\<`string`\>
+
+The collated attestation data.
+
+***
+
+### get()
+
+> **get**(`id`): `Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\>
+
+Resolve and verify the attestation id.
+
+#### Parameters
+
+##### id
+
+`string`
+
+The attestation id to verify.
+
+#### Returns
+
+`Promise`\<[`IAttestationInformation`](IAttestationInformation.md)\>
+
+The verified attestation details.
+
+***
+
+### transfer()
+
+> **transfer**(`controller`, `attestationId`, `holderIdentity`, `holderAddress`): `Promise`\<`void`\>
+
+Transfer the attestation to a new holder.
+
+#### Parameters
+
+##### controller
+
+`string`
+
+The controller identity of the user to access the vault keys.
+
+##### attestationId
+
+`string`
+
+The attestation to transfer.
+
+##### holderIdentity
+
+`string`
+
+The holder identity of the attestation.
+
+##### holderAddress
+
+`string`
+
+The new controller address of the attestation belonging to the holder.
 
 #### Returns
 
@@ -28,85 +102,30 @@ Bootstrap the service by creating and initializing any resources it needs.
 
 Nothing.
 
-#### Inherited from
+***
 
-IService.bootstrap
+### destroy()
 
-___
+> **destroy**(`controller`, `attestationId`): `Promise`\<`void`\>
 
-### sign
-
-▸ **sign**(`requestContext`, `data`): `Promise`\<`IDidProof`\>
-
-Sign the data and return the proof.
+Destroy the attestation.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `data` | `unknown` | The data to sign. |
+##### controller
 
-#### Returns
+`string`
 
-`Promise`\<`IDidProof`\>
+The controller identity of the user to access the vault keys.
 
-The proof for the data with the id set as a unique identifier for the data.
+##### attestationId
 
-___
+`string`
 
-### start
-
-▸ **start**(): `Promise`\<`void`\>
-
-The service needs to be started when the application is initialized.
+The attestation to destroy.
 
 #### Returns
 
 `Promise`\<`void`\>
 
 Nothing.
-
-#### Inherited from
-
-IService.start
-
-___
-
-### stop
-
-▸ **stop**(): `Promise`\<`void`\>
-
-The service needs to be stopped when the application is closed.
-
-#### Returns
-
-`Promise`\<`void`\>
-
-Nothing.
-
-#### Inherited from
-
-IService.stop
-
-___
-
-### verify
-
-▸ **verify**(`requestContext`, `data`, `proof`): `Promise`\<`boolean`\>
-
-Verify the data against the proof the proof.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requestContext` | `IRequestContext` | The context for the request. |
-| `data` | `unknown` | The data to verify. |
-| `proof` | `IDidProof` | The proof to verify against. |
-
-#### Returns
-
-`Promise`\<`boolean`\>
-
-True if the verification is successful.

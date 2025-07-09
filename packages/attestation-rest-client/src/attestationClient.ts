@@ -1,96 +1,121 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { BaseRestClient, type IBaseRestClientConfig } from "@gtsc/api-models";
+import { BaseRestClient } from "@twin.org/api-core";
 import type {
-	IAttestation,
-	IAttestationSignRequest,
-	IAttestationSignResponse,
-	IAttestationVerifyRequest,
-	IAttestationVerifyResponse
-} from "@gtsc/attestation-models";
-import { Guards, StringHelper } from "@gtsc/core";
-import { nameof } from "@gtsc/nameof";
-import type { IRequestContext } from "@gtsc/services";
-import type { IDidProof } from "@gtsc/standards-w3c-did";
+	IBaseRestClientConfig,
+	ICreatedResponse,
+	INoContentResponse
+} from "@twin.org/api-models";
+import type {
+	IAttestationComponent,
+	IAttestationCreateRequest,
+	IAttestationDestroyRequest,
+	IAttestationGetRequest,
+	IAttestationGetResponse,
+	IAttestationInformation,
+	IAttestationTransferRequest
+} from "@twin.org/attestation-models";
+import { Guards, Urn } from "@twin.org/core";
+import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
+import { nameof } from "@twin.org/nameof";
+import { HeaderTypes } from "@twin.org/web";
 
 /**
  * Client for performing attestation through to REST endpoints.
  */
-export class AttestationClient extends BaseRestClient implements IAttestation {
+export class AttestationClient extends BaseRestClient implements IAttestationComponent {
 	/**
 	 * Runtime name for the class.
-	 * @internal
 	 */
-	private static readonly _CLASS_NAME: string = nameof<AttestationClient>();
+	public readonly CLASS_NAME: string = nameof<AttestationClient>();
 
 	/**
 	 * Create a new instance of AttestationClient.
 	 * @param config The configuration for the client.
 	 */
 	constructor(config: IBaseRestClientConfig) {
-		super(AttestationClient._CLASS_NAME, config, StringHelper.kebabCase(nameof<IAttestation>()));
+		super(nameof<AttestationClient>(), config, "attestation");
 	}
 
 	/**
-	 * Sign the data and return the proof.
-	 * @param requestContext The context for the request.
-	 * @param data The data to sign.
-	 * @returns The proof for the data with the id set as a unique identifier for the data.
+	 * Attest the data and return the collated information.
+	 * @param attestationObject The data to attest.
+	 * @param namespace The namespace of the connector to use for the attestation, defaults to component configured namespace.
+	 * @returns The id.
 	 */
-	public async sign(requestContext: IRequestContext, data: unknown): Promise<IDidProof> {
-		Guards.object(AttestationClient._CLASS_NAME, nameof(requestContext), requestContext);
-		Guards.stringValue(
-			AttestationClient._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Guards.object(AttestationClient._CLASS_NAME, nameof(data), data);
-		const response = await this.fetch<IAttestationSignRequest, IAttestationSignResponse>(
-			requestContext,
-			"/sign",
-			"POST",
+	public async create(attestationObject: IJsonLdNodeObject, namespace?: string): Promise<string> {
+		Guards.object<IJsonLdNodeObject>(this.CLASS_NAME, nameof(attestationObject), attestationObject);
+
+		const response = await this.fetch<IAttestationCreateRequest, ICreatedResponse>("/", "POST", {
+			body: {
+				attestationObject,
+				namespace
+			}
+		});
+
+		return response.headers[HeaderTypes.Location];
+	}
+
+	/**
+	 * Resolve and verify the attestation id.
+	 * @param id The attestation id to verify.
+	 * @returns The verified attestation details.
+	 */
+	public async get(id: string): Promise<IAttestationInformation> {
+		Urn.guard(this.CLASS_NAME, nameof(id), id);
+
+		const response = await this.fetch<IAttestationGetRequest, IAttestationGetResponse>(
+			"/:id",
+			"GET",
 			{
-				body: {
-					data
+				pathParams: {
+					id
 				}
 			}
 		);
 
-		return response.body.proof;
+		return response.body;
 	}
 
 	/**
-	 * Verify the data against the proof the proof.
-	 * @param requestContext The context for the request.
-	 * @param data The data to verify.
-	 * @param proof The proof to verify against.
-	 * @returns True if the verification is successful.
+	 * Transfer the attestation to a new holder.
+	 * @param attestationId The attestation to transfer.
+	 * @param holderIdentity The identity to transfer the attestation to.
+	 * @param holderAddress The address to transfer the attestation to.
+	 * @returns Nothing.
 	 */
-	public async verify(
-		requestContext: IRequestContext,
-		data: unknown,
-		proof: IDidProof
-	): Promise<boolean> {
-		Guards.object(AttestationClient._CLASS_NAME, nameof(requestContext), requestContext);
-		Guards.stringValue(
-			AttestationClient._CLASS_NAME,
-			nameof(requestContext.tenantId),
-			requestContext.tenantId
-		);
-		Guards.object(AttestationClient._CLASS_NAME, nameof(data), data);
-		Guards.object(AttestationClient._CLASS_NAME, nameof(proof), proof);
-		const response = await this.fetch<IAttestationVerifyRequest, IAttestationVerifyResponse>(
-			requestContext,
-			"/verify",
-			"POST",
-			{
-				body: {
-					data,
-					proof
-				}
-			}
-		);
+	public async transfer(
+		attestationId: string,
+		holderIdentity: string,
+		holderAddress: string
+	): Promise<void> {
+		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
+		Guards.stringValue(this.CLASS_NAME, nameof(holderIdentity), holderIdentity);
+		Guards.stringValue(this.CLASS_NAME, nameof(holderAddress), holderAddress);
 
-		return response.body.verified;
+		await this.fetch<IAttestationTransferRequest, INoContentResponse>("/:id/transfer", "PUT", {
+			pathParams: {
+				id: attestationId
+			},
+			body: {
+				holderIdentity,
+				holderAddress
+			}
+		});
+	}
+
+	/**
+	 * Destroy the attestation.
+	 * @param attestationId The attestation to transfer.
+	 * @returns The updated attestation details.
+	 */
+	public async destroy(attestationId: string): Promise<void> {
+		Urn.guard(this.CLASS_NAME, nameof(attestationId), attestationId);
+
+		await this.fetch<IAttestationDestroyRequest, INoContentResponse>("/:id", "DELETE", {
+			pathParams: {
+				id: attestationId
+			}
+		});
 	}
 }
