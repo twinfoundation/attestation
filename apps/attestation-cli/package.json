@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/attestation-cli",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"description": "A command line interface for interacting with the attestation connectors",
 	"repository": {
 		"type": "git",
@@ -38,7 +38,7 @@
 		"@twin.org/data-json-ld": "^0.0.1",
 		"@twin.org/entity": "^0.0.1",
 		"@twin.org/entity-storage-connector-memory": "^0.0.1",
-		"@twin.org/attestation-connector-nft": "^0.0.0",
+		"@twin.org/attestation-connector-nft": "^0.0.1",
 		"@twin.org/identity-cli": "^0.0.1",
 		"@twin.org/identity-models": "^0.0.1",
 		"@twin.org/identity-connector-iota": "^0.0.1",
