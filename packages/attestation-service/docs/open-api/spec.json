@@ -547,6 +547,9 @@
 					"@context": {
 						"type": "array",
 						"minItems": 3,
+						"items": {
+							"$ref": "https://schema.twindev.org/json-ld/JsonLdContextDefinitionElement"
+						},
 						"description": "JSON-LD Context.",
 						"prefixItems": [
 							{
@@ -561,10 +564,7 @@
 								"type": "string",
 								"const": "https://schema.org"
 							}
-						],
-						"items": {
-							"$ref": "https://schema.twindev.org/json-ld/JsonLdContextDefinitionElement"
-						}
+						]
 					},
 					"type": {
 						"type": "string",
