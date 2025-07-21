@@ -17,8 +17,9 @@ import type { IAttestationServiceConstructorOptions } from "./models/IAttestatio
 export class AttestationService implements IAttestationComponent {
 	/**
 	 * The namespace supported by the attestation service.
+	 * @internal
 	 */
-	public static readonly NAMESPACE: string = "attestation";
+	private static readonly _NAMESPACE: string = "attestation";
 
 	/**
 	 * Runtime name for the class.
@@ -159,9 +160,9 @@ export class AttestationService implements IAttestationComponent {
 	private getConnector(id: string): IAttestationConnector {
 		const idUri = Urn.fromValidString(id);
 
-		if (idUri.namespaceIdentifier() !== AttestationService.NAMESPACE) {
+		if (idUri.namespaceIdentifier() !== AttestationService._NAMESPACE) {
 			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
-				namespace: AttestationService.NAMESPACE,
+				namespace: AttestationService._NAMESPACE,
 				id
 			});
 		}
